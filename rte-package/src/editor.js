@@ -284,7 +284,7 @@ export class RTE {
           fields: [{ id: 'url', label: 'URL', type: 'url', value: 'https://', required: true }]
         });
         if (url) document.execCommand(command, false, url);
-      } catch (e) {}
+      } catch (e) { }
     } else if (command === 'insertImage') {
       try {
         const url = await this.modal.prompt({
@@ -292,7 +292,7 @@ export class RTE {
           fields: [{ id: 'url', label: 'Image URL', type: 'url', required: true }]
         });
         if (url) document.execCommand(command, false, url);
-      } catch (e) {}
+      } catch (e) { }
     } else {
       document.execCommand(command, false, value);
     }
@@ -315,25 +315,10 @@ export class RTE {
   toggleFullscreen() {
     this.isFullscreen = !this.isFullscreen;
     if (this.isFullscreen) {
-      this.container.style.position = 'fixed';
-      this.container.style.top = '0';
-      this.container.style.left = '0';
-      this.container.style.right = '0';
-      this.container.style.bottom = '0';
-      this.container.style.zIndex = '9999';
-      this.container.style.width = '100%';
-      this.container.style.height = '100%';
-      this.container.style.borderRadius = '0';
+      this.container.classList.add('rte--fullscreen');
       document.body.style.overflow = 'hidden';
     } else {
-      this.container.style.position = '';
-      this.container.style.top = '';
-      this.container.style.left = '';
-      this.container.style.right = '';
-      this.container.style.bottom = '';
-      this.container.style.zIndex = '';
-      this.container.style.width = '';
-      this.container.style.height = '';
+      this.container.classList.remove('rte--fullscreen');
       document.body.style.overflow = '';
     }
   }
@@ -455,25 +440,25 @@ export class RTE {
    */
   export(format = 'html') {
     const content = this.getContent();
-    
+
     switch (format.toLowerCase()) {
       case 'json':
         return JSON.stringify({ content, timestamp: new Date().toISOString() });
-      
+
       case 'markdown':
         // Simple HTML to Markdown conversion
         return this._htmlToMarkdown(content);
-      
+
       case 'text':
         // Strip HTML tags
         const temp = document.createElement('div');
         temp.innerHTML = content;
         return temp.textContent || temp.innerText;
-      
+
       case 'rtf':
         // Return RTF format
         return this._htmlToRTF(content);
-      
+
       case 'html':
       default:
         return content;
@@ -518,7 +503,7 @@ export class RTE {
     const temp = document.createElement('div');
     temp.innerHTML = html;
     const text = temp.textContent || temp.innerText;
-    
+
     return `{\\rtf1\\ansi\\ansicpg1252\\cocoartf2\\cuc
 \\margl1440\\margr1440\\margtsxn0\\margbsxn0\\mghdr0\\mglsxn0\\mgrsxn0\\UNDEFBAR\\margxsxn0\\vieww11900\\viewh8605\\viewkind0
 \\c0\\pardirnatural\\partightenfactor100

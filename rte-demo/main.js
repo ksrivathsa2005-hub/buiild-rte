@@ -13,7 +13,7 @@ const editor = new RTE('editor-container', {
                 { type: 'button', label: 'Paste', command: 'paste', icon: '<i class="fas fa-paste"></i>' }
             ]
         },
-        
+
         // Text Formatting Group
         {
             group: 'formatting',
@@ -28,7 +28,7 @@ const editor = new RTE('editor-container', {
                 { type: 'button', label: 'Clear Format', command: 'clearFormatting', icon: '<i class="fas fa-eraser"></i>' }
             ]
         },
-        
+
         // Paragraph & List Formatting Group
         {
             group: 'paragraph',
@@ -53,7 +53,7 @@ const editor = new RTE('editor-container', {
                 { type: 'button', label: 'Block Quote', command: 'insertBlockquote', icon: '<i class="fas fa-quote-left"></i>' }
             ]
         },
-        
+
         // Alignment & Indentation Group
         {
             group: 'alignment',
@@ -66,7 +66,7 @@ const editor = new RTE('editor-container', {
                 { type: 'button', label: 'Decrease Indent', command: 'outdent', icon: '<i class="fas fa-outdent"></i>' }
             ]
         },
-        
+
         // Insert Elements Group
         {
             group: 'insert',
@@ -77,10 +77,11 @@ const editor = new RTE('editor-container', {
                 { type: 'button', label: 'Video', command: 'insertVideo', icon: '<i class="fas fa-video"></i>' },
                 { type: 'button', label: 'Table', command: 'insertTable', icon: '<i class="fas fa-table"></i>' },
                 { type: 'button', label: 'Emoji', command: 'insertEmoji', icon: '<i class="fas fa-grin"></i>' },
+                { type: 'button', label: 'Special Character', command: 'insertSpecialChar', icon: '<i class="fas fa-keyboard"></i>' },
                 { type: 'button', label: 'Horizontal Line', command: 'insertHorizontalRule', icon: '<i class="fas fa-minus"></i>' }
             ]
         },
-        
+
         // Font & Style Group
         {
             group: 'typography',
@@ -116,7 +117,7 @@ const editor = new RTE('editor-container', {
                 { type: 'color', label: 'Highlight', command: 'backColor', icon: '<i class="fas fa-highlighter"></i>' }
             ]
         },
-        
+
         // Text Case & Code Group
         {
             group: 'transform',
@@ -126,13 +127,21 @@ const editor = new RTE('editor-container', {
                 { type: 'button', label: 'Code Block', command: 'insertCodeBlock', icon: '<i class="fas fa-code"></i>' }
             ]
         },
-        
+
         // View Options Group
         {
             group: 'view',
             items: [
                 { type: 'button', label: 'Source Code', command: 'toggleSource', icon: '<i class="fas fa-file-code"></i>' },
                 { type: 'button', label: 'Fullscreen', command: 'toggleFullscreen', icon: '<i class="fas fa-expand"></i>' }
+            ]
+        },
+
+        // Tools Group
+        {
+            group: 'tools',
+            items: [
+                { type: 'button', label: 'Find & Replace', command: 'findReplace', icon: '<i class="fas fa-search"></i>' }
             ]
         }
     ]
@@ -217,11 +226,11 @@ window.contentManager = {
         const link = document.createElement('a');
         const blob = new Blob([exported], { type: 'text/plain' });
         link.href = URL.createObjectURL(blob);
-        
+
         const filename = `document.${format === 'markdown' ? 'md' : format === 'rtf' ? 'rtf' : format === 'text' ? 'txt' : 'html'}`;
         link.download = filename;
         link.click();
-        
+
         console.log(`Exported as ${format}:`, exported);
     }
 };

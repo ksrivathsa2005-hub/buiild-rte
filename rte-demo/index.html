@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,11 +8,12 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="../rte-package/src/styles/main.css">
     <link rel="stylesheet" href="../rte-package/src/styles/components.css">
+    <link rel="stylesheet" href="../rte-package/src/components/modal.css">
     <style>
         * {
             box-sizing: border-box;
         }
-        
+
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             padding: 0;
@@ -89,13 +91,16 @@
             color: #2c3e50;
         }
 
-        .rte__content h1, .rte__content h2, .rte__content h3 {
+        .rte__content h1,
+        .rte__content h2,
+        .rte__content h3 {
             color: #2c3e50;
             margin-top: 1.5rem;
             margin-bottom: 0.8rem;
         }
 
-        .rte__content ul, .rte__content ol {
+        .rte__content ul,
+        .rte__content ol {
             margin: 1rem 0;
             padding-left: 2rem;
         }
@@ -223,6 +228,7 @@
         }
     </style>
 </head>
+
 <body>
     <div class="container">
         <div class="editor-section">
@@ -231,10 +237,10 @@
                 <h3>Output</h3>
                 <pre id="output-code"></pre>
             </div>
-               </div>
+        </div>
     </div>
 
     <script type="module" src="main.js"></script>
 </body>
-</html>
 
+</html>
