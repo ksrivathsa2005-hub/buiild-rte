@@ -155,6 +155,7 @@ export class CommandHandler {
         break;
       case 'insertChecklist':
         this._insertChecklist();
+        break;
       case 'findReplace':
         await this._findReplace();
         break;
@@ -396,55 +397,47 @@ export class CommandHandler {
       });
 
       if (data && data.url) {
-        const wrapper = document.createElement('div');
-        wrapper.style.margin = '1rem 0';
-        wrapper.style.textAlign = 'center';
+        const container = document.createElement('div');
+        container.style.margin = '1rem 0';
+        container.style.textAlign = 'center';
+
+        // Create a wrapper for resizing
+        const resizer = document.createElement('div');
+        resizer.style.display = 'inline-block';
+        resizer.style.resize = 'both';
+        resizer.style.overflow = 'hidden';
+        resizer.style.verticalAlign = 'bottom';
+        resizer.style.maxWidth = '100%';
+        resizer.contentEditable = 'false';
+        resizer.style.border = '1px solid transparent'; // visual cue
 
         const img = document.createElement('img');
         img.src = data.url;
         img.alt = data.alt || 'Image';
-        img.style.maxWidth = '100%';
-        img.style.height = 'auto';
-        img.style.display = 'inline-block';
-        img.style.borderRadius = '4px';
-        // Create a wrapper for resizing
-        const wrapper = document.createElement('span');
-        wrapper.style.display = 'inline-block';
-        wrapper.style.resize = 'both';
-        wrapper.style.overflow = 'hidden';
-        wrapper.style.verticalAlign = 'bottom';
-        wrapper.style.maxWidth = '100%';
-        wrapper.contentEditable = 'false'; // Wrapper itself isn't editable text
-
-        const img = document.createElement('img');
-        img.src = data.url;
-        img.alt = 'Image';
         img.style.width = '100%';
         img.style.height = '100%';
         img.style.display = 'block';
 
-        wrapper.appendChild(img);
+        resizer.appendChild(img);
+        container.appendChild(resizer);
 
         const selection = window.getSelection();
         if (selection.rangeCount > 0) {
           const range = selection.getRangeAt(0);
           range.deleteContents();
-          range.insertNode(wrapper);
+          range.insertNode(container);
 
           // Create a new paragraph after the image for text to continue
           const newPara = document.createElement('p');
           newPara.innerHTML = '<br>';
-          wrapper.parentNode.insertBefore(newPara, wrapper.nextSibling);
+          container.parentNode.insertBefore(newPara, container.nextSibling);
 
           // Place cursor in the new paragraph
           const newRange = document.createRange();
           newRange.selectNodeContents(newPara);
           newRange.collapse(true);
-          // Move cursor after the image
-          range.setStartAfter(wrapper);
-          range.setEndAfter(wrapper);
           selection.removeAllRanges();
-          selection.addRange(range);
+          selection.addRange(newRange);
         }
       }
     } catch (e) {
