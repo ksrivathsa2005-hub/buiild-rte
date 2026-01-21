@@ -13,7 +13,7 @@ const editor = new RTE('editor-container', {
                 { type: 'button', label: 'Paste', command: 'paste', icon: '<i class="fas fa-paste"></i>' }
             ]
         },
-        
+
         // Text Formatting Group
         {
             group: 'formatting',
@@ -28,7 +28,7 @@ const editor = new RTE('editor-container', {
                 { type: 'button', label: 'Clear Format', command: 'clearFormatting', icon: '<i class="fas fa-eraser"></i>' }
             ]
         },
-        
+
         // Paragraph & List Formatting Group
         {
             group: 'paragraph',
@@ -50,10 +50,11 @@ const editor = new RTE('editor-container', {
                 },
                 { type: 'button', label: 'Bulleted List', command: 'insertUnorderedList', icon: '<i class="fas fa-list-ul"></i>' },
                 { type: 'button', label: 'Numbered List', command: 'insertOrderedList', icon: '<i class="fas fa-list-ol"></i>' },
+                { type: 'button', label: 'Checklist', command: 'insertChecklist', icon: '<i class="fas fa-check-square"></i>' },
                 { type: 'button', label: 'Block Quote', command: 'insertBlockquote', icon: '<i class="fas fa-quote-left"></i>' }
             ]
         },
-        
+
         // Alignment & Indentation Group
         {
             group: 'alignment',
@@ -66,7 +67,7 @@ const editor = new RTE('editor-container', {
                 { type: 'button', label: 'Decrease Indent', command: 'outdent', icon: '<i class="fas fa-outdent"></i>' }
             ]
         },
-        
+
         // Insert Elements Group
         {
             group: 'insert',
@@ -80,7 +81,7 @@ const editor = new RTE('editor-container', {
                 { type: 'button', label: 'Horizontal Line', command: 'insertHorizontalRule', icon: '<i class="fas fa-minus"></i>' }
             ]
         },
-        
+
         // Font & Style Group
         {
             group: 'typography',
@@ -96,7 +97,8 @@ const editor = new RTE('editor-container', {
                         { label: 'Georgia', value: 'Georgia' },
                         { label: 'Times New Roman', value: 'Times New Roman' },
                         { label: 'Courier New', value: 'Courier New' },
-                        { label: 'Trebuchet MS', value: 'Trebuchet MS' }
+                        { label: 'Trebuchet MS', value: 'Trebuchet MS' },
+                        { label: 'System UI', value: 'system-ui' }
                     ]
                 },
                 {
@@ -116,7 +118,7 @@ const editor = new RTE('editor-container', {
                 { type: 'color', label: 'Highlight', command: 'backColor', icon: '<i class="fas fa-highlighter"></i>' }
             ]
         },
-        
+
         // Text Case & Code Group
         {
             group: 'transform',
@@ -126,7 +128,7 @@ const editor = new RTE('editor-container', {
                 { type: 'button', label: 'Code Block', command: 'insertCodeBlock', icon: '<i class="fas fa-code"></i>' }
             ]
         },
-        
+
         // View Options Group
         {
             group: 'view',
@@ -174,6 +176,53 @@ document.getElementById('load-sample-btn').addEventListener('click', () => {
     editor.setContent(sampleContent);
 });
 
+// Parsing demo handlers
+document.getElementById('load-json-btn').addEventListener('click', () => {
+    document.getElementById('json-file-input').click();
+});
+
+document.getElementById('json-file-input').addEventListener('change', (e) => {
+    const file = e.target.files[0];
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = (event) => {
+            try {
+                const json = JSON.parse(event.target.result);
+                // If JSON has content/html property, use it; otherwise format JSON as readable HTML
+                if (json.content || json.html) {
+                    window.contentManager.loadFromJSON(json);
+                } else {
+                    // Format JSON as readable HTML for display
+                    const formattedHtml = `<h2>JSON Content</h2><pre style="background:#f5f5f5;padding:1rem;border-radius:4px;overflow-x:auto;">${JSON.stringify(json, null, 2)}</pre>`;
+                    editor.setContent(formattedHtml);
+                }
+            } catch (err) {
+                alert('Invalid JSON file: ' + err.message);
+            }
+        };
+        reader.readAsText(file);
+    }
+    e.target.value = '';
+});
+
+document.getElementById('load-html-btn').addEventListener('click', () => {
+    document.getElementById('html-file-input').click();
+});
+
+document.getElementById('html-file-input').addEventListener('change', (e) => {
+    const file = e.target.files[0];
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = (event) => {
+            // Set the HTML content directly
+            editor.setContent(event.target.result);
+            console.log('Loaded HTML file');
+        };
+        reader.readAsText(file);
+    }
+    e.target.value = '';
+});
+
 // Content Source Management - Support for different content sources
 window.contentManager = {
     // Load from static HTML
@@ -217,11 +266,11 @@ window.contentManager = {
         const link = document.createElement('a');
         const blob = new Blob([exported], { type: 'text/plain' });
         link.href = URL.createObjectURL(blob);
-        
+
         const filename = `document.${format === 'markdown' ? 'md' : format === 'rtf' ? 'rtf' : format === 'text' ? 'txt' : 'html'}`;
         link.download = filename;
         link.click();
-        
+
         console.log(`Exported as ${format}:`, exported);
     }
 };

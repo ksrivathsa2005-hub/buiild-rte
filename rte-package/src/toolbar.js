@@ -1,8 +1,8 @@
-import { 
-  createButton, 
-  createSelect, 
-  createColorPicker, 
-  createRangeSlider 
+import {
+  createButton,
+  createSelect,
+  createColorPicker,
+  createRangeSlider
 } from './components/builder.js';
 
 export const createToolbar = (config, actions) => {
@@ -40,7 +40,7 @@ export const createToolbar = (config, actions) => {
           onchange: (e) => {
             if (e.target.value) {
               actions.execute(item.command, e.target.value);
-              e.target.value = '';
+              // Keep the selection visible instead of resetting
             }
           }
         });

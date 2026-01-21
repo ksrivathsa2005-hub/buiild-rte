@@ -153,6 +153,9 @@ export class CommandHandler {
       case 'insertSpecialChar':
         await this._insertSpecialChar();
         break;
+      case 'insertChecklist':
+        this._insertChecklist();
+        break;
 
       // View
       case 'toggleSource':
@@ -272,14 +275,14 @@ export class CommandHandler {
 
     const range = selection.getRangeAt(0);
     let block = range.commonAncestorContainer;
-    
+
     // Get the closest block element
     while (block && block.nodeType !== Node.ELEMENT_NODE) {
       block = block.parentNode;
     }
-    
-    while (block && block.nodeType === Node.ELEMENT_NODE && 
-           !['P', 'DIV', 'H1', 'H2', 'H3', 'H4', 'H5', 'H6', 'BLOCKQUOTE', 'PRE', 'LI'].includes(block.tagName)) {
+
+    while (block && block.nodeType === Node.ELEMENT_NODE &&
+      !['P', 'DIV', 'H1', 'H2', 'H3', 'H4', 'H5', 'H6', 'BLOCKQUOTE', 'PRE', 'LI'].includes(block.tagName)) {
       block = block.parentNode;
     }
 
@@ -342,7 +345,7 @@ export class CommandHandler {
         const wrapper = document.createElement('div');
         wrapper.style.margin = '1rem 0';
         wrapper.style.textAlign = 'center';
-        
+
         const img = document.createElement('img');
         img.src = data.url;
         img.alt = data.alt || 'Image';
@@ -350,7 +353,7 @@ export class CommandHandler {
         img.style.height = 'auto';
         img.style.display = 'inline-block';
         img.style.borderRadius = '4px';
-        
+
         wrapper.appendChild(img);
 
         const selection = window.getSelection();
@@ -358,12 +361,12 @@ export class CommandHandler {
           const range = selection.getRangeAt(0);
           range.deleteContents();
           range.insertNode(wrapper);
-          
+
           // Create a new paragraph after the image for text to continue
           const newPara = document.createElement('p');
           newPara.innerHTML = '<br>';
           wrapper.parentNode.insertBefore(newPara, wrapper.nextSibling);
-          
+
           // Place cursor in the new paragraph
           const newRange = document.createRange();
           newRange.selectNodeContents(newPara);
@@ -388,13 +391,13 @@ export class CommandHandler {
         const wrapper = document.createElement('div');
         wrapper.style.margin = '1rem 0';
         wrapper.style.textAlign = 'center';
-        
+
         const audio = document.createElement('audio');
         audio.src = url;
         audio.controls = true;
         audio.style.maxWidth = '100%';
         audio.style.display = 'inline-block';
-        
+
         wrapper.appendChild(audio);
 
         const selection = window.getSelection();
@@ -402,12 +405,12 @@ export class CommandHandler {
           const range = selection.getRangeAt(0);
           range.deleteContents();
           range.insertNode(wrapper);
-          
+
           // Create a new paragraph after the audio for text to continue
           const newPara = document.createElement('p');
           newPara.innerHTML = '<br>';
           wrapper.parentNode.insertBefore(newPara, wrapper.nextSibling);
-          
+
           // Place cursor in the new paragraph
           const newRange = document.createRange();
           newRange.selectNodeContents(newPara);
@@ -432,13 +435,13 @@ export class CommandHandler {
         const wrapper = document.createElement('div');
         wrapper.style.margin = '1rem 0';
         wrapper.style.textAlign = 'center';
-        
+
         const video = document.createElement('video');
         video.src = url;
         video.controls = true;
         video.style.maxWidth = '100%';
         video.style.display = 'inline-block';
-        
+
         wrapper.appendChild(video);
 
         const selection = window.getSelection();
@@ -446,12 +449,12 @@ export class CommandHandler {
           const range = selection.getRangeAt(0);
           range.deleteContents();
           range.insertNode(wrapper);
-          
+
           // Create a new paragraph after the video for text to continue
           const newPara = document.createElement('p');
           newPara.innerHTML = '<br>';
           wrapper.parentNode.insertBefore(newPara, wrapper.nextSibling);
-          
+
           // Place cursor in the new paragraph
           const newRange = document.createRange();
           newRange.selectNodeContents(newPara);
@@ -545,6 +548,51 @@ export class CommandHandler {
       }
     } catch (e) {
       console.log('Special char insertion cancelled');
+    }
+  }
+
+  _insertChecklist() {
+    const ul = document.createElement('ul');
+    ul.className = 'rte-checklist';
+    ul.style.listStyleType = 'none';
+    ul.style.paddingLeft = '0';
+
+    const li = document.createElement('li');
+    li.style.display = 'flex';
+    li.style.alignItems = 'flex-start';
+    li.style.marginBottom = '0.5rem';
+
+    const checkbox = document.createElement('input');
+    checkbox.type = 'checkbox';
+    checkbox.style.marginTop = '4px';
+    checkbox.style.marginRight = '8px';
+    checkbox.onclick = (e) => {
+      if (e.target.checked) {
+        e.target.setAttribute('checked', 'checked');
+      } else {
+        e.target.removeAttribute('checked');
+      }
+    };
+
+    const textSpan = document.createElement('span');
+    textSpan.textContent = 'List item';
+    // textSpan.contentEditable = true; // Use editor's contentEditable
+
+    li.appendChild(checkbox);
+    li.appendChild(textSpan);
+    ul.appendChild(li);
+
+    const selection = window.getSelection();
+    if (selection.rangeCount > 0) {
+      const range = selection.getRangeAt(0);
+      range.deleteContents();
+      range.insertNode(ul);
+
+      // Select the text span
+      const newRange = document.createRange();
+      newRange.selectNodeContents(textSpan);
+      selection.removeAllRanges();
+      selection.addRange(newRange);
     }
   }
 }
