@@ -236,6 +236,71 @@ export class RTE {
 
   _bindEvents() {
     this.editor.addEventListener('keydown', (e) => {
+      // Check if we're inside a checklist
+      const selection = window.getSelection();
+      if (selection.rangeCount > 0) {
+        const range = selection.getRangeAt(0);
+        let node = range.startContainer;
+
+        // Find if we're inside a checklist item
+        let checklistItem = null;
+        let checklist = null;
+        while (node && node !== this.editor) {
+          if (node.nodeType === Node.ELEMENT_NODE) {
+            if (node.tagName === 'LI' && node.closest('.rte-checklist')) {
+              checklistItem = node;
+              checklist = node.closest('.rte-checklist');
+              break;
+            }
+          }
+          node = node.parentNode;
+        }
+
+        // Handle checklist-specific keys
+        if (checklistItem && checklist) {
+          if (e.key === 'Enter' && !e.shiftKey) {
+            e.preventDefault();
+            this._addChecklistItem(checklistItem, checklist);
+            return;
+          }
+
+          if (e.key === 'Tab') {
+            e.preventDefault();
+            if (e.shiftKey) {
+              this._outdentChecklistItem(checklistItem);
+            } else {
+              this._indentChecklistItem(checklistItem);
+            }
+            return;
+          }
+
+          if (e.key === 'Backspace') {
+            const textContent = checklistItem.textContent.trim();
+            const checkbox = checklistItem.querySelector('input[type="checkbox"]');
+            const textOnly = textContent.replace(checkbox ? '' : '', '').trim();
+
+            if (textOnly === '' || textOnly === 'List item') {
+              const prevItem = checklistItem.previousElementSibling;
+              if (prevItem) {
+                e.preventDefault();
+                checklistItem.remove();
+
+                // Focus previous item
+                const prevSpan = prevItem.querySelector('span');
+                if (prevSpan) {
+                  const newRange = document.createRange();
+                  newRange.selectNodeContents(prevSpan);
+                  newRange.collapse(false);
+                  selection.removeAllRanges();
+                  selection.addRange(newRange);
+                }
+              }
+            }
+          }
+        }
+      }
+
+      // Standard keyboard shortcuts
       if (e.ctrlKey || e.metaKey) {
         const key = e.key.toLowerCase();
         if (['b', 'i', 'u', 'z', 'y'].includes(key)) {
@@ -260,6 +325,82 @@ export class RTE {
       const sanitized = sanitizeHTML(text);
       document.execCommand('insertHTML', false, sanitized);
     });
+  }
+
+  _addChecklistItem(currentItem, checklist) {
+    const checkboxType = checklist.dataset.checkboxType || 'checkbox';
+    const li = document.createElement('li');
+    li.style.display = 'flex';
+    li.style.alignItems = 'flex-start';
+    li.style.marginBottom = '0.5rem';
+
+    const checkbox = document.createElement('input');
+    checkbox.type = 'checkbox';
+    checkbox.className = `rte-checkbox rte-checkbox--${checkboxType}`;
+    checkbox.style.marginTop = '4px';
+    checkbox.style.marginRight = '8px';
+    checkbox.onclick = (e) => {
+      if (e.target.checked) {
+        e.target.setAttribute('checked', 'checked');
+      } else {
+        e.target.removeAttribute('checked');
+      }
+    };
+
+    const textSpan = document.createElement('span');
+    textSpan.innerHTML = '<br>';
+
+    li.appendChild(checkbox);
+    li.appendChild(textSpan);
+
+    // Insert after current item
+    if (currentItem.nextSibling) {
+      currentItem.parentNode.insertBefore(li, currentItem.nextSibling);
+    } else {
+      currentItem.parentNode.appendChild(li);
+    }
+
+    // Focus the new item
+    const selection = window.getSelection();
+    const newRange = document.createRange();
+    newRange.selectNodeContents(textSpan);
+    newRange.collapse(true);
+    selection.removeAllRanges();
+    selection.addRange(newRange);
+  }
+
+  _indentChecklistItem(item) {
+    const prevSibling = item.previousElementSibling;
+    if (!prevSibling) return;
+
+    // Check if previous sibling already has a nested list
+    let nestedList = prevSibling.querySelector('ul.rte-checklist');
+    if (!nestedList) {
+      nestedList = document.createElement('ul');
+      nestedList.className = 'rte-checklist rte-checklist--nested';
+      nestedList.style.listStyleType = 'none';
+      nestedList.style.paddingLeft = '1.5rem';
+      nestedList.style.marginTop = '0.5rem';
+      prevSibling.appendChild(nestedList);
+    }
+
+    nestedList.appendChild(item);
+  }
+
+  _outdentChecklistItem(item) {
+    const parentList = item.parentNode;
+    if (!parentList.classList.contains('rte-checklist--nested')) return;
+
+    const grandparentItem = parentList.parentNode;
+    const grandparentList = grandparentItem.parentNode;
+
+    // Move item after grandparent item
+    grandparentList.insertBefore(item, grandparentItem.nextSibling);
+
+    // Remove empty nested list
+    if (parentList.children.length === 0) {
+      parentList.remove();
+    }
   }
 
   async executeCommand(command, value = null) {
