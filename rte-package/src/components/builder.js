@@ -7,7 +7,7 @@ export const createButton = (config) => {
   const button = document.createElement('button');
   button.className = `rte__btn ${config.className || ''}`;
   button.type = 'button';
-  
+
   // Support for both icon HTML (e.g., <i class="fas fa-bold"></i>) and text
   if (config.icon) {
     if (config.icon.includes('<i') || config.icon.includes('<svg')) {
@@ -18,32 +18,37 @@ export const createButton = (config) => {
   } else {
     button.textContent = config.label;
   }
-  
+
+
   button.setAttribute('aria-label', config.label);
   button.setAttribute('aria-pressed', 'false');
-  button.title = config.label;
+  // Use custom tooltip instead of native title for better control
+  button.setAttribute('data-tooltip', config.label);
   button.dataset.command = config.command;
   button.dataset.value = config.value || '';
-  
+
   if (config.onclick) {
     button.onclick = config.onclick;
   }
-  
+
   return button;
 };
 
 export const createSelect = (config) => {
   const wrapper = document.createElement('div');
   wrapper.className = 'rte__select-wrapper';
-  
+
   const select = document.createElement('select');
   select.className = `rte__select ${config.className || ''}`;
   select.setAttribute('aria-label', config.label);
+  select.setAttribute('data-tooltip', config.label);
   select.dataset.command = config.command;
-  
+
   const defaultOption = document.createElement('option');
   defaultOption.value = '';
   defaultOption.textContent = config.label;
+  defaultOption.disabled = true;
+  defaultOption.selected = true;
   select.appendChild(defaultOption);
 
   config.options.forEach(opt => {
@@ -56,7 +61,7 @@ export const createSelect = (config) => {
   if (config.onchange) {
     select.onchange = config.onchange;
   }
-  
+
   wrapper.appendChild(select);
   return wrapper;
 };
@@ -64,20 +69,42 @@ export const createSelect = (config) => {
 export const createColorPicker = (config) => {
   const wrapper = document.createElement('div');
   wrapper.className = 'rte__color-wrapper';
-  
+  wrapper.style.display = 'flex';
+  wrapper.style.alignItems = 'center';
+  wrapper.style.gap = '2px';
+
   const input = document.createElement('input');
   input.type = 'color';
   input.className = 'rte__color-picker';
   input.setAttribute('aria-label', config.label);
-  input.title = config.label;
+  input.setAttribute('data-tooltip', config.label);
   input.value = config.value || '#000000';
   input.dataset.command = config.command;
-  
+
+  const defaultColor = config.command === 'backColor' ? '#ffffff' : '#000000';
+
   if (config.oninput) {
     input.oninput = config.oninput;
   }
 
+  // Reset button
+  const resetBtn = document.createElement('button');
+  resetBtn.type = 'button';
+  resetBtn.className = 'rte__btn rte__color-reset';
+  resetBtn.innerHTML = '<i class="fas fa-undo" style="font-size:10px;"></i>';
+  resetBtn.setAttribute('data-tooltip', 'Reset');
+  resetBtn.style.padding = '2px 4px';
+  resetBtn.style.minWidth = 'auto';
+  resetBtn.onclick = (e) => {
+    e.preventDefault();
+    input.value = defaultColor;
+    if (config.oninput) {
+      config.oninput({ target: input });
+    }
+  };
+
   wrapper.appendChild(input);
+  wrapper.appendChild(resetBtn);
   return wrapper;
 };
 
@@ -94,7 +121,7 @@ export const createRangeSlider = (config) => {
   input.value = config.value || '1';
   input.setAttribute('aria-label', config.label);
   input.dataset.command = config.command;
-  
+
   if (config.oninput) {
     input.oninput = config.oninput;
   }
@@ -190,7 +217,7 @@ export const createToggleButton = (config) => {
   const button = createButton(config);
   button.classList.add('rte__btn--toggle');
   button.dataset.toggled = 'false';
-  
+
   const originalOnClick = button.onclick;
   button.onclick = (e) => {
     const toggled = button.dataset.toggled === 'false';
@@ -199,6 +226,6 @@ export const createToggleButton = (config) => {
     button.setAttribute('aria-pressed', String(toggled));
     if (originalOnClick) originalOnClick(e);
   };
-  
+
   return button;
 };

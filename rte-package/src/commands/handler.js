@@ -153,6 +153,8 @@ export class CommandHandler {
       case 'insertSpecialChar':
         await this._insertSpecialChar();
         break;
+      case 'insertChecklist':
+        this._insertChecklist();
       case 'findReplace':
         await this._findReplace();
         break;
@@ -394,6 +396,17 @@ export class CommandHandler {
       });
 
       if (data && data.url) {
+        const wrapper = document.createElement('div');
+        wrapper.style.margin = '1rem 0';
+        wrapper.style.textAlign = 'center';
+
+        const img = document.createElement('img');
+        img.src = data.url;
+        img.alt = data.alt || 'Image';
+        img.style.maxWidth = '100%';
+        img.style.height = 'auto';
+        img.style.display = 'inline-block';
+        img.style.borderRadius = '4px';
         // Create a wrapper for resizing
         const wrapper = document.createElement('span');
         wrapper.style.display = 'inline-block';
@@ -418,6 +431,15 @@ export class CommandHandler {
           range.deleteContents();
           range.insertNode(wrapper);
 
+          // Create a new paragraph after the image for text to continue
+          const newPara = document.createElement('p');
+          newPara.innerHTML = '<br>';
+          wrapper.parentNode.insertBefore(newPara, wrapper.nextSibling);
+
+          // Place cursor in the new paragraph
+          const newRange = document.createRange();
+          newRange.selectNodeContents(newPara);
+          newRange.collapse(true);
           // Move cursor after the image
           range.setStartAfter(wrapper);
           range.setEndAfter(wrapper);
@@ -492,6 +514,13 @@ export class CommandHandler {
         wrapper.style.margin = '1rem 0';
         wrapper.style.textAlign = 'center';
 
+        const video = document.createElement('video');
+        video.src = url;
+        video.controls = true;
+        video.style.maxWidth = '100%';
+        video.style.display = 'inline-block';
+
+        wrapper.appendChild(video);
         // Check for YouTube
         const ytMatch = data.url.match(/^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/);
         const ytId = (ytMatch && ytMatch[2].length === 11) ? ytMatch[2] : null;
@@ -646,6 +675,51 @@ export class CommandHandler {
       }
     } catch (e) {
       console.log('Special char insertion cancelled');
+    }
+  }
+
+  _insertChecklist() {
+    const ul = document.createElement('ul');
+    ul.className = 'rte-checklist';
+    ul.style.listStyleType = 'none';
+    ul.style.paddingLeft = '0';
+
+    const li = document.createElement('li');
+    li.style.display = 'flex';
+    li.style.alignItems = 'flex-start';
+    li.style.marginBottom = '0.5rem';
+
+    const checkbox = document.createElement('input');
+    checkbox.type = 'checkbox';
+    checkbox.style.marginTop = '4px';
+    checkbox.style.marginRight = '8px';
+    checkbox.onclick = (e) => {
+      if (e.target.checked) {
+        e.target.setAttribute('checked', 'checked');
+      } else {
+        e.target.removeAttribute('checked');
+      }
+    };
+
+    const textSpan = document.createElement('span');
+    textSpan.textContent = 'List item';
+    // textSpan.contentEditable = true; // Use editor's contentEditable
+
+    li.appendChild(checkbox);
+    li.appendChild(textSpan);
+    ul.appendChild(li);
+
+    const selection = window.getSelection();
+    if (selection.rangeCount > 0) {
+      const range = selection.getRangeAt(0);
+      range.deleteContents();
+      range.insertNode(ul);
+
+      // Select the text span
+      const newRange = document.createRange();
+      newRange.selectNodeContents(textSpan);
+      selection.removeAllRanges();
+      selection.addRange(newRange);
     }
   }
 }

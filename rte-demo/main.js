@@ -50,6 +50,7 @@ const editor = new RTE('editor-container', {
                 },
                 { type: 'button', label: 'Bulleted List', command: 'insertUnorderedList', icon: '<i class="fas fa-list-ul"></i>' },
                 { type: 'button', label: 'Numbered List', command: 'insertOrderedList', icon: '<i class="fas fa-list-ol"></i>' },
+                { type: 'button', label: 'Checklist', command: 'insertChecklist', icon: '<i class="fas fa-check-square"></i>' },
                 { type: 'button', label: 'Block Quote', command: 'insertBlockquote', icon: '<i class="fas fa-quote-left"></i>' }
             ]
         },
@@ -97,7 +98,8 @@ const editor = new RTE('editor-container', {
                         { label: 'Georgia', value: 'Georgia' },
                         { label: 'Times New Roman', value: 'Times New Roman' },
                         { label: 'Courier New', value: 'Courier New' },
-                        { label: 'Trebuchet MS', value: 'Trebuchet MS' }
+                        { label: 'Trebuchet MS', value: 'Trebuchet MS' },
+                        { label: 'System UI', value: 'system-ui' }
                     ]
                 },
                 {
@@ -181,6 +183,53 @@ document.getElementById('clear-btn').addEventListener('click', async () => {
 
 document.getElementById('load-sample-btn').addEventListener('click', () => {
     editor.setContent(sampleContent);
+});
+
+// Parsing demo handlers
+document.getElementById('load-json-btn').addEventListener('click', () => {
+    document.getElementById('json-file-input').click();
+});
+
+document.getElementById('json-file-input').addEventListener('change', (e) => {
+    const file = e.target.files[0];
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = (event) => {
+            try {
+                const json = JSON.parse(event.target.result);
+                // If JSON has content/html property, use it; otherwise format JSON as readable HTML
+                if (json.content || json.html) {
+                    window.contentManager.loadFromJSON(json);
+                } else {
+                    // Format JSON as readable HTML for display
+                    const formattedHtml = `<h2>JSON Content</h2><pre style="background:#f5f5f5;padding:1rem;border-radius:4px;overflow-x:auto;">${JSON.stringify(json, null, 2)}</pre>`;
+                    editor.setContent(formattedHtml);
+                }
+            } catch (err) {
+                alert('Invalid JSON file: ' + err.message);
+            }
+        };
+        reader.readAsText(file);
+    }
+    e.target.value = '';
+});
+
+document.getElementById('load-html-btn').addEventListener('click', () => {
+    document.getElementById('html-file-input').click();
+});
+
+document.getElementById('html-file-input').addEventListener('change', (e) => {
+    const file = e.target.files[0];
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = (event) => {
+            // Set the HTML content directly
+            editor.setContent(event.target.result);
+            console.log('Loaded HTML file');
+        };
+        reader.readAsText(file);
+    }
+    e.target.value = '';
 });
 
 // Content Source Management - Support for different content sources
