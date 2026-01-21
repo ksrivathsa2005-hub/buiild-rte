@@ -78,6 +78,7 @@ const editor = new RTE('editor-container', {
                 { type: 'button', label: 'Video', command: 'insertVideo', icon: '<i class="fas fa-video"></i>' },
                 { type: 'button', label: 'Table', command: 'insertTable', icon: '<i class="fas fa-table"></i>' },
                 { type: 'button', label: 'Emoji', command: 'insertEmoji', icon: '<i class="fas fa-grin"></i>' },
+                { type: 'button', label: 'Special Character', command: 'insertSpecialChar', icon: '<i class="fas fa-keyboard"></i>' },
                 { type: 'button', label: 'Horizontal Line', command: 'insertHorizontalRule', icon: '<i class="fas fa-minus"></i>' }
             ]
         },
@@ -135,6 +136,14 @@ const editor = new RTE('editor-container', {
             items: [
                 { type: 'button', label: 'Source Code', command: 'toggleSource', icon: '<i class="fas fa-file-code"></i>' },
                 { type: 'button', label: 'Fullscreen', command: 'toggleFullscreen', icon: '<i class="fas fa-expand"></i>' }
+            ]
+        },
+
+        // Tools Group
+        {
+            group: 'tools',
+            items: [
+                { type: 'button', label: 'Find & Replace', command: 'findReplace', icon: '<i class="fas fa-search"></i>' }
             ]
         }
     ]

@@ -26,6 +26,7 @@
   from {
     opacity: 0;
   }
+
   to {
     opacity: 1;
   }
@@ -47,6 +48,7 @@
   from {
     opacity: 0;
   }
+
   to {
     opacity: 1;
   }
@@ -73,6 +75,7 @@
     transform: translateY(40px);
     opacity: 0;
   }
+
   to {
     transform: translateY(0);
     opacity: 1;
@@ -84,8 +87,8 @@
    ============================================ */
 
 .rte__modal-header {
-  padding: 16px 20px;
-  border-bottom: 1px solid #e0e0e0;
+  padding: 20px 24px 0 24px;
+  border-bottom: none;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -156,8 +159,8 @@
    ============================================ */
 
 .rte__modal-footer {
-  padding: 12px 20px;
-  border-top: 1px solid #e0e0e0;
+  padding: 20px 24px;
+  border-top: none;
   display: flex;
   justify-content: flex-end;
   gap: 12px;
@@ -192,14 +195,15 @@
 .rte__form-label--checkbox {
   text-transform: none;
   letter-spacing: normal;
-  font-weight: 500;
+  font-weight: normal;
   display: inline;
   margin-left: 8px;
+  color: #333;
 }
 
 .rte__required {
-  color: #e74c3c;
-  font-weight: 700;
+  color: #d9534f;
+  margin-left: 4px;
 }
 
 /* ============================================
@@ -207,29 +211,28 @@
    ============================================ */
 
 .rte__form-input {
-  padding: 10px 12px;
-  border: 1px solid #ddd;
-  border-radius: 6px;
-  font-size: 13px;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  color: #2c3e50;
-  background-color: white;
-  transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.rte__form-input:hover {
-  border-color: #333333;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  display: block;
+  width: 100%;
+  padding: 8px 12px;
+  font-size: 14px;
+  line-height: 1.42857143;
+  color: #555;
+  background-color: #fff;
+  background-image: none;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075);
+  transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
 }
 
 .rte__form-input:focus {
-  outline: none;
-  border-color: #333333;
-  box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.15);
+  border-color: #86b7fe;
+  outline: 0;
+  box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
 }
 
 .rte__form-input::placeholder {
-  color: #adb5bd;
+  color: #999;
 }
 
 /* Input Types */
@@ -292,54 +295,70 @@ textarea.rte__form-input {
    ============================================ */
 
 .rte__upload-zone {
-  padding: 40px 20px;
-  border: 2px dashed #ddd;
-  border-radius: 8px;
-  background: #f9f9f9;
-  text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 40px;
+  border: 2px dashed #ccc;
+  border-radius: 4px;
+  background: #fff;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  cursor: pointer;
+  margin-bottom: 20px;
+  min-height: 200px;
 }
 
 .rte__upload-zone:hover {
-  border-color: #333333;
-  background-color: #f0f7ff;
+  border-color: #999;
+  background-color: #fafafa;
 }
 
 .rte__upload-zone.dragover {
-  border-color: #333333;
-  background-color: #f5f5f5;
-  box-shadow: inset 0 0 8px rgba(0, 0, 0, 0.2);
+  border-color: #66afe9;
+  background-color: #f0f7ff;
 }
 
-.rte__file-input {
-  display: none;
-}
-
-.rte__upload-label {
+.rte__upload-content {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 10px;
-  cursor: pointer;
+  gap: 15px;
+}
+
+.rte__upload-text {
+  font-size: 14px;
+  color: #555;
+  margin: 0;
+}
+
+.rte__btn {
+  display: inline-block;
+  font-weight: 400;
+  text-align: center;
+  vertical-align: middle;
   user-select: none;
+  border: 1px solid transparent;
+  padding: 0.375rem 0.75rem;
+  font-size: 14px;
+  line-height: 1.5;
+  border-radius: 4px;
+  transition: all 0.2s ease-in-out;
+  cursor: pointer;
 }
 
-.rte__upload-label i {
-  font-size: 36px;
-  color: #333333;
+.rte__btn--browse {
+  background-color: #5a6268;
+  color: white;
+  border: none;
+  padding: 8px 24px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.2s;
 }
 
-.rte__upload-label span {
-  display: block;
-  font-weight: 600;
-  color: #2c3e50;
-}
-
-.rte__upload-label small {
-  display: block;
-  font-size: 12px;
-  color: #6c757d;
+.rte__btn--browse:hover {
+  background-color: #4e555b;
 }
 
 /* ============================================
@@ -347,15 +366,15 @@ textarea.rte__form-input {
    ============================================ */
 
 .rte__btn--primary {
-  background: #333333;
-  border-color: #333333;
+  background: #007bff;
+  border-color: #007bff;
   color: white;
 }
 
 .rte__btn--primary:hover:not(:disabled) {
-  background: #000000;
-  border-color: #000000;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+  background: #0056b3;
+  border-color: #0056b3;
+  box-shadow: 0 2px 6px rgba(0, 123, 255, 0.3);
 }
 
 .rte__btn--secondary {
@@ -379,24 +398,24 @@ textarea.rte__form-input {
     max-width: 500px;
     max-height: 90vh;
   }
-  
+
   .rte__modal-header {
     padding: 16px;
   }
-  
+
   .rte__modal-title {
     font-size: 1.1rem;
   }
-  
+
   .rte__modal-body {
     padding: 16px;
   }
-  
+
   .rte__modal-footer {
     padding: 12px 16px;
     flex-direction: column-reverse;
   }
-  
+
   .rte__modal-footer .rte__btn {
     width: 100%;
   }
@@ -411,12 +430,12 @@ textarea.rte__form-input {
   .rte__modal-content {
     border: 2px solid #212529;
   }
-  
+
   .rte__modal-header,
   .rte__modal-footer {
     border-width: 2px;
   }
-  
+
   .rte__form-input {
     border: 2px solid #212529;
   }
@@ -424,12 +443,13 @@ textarea.rte__form-input {
 
 /* Reduced Motion */
 @media (prefers-reduced-motion: reduce) {
+
   .rte__modal,
   .rte__modal-backdrop,
   .rte__modal-content {
     animation: none;
   }
-  
+
   .rte__modal-close,
   .rte__form-input,
   .rte__upload-zone {
@@ -437,47 +457,175 @@ textarea.rte__form-input {
   }
 }
 
-/* Dark Mode Support */
-@media (prefers-color-scheme: dark) {
-  .rte__modal-content {
-    background-color: #2a2a2a;
-  }
-  
-  .rte__modal-header,
-  .rte__modal-footer {
-    background: linear-gradient(135deg, #2a2a2a 0%, #1f1f1f 100%);
-    border-color: #3a3a3a;
-  }
-  
-  .rte__modal-title {
-    color: #e0e0e0;
-  }
-  
-  .rte__modal-body {
-    color: #c9cace;
-  }
-  
-  .rte__form-input {
-    background-color: #1f1f1f;
-    border-color: #3a3a3a;
-    color: #c9cace;
-  }
-  
-  .rte__form-label {
-    color: #e0e0e0;
-  }
-  
-  .rte__form-help {
-    color: #999;
-  }
-  
-  .rte__upload-zone {
-    background-color: #1f1f1f;
-    border-color: #3a3a3a;
-  }
-  
-  .rte__upload-zone.dragover {
-    background-color: #0d4a8c;
-    border-color: #333333;
-  }
+
+
+/* ============================================
+   CHAR GRID
+   ============================================ */
+
+.rte__char-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, 32px);
+  gap: 8px;
+  padding: 16px;
+  max-height: 400px;
+  overflow-y: auto;
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  justify-content: center;
+}
+
+.rte__char-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border: 1px solid #000000;
+  border-radius: 4px;
+  background-color: #ffffff;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.rte__char-btn:hover {
+  background-color: #ffffff;
+  border-color: #000000;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+  z-index: 1;
+}
+
+.rte__char-btn:focus {
+  outline: 2px solid #333333;
+  outline-offset: 2px;
+}
+
+/* ============================================
+   LINK MODAL SPECIFICS
+   ============================================ */
+.rte__modal--link .rte__modal-content {
+  max-width: 400px;
+}
+
+.rte__modal--link .rte__btn--secondary {
+  background-color: #6c757d;
+  border-color: #6c757d;
+  color: white;
+}
+
+.rte__modal--link .rte__btn--secondary:hover {
+  background-color: #5c636a;
+  border-color: #565e64;
+}
+
+
+
+/* ============================================
+   TABLE PICKER
+   ============================================ */
+.rte__modal--table .rte__modal-content {
+  width: auto;
+  min-width: 240px;
+  max-width: 300px;
+}
+
+.rte__table-selector {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  padding: 10px;
+}
+
+.rte__table-label {
+  font-size: 16px;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 8px;
+}
+
+.rte__table-picker {
+  display: grid;
+  grid-template-columns: repeat(10, 20px);
+  grid-template-rows: repeat(10, 20px);
+  gap: 2px;
+  margin-bottom: 5px;
+  border: 1px solid transparent;
+  /* debug placeholder */
+}
+
+.rte__picker-cell {
+  width: 20px;
+  height: 20px;
+  border: 1px solid #d1d5db;
+  background-color: #fff;
+  cursor: pointer;
+  box-sizing: border-box;
+}
+
+.rte__picker-cell.active {
+  background-color: #cfe2ff;
+  border-color: #0dcaf0;
+}
+
+.rte__picker-cell:hover {
+  background-color: #cfe2ff;
+  border-color: #0d6efd;
+}
+
+.rte__table-footer-text {
+  font-size: 14px;
+  color: #555;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 5px;
+  font-weight: 500;
+}
+
+/* ============================================
+   FIND AND REPLACE MODAL
+   ============================================ */
+.rte__modal--find-replace .rte__modal-content {
+  max-width: 400px;
+}
+
+/* ============================================
+   FULLSCREEN MODE
+   ============================================ */
+.rte.rte--fullscreen {
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  bottom: 0 !important;
+  width: 100vw !important;
+  height: 100vh !important;
+  max-width: none !important;
+  margin: 0 !important;
+  z-index: 2147483647 !important;
+  /* Max z-index */
+  background: white;
+  border-radius: 0 !important;
+  display: flex !important;
+  flex-direction: column !important;
+}
+
+.rte.rte--fullscreen .rte__wrapper {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  height: auto !important;
+  overflow: hidden;
+}
+
+.rte.rte--fullscreen .rte__content,
+.rte.rte--fullscreen .rte__source {
+  flex: 1;
+  height: 100% !important;
+  min-height: 0 !important;
+  border-radius: 0 !important;
 }

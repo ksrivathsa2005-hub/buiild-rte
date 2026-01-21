@@ -155,6 +155,8 @@ export class CommandHandler {
         break;
       case 'insertChecklist':
         this._insertChecklist();
+      case 'findReplace':
+        await this._findReplace();
         break;
 
       // View
@@ -174,6 +176,49 @@ export class CommandHandler {
     }
 
     this.editor.focus();
+  }
+
+  async _findReplace() {
+    this.editor.modal.findReplace({
+      onFind: (query) => {
+        if (!query) return 'Enter text to find';
+        // window.find(string, caseSensitive, backwards, wrapAround, wholeWord, searchInFrames, showDialog)
+        const found = window.find(query, false, false, true, false, false, false);
+        return found ? '' : 'Not found';
+      },
+
+      onReplace: (query, replacement) => {
+        if (!query) return 'Enter text to find';
+        const selection = window.getSelection();
+        const selectedText = selection.toString();
+
+        if (selectedText.toLowerCase() === query.toLowerCase()) {
+          document.execCommand('insertText', false, replacement);
+          // Auto find next
+          window.find(query, false, false, true, false, false, false);
+          return 'Replaced';
+        } else {
+          const found = window.find(query, false, false, true, false, false, false);
+          return found ? '' : 'Not found';
+        }
+      },
+
+      onReplaceAll: (query, replacement) => {
+        if (!query) return 'Enter text to find';
+        const selection = window.getSelection();
+        // Move to start of editor to ensure we catch all
+        // Note: this collapses selection to start
+        selection.collapse(this.editor.container, 0);
+
+        let count = 0;
+        // Search without wrap first to avoid infinite loop
+        while (window.find(query, false, false, false, false, false, false)) {
+          document.execCommand('insertText', false, replacement);
+          count++;
+        }
+        return `Replaced ${count} occurrences`;
+      }
+    });
   }
 
   _saveToHistory() {
@@ -307,9 +352,12 @@ export class CommandHandler {
     try {
       const data = await this.editor.modal.prompt({
         title: 'Insert Link',
+        className: 'rte__modal--link',
         fields: [
-          { id: 'url', label: 'URL', type: 'url', value: 'https://', required: true },
-          { id: 'text', label: 'Link Text', type: 'text', value: window.getSelection().toString() || 'Link', required: true }
+          { id: 'url', label: 'Web Address', type: 'url', value: 'https://', required: true },
+          { id: 'text', label: 'Display Text', type: 'text', value: window.getSelection().toString() || 'Link', required: true },
+          { id: 'title', label: 'Title', type: 'text', value: '' },
+          { id: 'target', label: 'Open Link in New Window', type: 'checkbox', checked: true }
         ]
       });
 
@@ -317,7 +365,15 @@ export class CommandHandler {
         const link = document.createElement('a');
         link.href = data.url;
         link.textContent = data.text || data.url;
-        link.target = '_blank';
+
+        if (data.title) {
+          link.title = data.title;
+        }
+
+        if (data.target) {
+          link.target = '_blank';
+          link.rel = 'noopener noreferrer';
+        }
 
         const selection = window.getSelection();
         if (selection.rangeCount > 0) {
@@ -327,18 +383,16 @@ export class CommandHandler {
         }
       }
     } catch (e) {
-      console.log('Link insertion cancelled');
+      console.log('Link insertion cancelled', e);
     }
   }
 
   async _insertImage() {
     try {
-      const data = await this.editor.modal.prompt({
+      const data = await this.editor.modal.uploadMedia({
         title: 'Insert Image',
-        fields: [
-          { id: 'url', label: 'Image URL', type: 'url', required: true },
-          { id: 'alt', label: 'Alt Text', type: 'text', value: 'Image' }
-        ]
+        accept: 'image/*',
+        label: 'Drop image here or browse to upload'
       });
 
       if (data && data.url) {
@@ -353,6 +407,21 @@ export class CommandHandler {
         img.style.height = 'auto';
         img.style.display = 'inline-block';
         img.style.borderRadius = '4px';
+        // Create a wrapper for resizing
+        const wrapper = document.createElement('span');
+        wrapper.style.display = 'inline-block';
+        wrapper.style.resize = 'both';
+        wrapper.style.overflow = 'hidden';
+        wrapper.style.verticalAlign = 'bottom';
+        wrapper.style.maxWidth = '100%';
+        wrapper.contentEditable = 'false'; // Wrapper itself isn't editable text
+
+        const img = document.createElement('img');
+        img.src = data.url;
+        img.alt = 'Image';
+        img.style.width = '100%';
+        img.style.height = '100%';
+        img.style.display = 'block';
 
         wrapper.appendChild(img);
 
@@ -371,29 +440,35 @@ export class CommandHandler {
           const newRange = document.createRange();
           newRange.selectNodeContents(newPara);
           newRange.collapse(true);
+          // Move cursor after the image
+          range.setStartAfter(wrapper);
+          range.setEndAfter(wrapper);
           selection.removeAllRanges();
-          selection.addRange(newRange);
+          selection.addRange(range);
         }
       }
     } catch (e) {
-      console.log('Image insertion cancelled');
+      console.log('Image insertion cancelled', e);
     }
   }
 
   async _insertAudio() {
     try {
-      const url = await this.editor.modal.prompt({
+      const data = await this.editor.modal.uploadMedia({
         title: 'Insert Audio',
-        fields: [{ id: 'url', label: 'Audio URL', type: 'url', required: true }]
+        accept: 'audio/*',
+        label: 'Drop audio here or browse to upload',
+        placeholder: 'http://example.com/audio.mp3',
+        className: 'rte__modal--audio'
       });
 
-      if (url) {
+      if (data && data.url) {
         const wrapper = document.createElement('div');
         wrapper.style.margin = '1rem 0';
         wrapper.style.textAlign = 'center';
 
         const audio = document.createElement('audio');
-        audio.src = url;
+        audio.src = data.url;
         audio.controls = true;
         audio.style.maxWidth = '100%';
         audio.style.display = 'inline-block';
@@ -426,12 +501,15 @@ export class CommandHandler {
 
   async _insertVideo() {
     try {
-      const url = await this.editor.modal.prompt({
+      const data = await this.editor.modal.uploadMedia({
         title: 'Insert Video',
-        fields: [{ id: 'url', label: 'Video URL', type: 'url', required: true }]
+        accept: 'video/*',
+        label: 'Drop video here or browse to upload',
+        placeholder: 'http://example.com/video.mp4',
+        className: 'rte__modal--video'
       });
 
-      if (url) {
+      if (data && data.url) {
         const wrapper = document.createElement('div');
         wrapper.style.margin = '1rem 0';
         wrapper.style.textAlign = 'center';
@@ -443,6 +521,45 @@ export class CommandHandler {
         video.style.display = 'inline-block';
 
         wrapper.appendChild(video);
+        // Check for YouTube
+        const ytMatch = data.url.match(/^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/);
+        const ytId = (ytMatch && ytMatch[2].length === 11) ? ytMatch[2] : null;
+
+        let content;
+        // Container for resizing
+        const resizer = document.createElement('div');
+        resizer.style.display = 'inline-block';
+        resizer.style.resize = 'both';
+        resizer.style.overflow = 'hidden';
+        resizer.style.maxWidth = '100%';
+        resizer.style.position = 'relative';
+        resizer.style.border = '1px solid transparent'; // visual cue
+
+        if (ytId) {
+          content = document.createElement('iframe');
+          content.src = `https://www.youtube.com/embed/${ytId}`;
+          content.allow = "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture";
+          content.allowFullscreen = true;
+          content.style.border = 'none';
+
+          // Default YouTube Size
+          resizer.style.width = '560px';
+          resizer.style.height = '315px';
+        } else {
+          content = document.createElement('video');
+          content.src = data.url;
+          content.controls = true;
+
+          // Default Video Size
+          resizer.style.width = '480px';
+          resizer.style.height = '270px';
+        }
+
+        content.style.width = '100%';
+        content.style.height = '100%';
+
+        resizer.appendChild(content);
+        wrapper.appendChild(resizer);
 
         const selection = window.getSelection();
         if (selection.rangeCount > 0) {
@@ -470,23 +587,17 @@ export class CommandHandler {
 
   async _insertTable() {
     try {
-      const data = await this.editor.modal.prompt({
-        title: 'Insert Table',
-        fields: [
-          { id: 'rows', label: 'Rows', type: 'number', value: '2', required: true },
-          { id: 'cols', label: 'Columns', type: 'number', value: '2', required: true }
-        ]
-      });
+      const sizes = await this.editor.modal.tableSelector();
 
-      if (data && data.rows && data.cols) {
+      if (sizes && sizes.rows && sizes.cols) {
         const table = document.createElement('table');
         table.style.border = '1px solid #ccc';
         table.style.borderCollapse = 'collapse';
         table.style.width = '100%';
 
-        for (let i = 0; i < parseInt(data.rows); i++) {
+        for (let i = 0; i < sizes.rows; i++) {
           const tr = document.createElement('tr');
-          for (let j = 0; j < parseInt(data.cols); j++) {
+          for (let j = 0; j < sizes.cols; j++) {
             const td = document.createElement('td');
             td.style.border = '1px solid #ccc';
             td.style.padding = '8px';
@@ -539,10 +650,26 @@ export class CommandHandler {
 
   async _insertSpecialChar() {
     try {
-      const char = await this.editor.modal.prompt({
+      const chars = [
+        // Currency
+        '€', '£', '¥', '¢', '¤', '₹', '₽', '₿',
+        // Math
+        '±', '×', '÷', '≈', '≠', '≤', '≥', '∞', '∑', '∏', '√', '∫', '∆', 'π', '°',
+        // Punctuation & Symbols
+        '©', '®', '™', '§', '¶', '†', '‡', '•', '…', '–', '—', '«', '»', '‹', '›', '¿', '¡',
+        // Arrows
+        '←', '↑', '→', '↓', '↔', '↕', '⇐', '⇑', '⇒', '⇓',
+        // Greek
+        'α', 'β', 'γ', 'δ', 'ε', 'ζ', 'η', 'θ', 'ι', 'κ', 'λ', 'μ', 'ν', 'ξ', 'ο', 'π', 'ρ', 'σ', 'τ', 'υ', 'φ', 'χ', 'ψ', 'ω', 'Ω',
+        // Accents
+        'Á', 'á', 'À', 'à', 'Â', 'â', 'Ä', 'ä', 'Ã', 'ã', 'Å', 'å', 'Æ', 'æ', 'Ç', 'ç', 'É', 'é', 'È', 'è', 'Ê', 'ê', 'Ë', 'ë'
+      ];
+
+      const char = await this.editor.modal.grid({
         title: 'Insert Special Character',
-        fields: [{ id: 'char', label: 'Character', type: 'text', value: '©', required: true }]
+        items: chars
       });
+
       if (char) {
         document.execCommand('insertText', false, char);
       }
