@@ -1,0 +1,402 @@
+/* ============================================
+   COLOR PICKER COMPONENT STYLES
+   Professional Color Selection Component
+   ============================================ */
+
+/* Color Picker Wrapper */
+.rte__color-picker-wrapper {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* Color Picker Button */
+.rte__color-picker-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.3rem;
+  
+  /* Dimensions */
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  border-radius: 6px;
+  
+  /* Visual */
+  background-color: transparent;
+  border: 1px solid #ddd;
+  cursor: pointer;
+  user-select: none;
+  
+  /* Typography */
+  font-size: 14px;
+  color: #495057;
+  
+  /* Animation */
+  transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.rte__color-picker-button:hover {
+  background-color: #f0f1f3;
+  border-color: #333333;
+  color: #333333;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+}
+
+.rte__color-picker-button:focus {
+  outline: 2px solid #333333;
+  outline-offset: -2px;
+  box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+}
+
+/* Color Indicator Dot */
+.rte__color-indicator {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background-color: #000000;
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  margin-left: 2px;
+}
+
+/* Color Picker Input (Hidden) */
+.rte__color-picker-input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  cursor: pointer;
+}
+
+/* ============================================
+   COLOR PALETTE
+   ============================================ */
+
+.rte__color-palette {
+  display: none;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+  min-width: 220px;
+}
+
+.rte__color-palette.active {
+  display: block;
+}
+
+.rte__palette-title {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  color: #6c757d;
+  margin: 8px 0 6px 0;
+  letter-spacing: 0.5px;
+}
+
+.rte__palette-grid {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 4px;
+  margin-bottom: 8px;
+}
+
+.rte__palette-swatch {
+  width: 100%;
+  aspect-ratio: 1;
+  border: 2px solid transparent;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+  padding: 0;
+  background-clip: padding-box;
+}
+
+.rte__palette-swatch:hover {
+  transform: scale(1.1);
+  border-color: #333333;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+}
+
+.rte__palette-swatch:focus {
+  outline: 2px solid #333333;
+  outline-offset: 1px;
+}
+
+.rte__palette-swatch.active {
+  border-color: #333333;
+  box-shadow: inset 0 0 0 2px white, 0 0 0 3px #333333;
+}
+
+/* ============================================
+   ADVANCED COLOR PICKER
+   ============================================ */
+
+.rte__color-picker-advanced {
+  position: relative;
+  display: inline-block;
+}
+
+.rte__color-picker-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.3rem;
+  
+  /* Dimensions */
+  padding: 7px 10px;
+  min-height: 36px;
+  min-width: 36px;
+  border-radius: 6px;
+  border: 1px solid #ddd;
+  
+  /* Visual */
+  background-color: transparent;
+  cursor: pointer;
+  font-size: 14px;
+  color: #495057;
+  
+  /* Animation */
+  transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.rte__color-picker-toggle:hover {
+  background-color: #f0f1f3;
+  border-color: #333333;
+  color: #333333;
+}
+
+.rte__color-picker-toggle:focus {
+  outline: 2px solid #333333;
+  outline-offset: -2px;
+}
+
+.rte__color-picker-toggle[aria-expanded="true"] {
+  background-color: #f5f5f5;
+  border-color: #333333;
+  color: #333333;
+}
+
+.rte__color-picker-toggle i:last-child {
+  font-size: 11px;
+  transition: transform 0.2s;
+}
+
+.rte__color-picker-toggle[aria-expanded="true"] i:last-child {
+  transform: rotate(180deg);
+}
+
+/* Color Picker Menu */
+.rte__color-picker-menu {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  margin-top: 4px;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+  z-index: 1000;
+  min-width: 280px;
+  animation: slideDown 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.rte__color-picker-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.rte__color-picker-header h4 {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 600;
+  color: #2c3e50;
+}
+
+.rte__color-picker-close {
+  background: none;
+  border: none;
+  font-size: 20px;
+  cursor: pointer;
+  color: #6c757d;
+  padding: 0;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  transition: all 0.15s;
+}
+
+.rte__color-picker-close:hover {
+  background-color: #f0f1f3;
+  color: #2c3e50;
+}
+
+/* Color Picker Content */
+.rte__color-picker-content {
+  padding: 12px;
+}
+
+.rte__color-input-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 12px;
+}
+
+.rte__color-input-group label {
+  font-size: 12px;
+  font-weight: 600;
+  color: #495057;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+}
+
+.rte__color-hex-input {
+  padding: 8px 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 13px;
+  font-family: 'Courier New', monospace;
+  transition: all 0.15s;
+}
+
+.rte__color-hex-input:hover {
+  border-color: #333333;
+}
+
+.rte__color-hex-input:focus {
+  outline: none;
+  border-color: #333333;
+  box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.05);
+}
+
+/* Color Presets */
+.rte__color-presets {
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid #f0f0f0;
+}
+
+.rte__color-presets h5 {
+  margin: 0 0 8px 0;
+  font-size: 12px;
+  font-weight: 600;
+  color: #495057;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+}
+
+/* ============================================
+   RESPONSIVE DESIGN
+   ============================================ */
+
+@media (max-width: 768px) {
+  .rte__color-picker-button {
+    width: 34px;
+    height: 34px;
+    font-size: 13px;
+  }
+  
+  .rte__color-picker-menu {
+    min-width: 240px;
+    right: 0;
+    left: auto;
+  }
+  
+  .rte__palette-grid {
+    grid-template-columns: repeat(5, 1fr);
+  }
+}
+
+/* ============================================
+   ACCESSIBILITY
+   ============================================ */
+
+/* High Contrast Mode */
+@media (prefers-contrast: more) {
+  .rte__color-picker-button,
+  .rte__color-picker-toggle {
+    border: 2px solid #495057;
+  }
+  
+  .rte__palette-swatch {
+    border: 2px solid transparent;
+  }
+}
+
+/* Reduced Motion */
+@media (prefers-reduced-motion: reduce) {
+  .rte__color-picker-button,
+  .rte__color-picker-toggle,
+  .rte__palette-swatch,
+  .rte__color-picker-menu {
+    transition: none;
+  }
+  
+  .rte__color-picker-menu {
+    animation: none;
+  }
+}
+
+/* Dark Mode Support */
+@media (prefers-color-scheme: dark) {
+  .rte__color-picker-button,
+  .rte__color-picker-toggle {
+    background-color: transparent;
+    border-color: #3a3a3a;
+    color: #c9cace;
+  }
+  
+  .rte__color-picker-button:hover,
+  .rte__color-picker-toggle:hover {
+    background-color: #2a2a2a;
+    border-color: #666666;
+    color: #c9cace;
+  }
+  
+  .rte__color-palette,
+  .rte__color-picker-menu {
+    background-color: #2a2a2a;
+    border-color: #3a3a3a;
+  }
+  
+  .rte__palette-title,
+  .rte__color-picker-header h4,
+  .rte__color-input-group label,
+  .rte__color-presets h5 {
+    color: #c9cace;
+  }
+  
+  .rte__color-hex-input {
+    background-color: #1f1f1f;
+    border-color: #3a3a3a;
+    color: #c9cace;
+  }
+  
+  .rte__color-hex-input:hover,
+  .rte__color-hex-input:focus {
+    border-color: #666666;
+  }
+}

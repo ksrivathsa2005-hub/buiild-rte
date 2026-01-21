@@ -1,0 +1,483 @@
+/* ============================================
+   MODAL / DIALOG COMPONENT STYLES
+   Professional Modal Dialog Component
+   ============================================ */
+
+/* Modal Container */
+.rte__modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 1050;
+  animation: modalFadeIn 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.rte__modal.active,
+.rte__modal[data-active="true"] {
+  display: flex;
+}
+
+@keyframes modalFadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Modal Backdrop */
+.rte__modal-backdrop {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(2px);
+  animation: backdropFadeIn 0.2s ease-in-out;
+}
+
+@keyframes backdropFadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Modal Content Container */
+.rte__modal-content {
+  position: relative;
+  background: white;
+  border-radius: 12px;
+  margin: auto;
+  max-width: 550px;
+  width: 90%;
+  max-height: 85vh;
+  overflow-y: auto;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3), 0 0 1px rgba(0, 0, 0, 0.1);
+  animation: contentSlideUp 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  display: flex;
+  flex-direction: column;
+}
+
+@keyframes contentSlideUp {
+  from {
+    transform: translateY(40px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+/* ============================================
+   MODAL HEADER
+   ============================================ */
+
+.rte__modal-header {
+  padding: 16px 20px;
+  border-bottom: 1px solid #e0e0e0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #ffffff;
+  border-radius: 12px 12px 0 0;
+  flex-shrink: 0;
+}
+
+.rte__modal-title {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #2c3e50;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.rte__modal-title i {
+  font-size: 1.4rem;
+  color: #333333;
+}
+
+/* ============================================
+   MODAL CLOSE BUTTON
+   ============================================ */
+
+.rte__modal-close {
+  background: none;
+  border: none;
+  font-size: 28px;
+  cursor: pointer;
+  color: #6c757d;
+  padding: 0;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px;
+  transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.rte__modal-close:hover {
+  background-color: #f0f0f0;
+  color: #2c3e50;
+}
+
+.rte__modal-close:focus {
+  outline: 2px solid #333333;
+  outline-offset: -2px;
+}
+
+/* ============================================
+   MODAL BODY
+   ============================================ */
+
+.rte__modal-body {
+  padding: 20px;
+  color: #495057;
+  line-height: 1.6;
+  overflow-y: auto;
+  flex: 1;
+}
+
+/* ============================================
+   MODAL FOOTER
+   ============================================ */
+
+.rte__modal-footer {
+  padding: 12px 20px;
+  border-top: 1px solid #e0e0e0;
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  background: #ffffff;
+  border-radius: 0 0 12px 12px;
+  flex-shrink: 0;
+}
+
+/* ============================================
+   FORM GROUPS
+   ============================================ */
+
+.rte__form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 16px;
+}
+
+.rte__form-group:last-child {
+  margin-bottom: 0;
+}
+
+.rte__form-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: #2c3e50;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+}
+
+.rte__form-label--checkbox {
+  text-transform: none;
+  letter-spacing: normal;
+  font-weight: 500;
+  display: inline;
+  margin-left: 8px;
+}
+
+.rte__required {
+  color: #e74c3c;
+  font-weight: 700;
+}
+
+/* ============================================
+   FORM INPUTS
+   ============================================ */
+
+.rte__form-input {
+  padding: 10px 12px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 13px;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  color: #2c3e50;
+  background-color: white;
+  transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.rte__form-input:hover {
+  border-color: #333333;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.rte__form-input:focus {
+  outline: none;
+  border-color: #333333;
+  box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.15);
+}
+
+.rte__form-input::placeholder {
+  color: #adb5bd;
+}
+
+/* Input Types */
+input[type="url"].rte__form-input,
+input[type="text"].rte__form-input,
+input[type="number"].rte__form-input,
+input[type="email"].rte__form-input,
+textarea.rte__form-input {
+  width: 100%;
+}
+
+textarea.rte__form-input {
+  resize: vertical;
+  min-height: 100px;
+}
+
+/* ============================================
+   FORM CHECKBOX
+   ============================================ */
+
+.rte__form-group--checkbox {
+  flex-direction: row;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.rte__form-checkbox {
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
+  accent-color: #333333;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.rte__form-checkbox:checked {
+  background-color: #333333;
+  border-color: #333333;
+}
+
+.rte__form-checkbox:focus {
+  outline: 2px solid #333333;
+  outline-offset: 2px;
+}
+
+/* ============================================
+   FORM HELP TEXT
+   ============================================ */
+
+.rte__form-help {
+  display: block;
+  font-size: 12px;
+  color: #6c757d;
+  margin-top: 2px;
+  font-style: italic;
+}
+
+/* ============================================
+   UPLOAD ZONE
+   ============================================ */
+
+.rte__upload-zone {
+  padding: 40px 20px;
+  border: 2px dashed #ddd;
+  border-radius: 8px;
+  background: #f9f9f9;
+  text-align: center;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  cursor: pointer;
+}
+
+.rte__upload-zone:hover {
+  border-color: #333333;
+  background-color: #f0f7ff;
+}
+
+.rte__upload-zone.dragover {
+  border-color: #333333;
+  background-color: #f5f5f5;
+  box-shadow: inset 0 0 8px rgba(0, 0, 0, 0.2);
+}
+
+.rte__file-input {
+  display: none;
+}
+
+.rte__upload-label {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  user-select: none;
+}
+
+.rte__upload-label i {
+  font-size: 36px;
+  color: #333333;
+}
+
+.rte__upload-label span {
+  display: block;
+  font-weight: 600;
+  color: #2c3e50;
+}
+
+.rte__upload-label small {
+  display: block;
+  font-size: 12px;
+  color: #6c757d;
+}
+
+/* ============================================
+   MODAL BUTTONS
+   ============================================ */
+
+.rte__btn--primary {
+  background: #333333;
+  border-color: #333333;
+  color: white;
+}
+
+.rte__btn--primary:hover:not(:disabled) {
+  background: #000000;
+  border-color: #000000;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+}
+
+.rte__btn--secondary {
+  background: #f5f5f5;
+  border-color: #ddd;
+  color: #495057;
+}
+
+.rte__btn--secondary:hover:not(:disabled) {
+  background: #e9ecef;
+  border-color: #adb5bd;
+}
+
+/* ============================================
+   RESPONSIVE DESIGN
+   ============================================ */
+
+@media (max-width: 768px) {
+  .rte__modal-content {
+    width: 95%;
+    max-width: 500px;
+    max-height: 90vh;
+  }
+  
+  .rte__modal-header {
+    padding: 16px;
+  }
+  
+  .rte__modal-title {
+    font-size: 1.1rem;
+  }
+  
+  .rte__modal-body {
+    padding: 16px;
+  }
+  
+  .rte__modal-footer {
+    padding: 12px 16px;
+    flex-direction: column-reverse;
+  }
+  
+  .rte__modal-footer .rte__btn {
+    width: 100%;
+  }
+}
+
+/* ============================================
+   ACCESSIBILITY
+   ============================================ */
+
+/* High Contrast Mode */
+@media (prefers-contrast: more) {
+  .rte__modal-content {
+    border: 2px solid #212529;
+  }
+  
+  .rte__modal-header,
+  .rte__modal-footer {
+    border-width: 2px;
+  }
+  
+  .rte__form-input {
+    border: 2px solid #212529;
+  }
+}
+
+/* Reduced Motion */
+@media (prefers-reduced-motion: reduce) {
+  .rte__modal,
+  .rte__modal-backdrop,
+  .rte__modal-content {
+    animation: none;
+  }
+  
+  .rte__modal-close,
+  .rte__form-input,
+  .rte__upload-zone {
+    transition: none;
+  }
+}
+
+/* Dark Mode Support */
+@media (prefers-color-scheme: dark) {
+  .rte__modal-content {
+    background-color: #2a2a2a;
+  }
+  
+  .rte__modal-header,
+  .rte__modal-footer {
+    background: linear-gradient(135deg, #2a2a2a 0%, #1f1f1f 100%);
+    border-color: #3a3a3a;
+  }
+  
+  .rte__modal-title {
+    color: #e0e0e0;
+  }
+  
+  .rte__modal-body {
+    color: #c9cace;
+  }
+  
+  .rte__form-input {
+    background-color: #1f1f1f;
+    border-color: #3a3a3a;
+    color: #c9cace;
+  }
+  
+  .rte__form-label {
+    color: #e0e0e0;
+  }
+  
+  .rte__form-help {
+    color: #999;
+  }
+  
+  .rte__upload-zone {
+    background-color: #1f1f1f;
+    border-color: #3a3a3a;
+  }
+  
+  .rte__upload-zone.dragover {
+    background-color: #0d4a8c;
+    border-color: #333333;
+  }
+}

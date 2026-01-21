@@ -1,0 +1,254 @@
+/* ============================================
+   BUTTON COMPONENT STYLES
+   Professional Toolbar Button Component
+   ============================================ */
+
+/* Base Button Styling */
+.rte__btn {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  
+  /* Dimensions */
+  padding: 7px 12px;
+  min-width: 36px;
+  min-height: 36px;
+  border-radius: 6px;
+  
+  /* Typography */
+  font-size: 14px;
+  font-weight: 500;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  
+  /* Visual */
+  background: transparent;
+  border: 1px solid transparent;
+  cursor: pointer;
+  user-select: none;
+  white-space: nowrap;
+  
+  /* Animation */
+  transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+  
+  /* Accessibility */
+  color: #495057;
+  text-decoration: none;
+}
+
+/* Icon Container */
+.rte__btn-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.2em;
+  height: 1.2em;
+  font-size: 15px;
+  line-height: 1;
+}
+
+/* Label Container */
+.rte__btn-label {
+  display: inline-block;
+  font-size: 13px;
+}
+
+/* ============================================
+   BUTTON STATES
+   ============================================ */
+
+/* Inactive/Hover State */
+.rte__btn:not(:disabled):not([aria-pressed="true"]) {
+  background-color: transparent;
+  border-color: transparent;
+  color: #495057;
+}
+
+.rte__btn:hover:not(:disabled):not([aria-pressed="true"]) {
+  background-color: #f0f1f3;
+  border-color: #e0e3e7;
+  color: #2c3e50;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+}
+
+/* Focus State (Keyboard Navigation) */
+.rte__btn:focus {
+  outline: none;
+}
+
+.rte__btn:focus-visible {
+  outline: 2px solid #333333;
+  outline-offset: -2px;
+  box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.1);
+}
+
+/* Active/Pressed State */
+.rte__btn[aria-pressed="true"],
+.rte__btn--active {
+  background: #333333;
+  border-color: #333333;
+  color: #ffffff;
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.15);
+  font-weight: 500;
+}
+
+.rte__btn[aria-pressed="true"]:hover,
+.rte__btn--active:hover {
+  background: #000000;
+  border-color: #000000;
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.rte__btn[aria-pressed="true"]:focus-visible,
+.rte__btn--active:focus-visible {
+  outline: 2px solid rgba(255, 255, 255, 0.6);
+  outline-offset: -2px;
+}
+
+/* Disabled State */
+.rte__btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  background-color: #f8f9fa;
+  border-color: #e9ecef;
+  color: #6c757d;
+  box-shadow: none;
+}
+
+/* ============================================
+   BUTTON VARIANTS
+   ============================================ */
+
+/* Toggle Button */
+.rte__btn--toggle {
+  border: 1px solid #dee2e6;
+}
+
+.rte__btn--toggle[data-toggled="true"] {
+  background: #333333;
+  border-color: #333333;
+  color: #ffffff;
+  font-weight: 500;
+}
+
+/* Danger Button */
+.rte__btn--danger {
+  color: #dc3545;
+}
+
+.rte__btn--danger:hover:not(:disabled) {
+  background-color: #f8d7da;
+  border-color: #f5c6cb;
+  color: #c82333;
+}
+
+/* Success Button */
+.rte__btn--success {
+  color: #28a745;
+}
+
+.rte__btn--success:hover:not(:disabled) {
+  background-color: #d4edda;
+  border-color: #c3e6cb;
+  color: #1e7e34;
+}
+
+/* ============================================
+   BUTTON GROUPS
+   ============================================ */
+
+.rte__btn-group {
+  display: inline-flex;
+  gap: 3px;
+  align-items: center;
+  padding: 0 4px;
+  background: linear-gradient(180deg, #f8f9fa 0%, #ffffff 100%);
+  border-radius: 8px;
+  border: 1px solid #e0e3e7;
+  padding: 4px;
+}
+
+.rte__btn-group .rte__btn {
+  border-radius: 4px;
+  gap: 0;
+  padding: 6px 10px;
+  min-width: 34px;
+  min-height: 34px;
+}
+
+.rte__btn-group .rte__btn:first-child {
+  margin-left: 0;
+}
+
+.rte__btn-group .rte__btn:last-child {
+  margin-right: 0;
+}
+
+/* ============================================
+   RESPONSIVE DESIGN
+   ============================================ */
+
+@media (max-width: 768px) {
+  .rte__btn {
+    padding: 6px 10px;
+    min-width: 34px;
+    min-height: 34px;
+    font-size: 13px;
+  }
+  
+  .rte__btn-icon {
+    font-size: 14px;
+  }
+  
+  .rte__btn-label {
+    display: none;
+  }
+}
+
+/* ============================================
+   ACCESSIBILITY
+   ============================================ */
+
+/* High Contrast Mode Support */
+@media (prefers-contrast: more) {
+  .rte__btn {
+    border: 1px solid transparent;
+  }
+  
+  .rte__btn:not(:disabled):not([aria-pressed="true"]) {
+    border-color: #495057;
+  }
+  
+  .rte__btn[aria-pressed="true"],
+  .rte__btn--active {
+    border: 2px solid #0a3d66;
+  }
+}
+
+/* Reduced Motion Support */
+@media (prefers-reduced-motion: reduce) {
+  .rte__btn {
+    transition: none;
+  }
+}
+
+/* Dark Mode Support */
+@media (prefers-color-scheme: dark) {
+  .rte__btn {
+    color: #c9cace;
+    background-color: transparent;
+  }
+  
+  .rte__btn:hover:not(:disabled):not([aria-pressed="true"]) {
+    background-color: #2a2a2a;
+    border-color: #3a3a3a;
+    color: #e0e0e0;
+  }
+  
+  .rte__btn[aria-pressed="true"],
+  .rte__btn--active {
+    background: linear-gradient(135deg, #2980b9 0%, #1a5c9b 100%);
+    color: white;
+  }
+}

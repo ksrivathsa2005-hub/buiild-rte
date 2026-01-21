@@ -1,0 +1,10 @@
+{
+  "name": "rte-demo",
+  "version": "1.0.0",
+  "description": "Demo application for the RTE package.",
+  "main": "main.js",
+  "type": "module",
+  "dependencies": {
+    "rte-package": "file:../rte-package"
+  }
+}

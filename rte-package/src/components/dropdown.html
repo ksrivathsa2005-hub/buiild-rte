@@ -1,0 +1,123 @@
+<!-- 
+  DROPDOWN / SELECT COMPONENT
+  Professional toolbar dropdown for: Heading, Font, Size, etc.
+-->
+
+<template id="rte-select-template">
+  <div class="rte__select-wrapper">
+    <select class="rte__select" role="combobox" aria-expanded="false">
+      <option value="">Select Option</option>
+    </select>
+    <span class="rte__select-arrow">
+      <i class="fas fa-chevron-down"></i>
+    </span>
+  </div>
+</template>
+
+<!-- Usage Examples -->
+
+<!-- Paragraph/Heading Dropdown -->
+<div class="rte__select-wrapper">
+  <select class="rte__select" data-command="formatBlock" aria-label="Paragraph Format">
+    <option value="">Paragraph</option>
+    <option value="p">Paragraph</option>
+    <option value="h1">Heading 1</option>
+    <option value="h2">Heading 2</option>
+    <option value="h3">Heading 3</option>
+    <option value="h4">Heading 4</option>
+    <option value="h5">Heading 5</option>
+    <option value="h6">Heading 6</option>
+    <option value="pre">Preformatted</option>
+    <option value="blockquote">Block Quote</option>
+  </select>
+  <span class="rte__select-arrow">
+    <i class="fas fa-chevron-down"></i>
+  </span>
+</div>
+
+<!-- Font Family Dropdown -->
+<div class="rte__select-wrapper">
+  <select class="rte__select" data-command="fontName" aria-label="Font Family">
+    <option value="">Font</option>
+    <option value="Arial">Arial</option>
+    <option value="Arial Black">Arial Black</option>
+    <option value="Courier New">Courier New</option>
+    <option value="Georgia">Georgia</option>
+    <option value="Times New Roman">Times New Roman</option>
+    <option value="Trebuchet MS">Trebuchet MS</option>
+    <option value="Verdana">Verdana</option>
+    <option value="Impact">Impact</option>
+    <option value="Comic Sans MS">Comic Sans MS</option>
+  </select>
+  <span class="rte__select-arrow">
+    <i class="fas fa-chevron-down"></i>
+  </span>
+</div>
+
+<!-- Font Size Dropdown -->
+<div class="rte__select-wrapper">
+  <select class="rte__select" data-command="fontSize" aria-label="Font Size">
+    <option value="">Size</option>
+    <option value="8pt">8pt</option>
+    <option value="10pt">10pt</option>
+    <option value="12pt">12pt</option>
+    <option value="14pt">14pt</option>
+    <option value="18pt">18pt</option>
+    <option value="24pt">24pt</option>
+    <option value="32pt">32pt</option>
+    <option value="36pt">36pt</option>
+    <option value="48pt">48pt</option>
+  </select>
+  <span class="rte__select-arrow">
+    <i class="fas fa-chevron-down"></i>
+  </span>
+</div>
+
+<!-- Line Height Dropdown -->
+<div class="rte__select-wrapper">
+  <select class="rte__select" data-command="lineHeight" aria-label="Line Height">
+    <option value="">Line Height</option>
+    <option value="1">Single</option>
+    <option value="1.15">1.15</option>
+    <option value="1.5">1.5 (Default)</option>
+    <option value="2">Double</option>
+    <option value="2.5">2.5</option>
+  </select>
+  <span class="rte__select-arrow">
+    <i class="fas fa-chevron-down"></i>
+  </span>
+</div>
+
+<!-- Code Language Dropdown -->
+<div class="rte__select-wrapper">
+  <select class="rte__select" data-command="codeLanguage" aria-label="Code Language">
+    <option value="">Language</option>
+    <option value="html">HTML</option>
+    <option value="css">CSS</option>
+    <option value="javascript">JavaScript</option>
+    <option value="python">Python</option>
+    <option value="java">Java</option>
+    <option value="csharp">C#</option>
+    <option value="php">PHP</option>
+    <option value="ruby">Ruby</option>
+    <option value="sql">SQL</option>
+    <option value="xml">XML</option>
+  </select>
+  <span class="rte__select-arrow">
+    <i class="fas fa-chevron-down"></i>
+  </span>
+</div>
+
+<!-- Text Case Dropdown -->
+<div class="rte__select-wrapper">
+  <select class="rte__select" data-command="textCase" aria-label="Text Case">
+    <option value="">Case</option>
+    <option value="uppercase">UPPERCASE</option>
+    <option value="lowercase">lowercase</option>
+    <option value="capitalize">Capitalize</option>
+    <option value="sentence">Sentence case</option>
+  </select>
+  <span class="rte__select-arrow">
+    <i class="fas fa-chevron-down"></i>
+  </span>
+</div>

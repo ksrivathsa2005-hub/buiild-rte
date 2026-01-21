@@ -1,0 +1,283 @@
+/* ============================================
+   DROPDOWN / SELECT COMPONENT STYLES
+   Professional Toolbar Dropdown Component
+   ============================================ */
+
+/* Select Wrapper Container */
+.rte__select-wrapper {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  height: 36px;
+}
+
+/* Base Select Styling */
+.rte__select {
+  /* Layout */
+  display: block;
+  width: 100%;
+  padding: 6px 28px 6px 10px;
+  
+  /* Dimensions */
+  min-height: 32px;
+  border-radius: 4px;
+  border: 1px solid #d0d0d0;
+  
+  /* Typography */
+  font-size: 13px;
+  font-weight: 400;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  color: #333333;
+  background-color: #ffffff;
+  
+  /* Visual */
+  cursor: pointer;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-position: right 6px center;
+  background-size: 18px;
+  padding-right: 30px;
+  
+  /* Animation */
+  transition: all 0.2s ease;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.02);
+  
+  /* Accessibility */
+  line-height: 1.5;
+}
+
+/* ============================================
+   SELECT STATES
+   ============================================ */
+
+/* Hover State */
+.rte__select:hover {
+  background-color: #f5f5f5;
+  border-color: #999999;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+  color: #1a1a1a;
+}
+
+/* Focus State */
+.rte__select:focus {
+  outline: none;
+  border-color: #4a90e2;
+  box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.15), 0 1px 3px rgba(0, 0, 0, 0.1);
+  color: #000000;
+  background-color: #fafafa;
+}
+
+.rte__select:focus:not(:focus-visible) {
+  outline: none;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.02);
+  border-color: #d0d0d0;
+}
+
+/* Active/Open State */
+.rte__select:active {
+  background-color: #efefef;
+  border-color: #666666;
+}
+
+/* Disabled State */
+.rte__select:disabled {
+  opacity: 0.5;
+  background-color: #f5f5f5;
+  cursor: not-allowed;
+  border-color: #ddd;
+  color: #6c757d;
+}
+
+/* ============================================
+   SELECT ARROW ICON
+   ============================================ */
+
+.rte__select-arrow {
+  position: absolute;
+  right: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #495057;
+  font-size: 12px;
+  transition: color 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.rte__select:hover + .rte__select-arrow {
+  color: #333333;
+}
+
+.rte__select:focus + .rte__select-arrow {
+  color: #333333;
+}
+
+.rte__select:disabled + .rte__select-arrow {
+  color: #6c757d;
+  opacity: 0.5;
+}
+
+/* ============================================
+   OPTION STYLES
+   ============================================ */
+
+.rte__select option {
+  padding: 8px 12px;
+  margin: 2px 0;
+  font-size: 13px;
+  color: #2c3e50;
+  background-color: white;
+  border: none;
+  outline: none;
+}
+
+.rte__select option:hover {
+  background-color: #f5f5f5;
+  color: #000000;
+}
+
+.rte__select option:checked {
+  background-color: #333333;
+  color: #ffffff;
+  font-weight: 500;
+}
+
+.rte__select option:disabled {
+  color: #999;
+  background-color: #f5f5f5;
+}
+
+/* ============================================
+   GROUPED SELECTS
+   ============================================ */
+
+.rte__select-group {
+  display: inline-flex;
+  gap: 2px;
+  align-items: center;
+}
+
+.rte__select-group .rte__select-wrapper {
+  margin: 0;
+}
+
+.rte__select-group .rte__select-wrapper:first-child .rte__select {
+  border-radius: 6px 0 0 6px;
+}
+
+.rte__select-group .rte__select-wrapper:last-child .rte__select {
+  border-radius: 0 6px 6px 0;
+}
+
+/* ============================================
+   DROPDOWN VARIANTS
+   ============================================ */
+
+/* Minimal Select */
+.rte__select--minimal {
+  background: transparent;
+  border: 1px dashed #ddd;
+  padding: 4px 6px;
+}
+
+.rte__select--minimal:hover {
+  background: #f5f5f5;
+  border-color: #333333;
+}
+
+/* Large Select */
+.rte__select--large {
+  padding: 10px 12px;
+  min-height: 40px;
+  font-size: 14px;
+}
+
+/* Small Select */
+.rte__select--small {
+  padding: 5px 8px;
+  min-height: 28px;
+  font-size: 12px;
+}
+
+/* ============================================
+   RESPONSIVE DESIGN
+   ============================================ */
+
+@media (max-width: 768px) {
+  .rte__select {
+    padding: 6px 8px;
+    padding-right: 24px;
+    min-height: 34px;
+    font-size: 12px;
+  }
+  
+  .rte__select-arrow {
+    right: 6px;
+    font-size: 11px;
+  }
+}
+
+/* ============================================
+   ACCESSIBILITY
+   ============================================ */
+
+/* High Contrast Mode */
+@media (prefers-contrast: more) {
+  .rte__select {
+    border: 2px solid #495057;
+  }
+  
+  .rte__select:focus {
+    border: 2px solid #333333;
+  }
+}
+
+/* Reduced Motion */
+@media (prefers-reduced-motion: reduce) {
+  .rte__select {
+    transition: none;
+  }
+  
+  .rte__select-arrow {
+    transition: none;
+  }
+}
+
+/* Dark Mode Support */
+@media (prefers-color-scheme: dark) {
+  .rte__select {
+    background: linear-gradient(to right, #2a2a2a 0%, #2a2a2a 95%, #1f1f1f 100%);
+    border-color: #3a3a3a;
+    color: #c9cace;
+  }
+  
+  .rte__select:hover {
+    background: linear-gradient(to right, #333 0%, #333 95%, #222 100%);
+    border-color: #666666;
+    color: #e0e0e0;
+  }
+  
+  .rte__select:focus {
+    border-color: #666666;
+  }
+  
+  .rte__select option {
+    background-color: #2a2a2a;
+    color: #c9cace;
+  }
+  
+  .rte__select option:checked {
+    background: linear-gradient(#333333, #333333);
+    background-color: #333333;
+    color: white;
+  }
+  
+  .rte__select-arrow {
+    color: #c9cace;
+  }
+}

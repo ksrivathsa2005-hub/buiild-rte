@@ -1,0 +1,103 @@
+<!-- 
+  COLOR PICKER COMPONENT
+  Professional color selection for text color and background/highlight color
+-->
+
+<template id="rte-color-picker-template">
+  <div class="rte__color-picker-wrapper">
+    <label class="rte__color-picker-label"></label>
+    <input type="color" class="rte__color-picker-input">
+    <span class="rte__color-preview"></span>
+  </div>
+</template>
+
+<!-- Usage Examples -->
+
+<!-- Text Color Picker -->
+<div class="rte__color-picker-wrapper">
+  <div class="rte__color-picker-button" role="button" tabindex="0" aria-label="Text Color Picker">
+    <i class="fas fa-palette"></i>
+    <span class="rte__color-indicator"></span>
+  </div>
+  <input 
+    type="color" 
+    class="rte__color-picker-input" 
+    data-command="foreColor" 
+    value="#000000" 
+    title="Text Color"
+    aria-label="Text Color">
+</div>
+
+<!-- Background/Highlight Color Picker -->
+<div class="rte__color-picker-wrapper">
+  <div class="rte__color-picker-button" role="button" tabindex="0" aria-label="Highlight Color Picker">
+    <i class="fas fa-highlighter"></i>
+    <span class="rte__color-indicator"></span>
+  </div>
+  <input 
+    type="color" 
+    class="rte__color-picker-input" 
+    data-command="backColor" 
+    value="#ffff00" 
+    title="Highlight Color"
+    aria-label="Highlight Color">
+</div>
+
+<!-- Color Palette Grid -->
+<div class="rte__color-palette">
+  <div class="rte__palette-title">Recent Colors</div>
+  <div class="rte__palette-grid">
+    <button class="rte__palette-swatch" style="background-color: #000000;" data-color="#000000" title="Black"></button>
+    <button class="rte__palette-swatch" style="background-color: #ffffff; border: 1px solid #ddd;" data-color="#ffffff" title="White"></button>
+    <button class="rte__palette-swatch" style="background-color: #ff0000;" data-color="#ff0000" title="Red"></button>
+    <button class="rte__palette-swatch" style="background-color: #00ff00;" data-color="#00ff00" title="Green"></button>
+    <button class="rte__palette-swatch" style="background-color: #0000ff;" data-color="#0000ff" title="Blue"></button>
+    <button class="rte__palette-swatch" style="background-color: #ffff00;" data-color="#ffff00" title="Yellow"></button>
+  </div>
+  
+  <div class="rte__palette-title">Standard Colors</div>
+  <div class="rte__palette-grid">
+    <button class="rte__palette-swatch" style="background-color: #f4cccc;" data-color="#f4cccc" title="Light Red"></button>
+    <button class="rte__palette-swatch" style="background-color: #fce5cd;" data-color="#fce5cd" title="Light Orange"></button>
+    <button class="rte__palette-swatch" style="background-color: #ffe599;" data-color="#ffe599" title="Light Yellow"></button>
+    <button class="rte__palette-swatch" style="background-color: #c6e0b4;" data-color="#c6e0b4" title="Light Green"></button>
+    <button class="rte__palette-swatch" style="background-color: #b4c7e7;" data-color="#b4c7e7" title="Light Blue"></button>
+    <button class="rte__palette-swatch" style="background-color: #d9d2e9;" data-color="#d9d2e9" title="Light Purple"></button>
+  </div>
+</div>
+
+<!-- Advanced Color Picker with Dropdown -->
+<div class="rte__color-picker-advanced">
+  <button class="rte__color-picker-toggle" aria-label="Color Options" aria-expanded="false">
+    <i class="fas fa-palette"></i>
+    <i class="fas fa-chevron-down"></i>
+  </button>
+  
+  <div class="rte__color-picker-menu" style="display: none;">
+    <div class="rte__color-picker-header">
+      <h4>Choose Color</h4>
+      <button class="rte__color-picker-close" aria-label="Close Color Picker">×</button>
+    </div>
+    
+    <div class="rte__color-picker-content">
+      <!-- Color Input -->
+      <div class="rte__color-input-group">
+        <label>Color Code:</label>
+        <input type="text" class="rte__color-hex-input" placeholder="#000000" maxlength="7">
+      </div>
+      
+      <!-- Preset Colors -->
+      <div class="rte__color-presets">
+        <h5>Preset Colors</h5>
+        <div class="rte__palette-grid">
+          <button class="rte__palette-swatch" style="background-color: #3498db;" data-color="#3498db" title="Blue"></button>
+          <button class="rte__palette-swatch" style="background-color: #2ecc71;" data-color="#2ecc71" title="Green"></button>
+          <button class="rte__palette-swatch" style="background-color: #e74c3c;" data-color="#e74c3c" title="Red"></button>
+          <button class="rte__palette-swatch" style="background-color: #f39c12;" data-color="#f39c12" title="Orange"></button>
+          <button class="rte__palette-swatch" style="background-color: #9b59b6;" data-color="#9b59b6" title="Purple"></button>
+          <button class="rte__palette-swatch" style="background-color: #1abc9c;" data-color="#1abc9c" title="Teal"></button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,299 @@
+/* ============================================
+   TOOLBAR GROUP & SEPARATOR STYLES
+   Toolbar Organization Component
+   ============================================ */
+
+/* Toolbar Container */
+.rte__toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  padding: 6px 8px;
+  align-items: center;
+  background: #ffffff;
+  border-bottom: 1px solid #e0e0e0;
+  overflow-x: auto;
+  overflow-y: hidden;
+  border-radius: 0;
+}
+
+.rte__toolbar::-webkit-scrollbar {
+  height: 6px;
+}
+
+.rte__toolbar::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+.rte__toolbar::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: 3px;
+}
+
+.rte__toolbar::-webkit-scrollbar-thumb:hover {
+  background: #a0a0a0;
+}
+
+/* ============================================
+   TOOLBAR GROUP
+   ============================================ */
+
+.rte__toolbar-group {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 0;
+  flex-wrap: nowrap;
+}
+
+/* Group Background (Optional) */
+.rte__toolbar-group {
+  background: transparent;
+}
+
+/* Focused Group Highlight */
+.rte__toolbar-group:focus-within {
+  border-radius: 4px;
+  background-color: rgba(0, 0, 0, 0.03);
+}
+
+/* ============================================
+   TOOLBAR SEPARATOR / DIVIDER
+   ============================================ */
+
+.rte__toolbar-separator {
+  width: 1px;
+  height: 20px;
+  background: #e0e0e0;
+  margin: 0 4px;
+  opacity: 0.8;
+  display: inline-block;
+  flex-shrink: 0;
+}
+
+/* Small Separator */
+.rte__toolbar-separator--small {
+  height: 16px;
+  margin: 0 4px;
+}
+
+/* Thick Separator */
+.rte__toolbar-separator--thick {
+  width: 2px;
+  margin: 0 8px;
+}
+
+/* Separator Accessibility */
+.rte__toolbar-separator[role="separator"] {
+  /* Semantic role */
+}
+
+/* ============================================
+   TOOLBAR GROUP VARIANTS
+   ============================================ */
+
+/* Grouped Buttons */
+.rte__toolbar-group--buttons {
+  background: #ffffff;
+  border-radius: 4px;
+  border: 1px solid #e0e0e0;
+  padding: 2px;
+  gap: 2px;
+}
+
+/* Grouped Selects */
+.rte__toolbar-group--selects {
+  gap: 6px;
+}
+
+/* Mixed Content Group */
+.rte__toolbar-group--mixed {
+  gap: 6px;
+  align-items: stretch;
+}
+
+/* ============================================
+   TOOLBAR WITH SCROLLABLE GROUPS
+   ============================================ */
+
+.rte__toolbar--scrollable {
+  flex-wrap: nowrap;
+  overflow-x: auto;
+}
+
+.rte__toolbar--scrollable .rte__toolbar-group {
+  flex-shrink: 0;
+}
+
+/* ============================================
+   TOOLBAR LAYOUTS
+   ============================================ */
+
+/* Single Row Toolbar */
+.rte__toolbar--single-row {
+  flex-wrap: nowrap;
+  justify-content: flex-start;
+}
+
+/* Multi-Row Toolbar */
+.rte__toolbar--multi-row {
+  flex-wrap: wrap;
+  justify-content: flex-start;
+}
+
+/* ============================================
+   RESPONSIVE DESIGN
+   ============================================ */
+
+/* Tablet */
+@media (max-width: 1024px) {
+  .rte__toolbar {
+    gap: 6px;
+    padding: 10px;
+  }
+  
+  .rte__toolbar-separator {
+    margin: 0 4px;
+  }
+  
+  .rte__toolbar-group {
+    gap: 3px;
+  }
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+  .rte__toolbar {
+    gap: 4px;
+    padding: 8px;
+    flex-wrap: wrap;
+  }
+  
+  .rte__toolbar-separator {
+    display: none;
+  }
+  
+  .rte__toolbar-group {
+    gap: 2px;
+    padding: 2px;
+    background: linear-gradient(180deg, #f8f9fa 0%, #ffffff 100%);
+    border-radius: 4px;
+    border: 1px solid #f0f1f3;
+  }
+}
+
+/* Small Mobile */
+@media (max-width: 480px) {
+  .rte__toolbar {
+    gap: 3px;
+    padding: 6px;
+  }
+  
+  .rte__toolbar-group {
+    gap: 0;
+  }
+}
+
+/* ============================================
+   ACCESSIBLE FOCUS MANAGEMENT
+   ============================================ */
+
+/* Group Focus Indicator */
+.rte__toolbar-group:focus-visible {
+  outline: 2px solid #333333;
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* First Group */
+.rte__toolbar-group:first-of-type {
+  margin-left: 0;
+}
+
+/* Last Group */
+.rte__toolbar-group:last-of-type {
+  margin-right: 0;
+}
+
+/* ============================================
+   KEYBOARD NAVIGATION
+   ============================================ */
+
+/* Tab Order Indicator */
+.rte__toolbar-group[tabindex="0"]:focus {
+  outline: 2px dashed #333333;
+  outline-offset: 2px;
+}
+
+/* ============================================
+   ANIMATIONS
+   ============================================ */
+
+/* Group Fade-In Animation */
+@keyframes groupFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.rte__toolbar-group {
+  animation: groupFadeIn 0.3s ease-out;
+}
+
+/* ============================================
+   DARK MODE SUPPORT
+   ============================================ */
+
+@media (prefers-color-scheme: dark) {
+  .rte__toolbar {
+    background: linear-gradient(180deg, #2a2a2a 0%, #1f1f1f 100%);
+    border-bottom-color: #3a3a3a;
+  }
+  
+  .rte__toolbar-separator {
+    background: linear-gradient(180deg, transparent 0%, #4a4a4a 50%, transparent 100%);
+  }
+  
+  .rte__toolbar-group--buttons {
+    background: linear-gradient(180deg, #2a2a2a 0%, #1f1f1f 100%);
+    border-color: #3a3a3a;
+  }
+  
+  .rte__toolbar::-webkit-scrollbar-track {
+    background: #1f1f1f;
+  }
+  
+  .rte__toolbar::-webkit-scrollbar-thumb {
+    background: #4a4a4a;
+  }
+}
+
+/* ============================================
+   REDUCED MOTION SUPPORT
+   ============================================ */
+
+@media (prefers-reduced-motion: reduce) {
+  .rte__toolbar-group {
+    animation: none;
+  }
+}
+
+/* ============================================
+   HIGH CONTRAST MODE
+   ============================================ */
+
+@media (prefers-contrast: more) {
+  .rte__toolbar-separator {
+    background: #495057;
+    opacity: 1;
+  }
+  
+  .rte__toolbar {
+    border-bottom: 3px solid #212529;
+  }
+}

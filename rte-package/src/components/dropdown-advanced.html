@@ -1,0 +1,288 @@
+<!-- Professional Dropdown Component with Advanced Features -->
+
+<!-- Format Block Dropdown (Headings, Paragraph, etc.) -->
+<div class="rte__select-wrapper">
+  <label class="rte__select-label">Format</label>
+  <div class="rte__dropdown-container">
+    <button class="rte__dropdown-trigger" data-command="formatBlock">
+      <span class="rte__dropdown-value">Normal</span>
+      <i class="fas fa-chevron-down"></i>
+    </button>
+    <div class="rte__dropdown-menu rte__dropdown-menu--format">
+      <div class="rte__dropdown-group">
+        <div class="rte__dropdown-item" data-value="p">
+          <span class="rte__dropdown-item-label">Paragraph</span>
+          <span class="rte__dropdown-item-desc">Normal text</span>
+        </div>
+        <div class="rte__dropdown-item" data-value="h1">
+          <span class="rte__dropdown-item-label" style="font-size: 28px; font-weight: 700;">Heading 1</span>
+          <span class="rte__dropdown-item-desc">Large heading</span>
+        </div>
+        <div class="rte__dropdown-item" data-value="h2">
+          <span class="rte__dropdown-item-label" style="font-size: 24px; font-weight: 700;">Heading 2</span>
+          <span class="rte__dropdown-item-desc">Medium heading</span>
+        </div>
+        <div class="rte__dropdown-item" data-value="h3">
+          <span class="rte__dropdown-item-label" style="font-size: 20px; font-weight: 700;">Heading 3</span>
+          <span class="rte__dropdown-item-desc">Small heading</span>
+        </div>
+        <div class="rte__dropdown-item" data-value="h4">
+          <span class="rte__dropdown-item-label" style="font-size: 18px; font-weight: 700;">Heading 4</span>
+          <span class="rte__dropdown-item-desc">Extra small heading</span>
+        </div>
+        <div class="rte__dropdown-item" data-value="h5">
+          <span class="rte__dropdown-item-label" style="font-size: 16px; font-weight: 700;">Heading 5</span>
+          <span class="rte__dropdown-item-desc">Minimal heading</span>
+        </div>
+        <div class="rte__dropdown-item" data-value="h6">
+          <span class="rte__dropdown-item-label" style="font-size: 14px; font-weight: 700;">Heading 6</span>
+          <span class="rte__dropdown-item-desc">Tiny heading</span>
+        </div>
+        <div class="rte__dropdown-divider"></div>
+        <div class="rte__dropdown-item" data-value="blockquote">
+          <span class="rte__dropdown-item-label" style="border-left: 3px solid #3498db; padding-left: 10px;">Blockquote</span>
+          <span class="rte__dropdown-item-desc">Quoted text</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Font Dropdown -->
+<div class="rte__select-wrapper">
+  <label class="rte__select-label">Font</label>
+  <div class="rte__dropdown-container">
+    <button class="rte__dropdown-trigger" data-command="fontName">
+      <span class="rte__dropdown-value">Arial</span>
+      <i class="fas fa-chevron-down"></i>
+    </button>
+    <div class="rte__dropdown-menu rte__dropdown-menu--font">
+      <div class="rte__dropdown-group">
+        <div class="rte__dropdown-item" data-value="Arial" style="font-family: Arial;">
+          <span class="rte__dropdown-item-label">Arial</span>
+        </div>
+        <div class="rte__dropdown-item" data-value="'Times New Roman'" style="font-family: 'Times New Roman';">
+          <span class="rte__dropdown-item-label">Times New Roman</span>
+        </div>
+        <div class="rte__dropdown-item" data-value="Georgia" style="font-family: Georgia;">
+          <span class="rte__dropdown-item-label">Georgia</span>
+        </div>
+        <div class="rte__dropdown-item" data-value="Verdana" style="font-family: Verdana;">
+          <span class="rte__dropdown-item-label">Verdana</span>
+        </div>
+        <div class="rte__dropdown-item" data-value="'Courier New'" style="font-family: 'Courier New';">
+          <span class="rte__dropdown-item-label">Courier New</span>
+        </div>
+        <div class="rte__dropdown-item" data-value="'Comic Sans MS'" style="font-family: 'Comic Sans MS';">
+          <span class="rte__dropdown-item-label">Comic Sans MS</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Font Size Dropdown -->
+<div class="rte__select-wrapper">
+  <label class="rte__select-label">Size</label>
+  <div class="rte__dropdown-container">
+    <button class="rte__dropdown-trigger" data-command="fontSize">
+      <span class="rte__dropdown-value">12pt</span>
+      <i class="fas fa-chevron-down"></i>
+    </button>
+    <div class="rte__dropdown-menu rte__dropdown-menu--size">
+      <div class="rte__dropdown-group">
+        <div class="rte__dropdown-item" data-value="1">
+          <span class="rte__dropdown-item-label">8 pt</span>
+        </div>
+        <div class="rte__dropdown-item" data-value="2">
+          <span class="rte__dropdown-item-label">10 pt</span>
+        </div>
+        <div class="rte__dropdown-item" data-value="3">
+          <span class="rte__dropdown-item-label">12 pt</span>
+        </div>
+        <div class="rte__dropdown-item" data-value="4">
+          <span class="rte__dropdown-item-label">14 pt</span>
+        </div>
+        <div class="rte__dropdown-item" data-value="5">
+          <span class="rte__dropdown-item-label">18 pt</span>
+        </div>
+        <div class="rte__dropdown-item" data-value="6">
+          <span class="rte__dropdown-item-label">24 pt</span>
+        </div>
+        <div class="rte__dropdown-item" data-value="7">
+          <span class="rte__dropdown-item-label">36 pt</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Color Picker Dropdown with Grid -->
+<div class="rte__select-wrapper">
+  <label class="rte__select-label">
+    <i class="fas fa-palette"></i> Colors
+  </label>
+  <div class="rte__dropdown-container">
+    <button class="rte__dropdown-trigger rte__color-trigger" data-command="foreColor">
+      <span class="rte__color-preview" style="background-color: #000000;"></span>
+      <i class="fas fa-chevron-down"></i>
+    </button>
+    <div class="rte__dropdown-menu rte__dropdown-menu--color">
+      <div class="rte__color-grid">
+        <!-- Black to White -->
+        <div class="rte__color-swatch" style="background-color: #000000;" data-value="#000000" title="#000000"></div>
+        <div class="rte__color-swatch" style="background-color: #404040;" data-value="#404040" title="#404040"></div>
+        <div class="rte__color-swatch" style="background-color: #808080;" data-value="#808080" title="#808080"></div>
+        <div class="rte__color-swatch" style="background-color: #c0c0c0;" data-value="#c0c0c0" title="#c0c0c0"></div>
+        <div class="rte__color-swatch" style="background-color: #ffffff; border: 1px solid #ddd;" data-value="#ffffff" title="#ffffff"></div>
+        
+        <!-- Primary Colors -->
+        <div class="rte__color-swatch" style="background-color: #ff0000;" data-value="#ff0000" title="Red"></div>
+        <div class="rte__color-swatch" style="background-color: #00ff00;" data-value="#00ff00" title="Green"></div>
+        <div class="rte__color-swatch" style="background-color: #0000ff;" data-value="#0000ff" title="Blue"></div>
+        <div class="rte__color-swatch" style="background-color: #ffff00;" data-value="#ffff00" title="Yellow"></div>
+        <div class="rte__color-swatch" style="background-color: #00ffff;" data-value="#00ffff" title="Cyan"></div>
+        
+        <!-- Accent Colors -->
+        <div class="rte__color-swatch" style="background-color: #ff8000;" data-value="#ff8000" title="Orange"></div>
+        <div class="rte__color-swatch" style="background-color: #ff0080;" data-value="#ff0080" title="Pink"></div>
+        <div class="rte__color-swatch" style="background-color: #8000ff;" data-value="#8000ff" title="Purple"></div>
+        <div class="rte__color-swatch" style="background-color: #008080;" data-value="#008080" title="Teal"></div>
+        <div class="rte__color-swatch" style="background-color: #ff6347;" data-value="#ff6347" title="Tomato"></div>
+        
+        <!-- Theme Colors -->
+        <div class="rte__color-swatch" style="background-color: #3498db;" data-value="#3498db" title="Blue"></div>
+        <div class="rte__color-swatch" style="background-color: #2ecc71;" data-value="#2ecc71" title="Green"></div>
+        <div class="rte__color-swatch" style="background-color: #e74c3c;" data-value="#e74c3c" title="Red"></div>
+        <div class="rte__color-swatch" style="background-color: #f39c12;" data-value="#f39c12" title="Orange"></div>
+        <div class="rte__color-swatch" style="background-color: #9b59b6;" data-value="#9b59b6" title="Purple"></div>
+      </div>
+      <div class="rte__color-input-group">
+        <input type="text" class="rte__color-hex-input" placeholder="#000000" maxlength="7">
+        <button class="rte__color-apply-btn">Apply</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Highlight/Background Color Dropdown -->
+<div class="rte__select-wrapper">
+  <label class="rte__select-label">
+    <i class="fas fa-highlighter"></i> Highlight
+  </label>
+  <div class="rte__dropdown-container">
+    <button class="rte__dropdown-trigger rte__color-trigger" data-command="backColor">
+      <span class="rte__color-preview" style="background-color: #ffff00;"></span>
+      <i class="fas fa-chevron-down"></i>
+    </button>
+    <div class="rte__dropdown-menu rte__dropdown-menu--color">
+      <div class="rte__color-grid">
+        <div class="rte__color-swatch" style="background-color: #ffff00;" data-value="#ffff00" title="Yellow"></div>
+        <div class="rte__color-swatch" style="background-color: #ff8000;" data-value="#ff8000" title="Orange"></div>
+        <div class="rte__color-swatch" style="background-color: #ff0000;" data-value="#ff0000" title="Red"></div>
+        <div class="rte__color-swatch" style="background-color: #00ff00;" data-value="#00ff00" title="Green"></div>
+        <div class="rte__color-swatch" style="background-color: #00ffff;" data-value="#00ffff" title="Cyan"></div>
+        <div class="rte__color-swatch" style="background-color: #0000ff;" data-value="#0000ff" title="Blue"></div>
+        <div class="rte__color-swatch" style="background-color: #ffccff;" data-value="#ffccff" title="Light Pink"></div>
+        <div class="rte__color-swatch" style="background-color: #ccffff;" data-value="#ccffff" title="Light Cyan"></div>
+        <div class="rte__color-swatch" style="background-color: #ffffcc;" data-value="#ffffcc" title="Light Yellow"></div>
+        <div class="rte__color-swatch" style="background-color: #ffffff; border: 1px solid #ddd;" data-value="#ffffff" title="None"></div>
+      </div>
+      <div class="rte__color-input-group">
+        <input type="text" class="rte__color-hex-input" placeholder="#ffff00" maxlength="7">
+        <button class="rte__color-apply-btn">Apply</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Line Height Dropdown -->
+<div class="rte__select-wrapper">
+  <label class="rte__select-label">Line Height</label>
+  <div class="rte__dropdown-container">
+    <button class="rte__dropdown-trigger" data-command="lineHeight">
+      <span class="rte__dropdown-value">1.5</span>
+      <i class="fas fa-chevron-down"></i>
+    </button>
+    <div class="rte__dropdown-menu rte__dropdown-menu--lineheight">
+      <div class="rte__dropdown-group">
+        <div class="rte__dropdown-item" data-value="1">
+          <span class="rte__dropdown-item-label" style="line-height: 1;">Single (1.0)</span>
+        </div>
+        <div class="rte__dropdown-item" data-value="1.15">
+          <span class="rte__dropdown-item-label" style="line-height: 1.15;">1.15x</span>
+        </div>
+        <div class="rte__dropdown-item" data-value="1.5">
+          <span class="rte__dropdown-item-label" style="line-height: 1.5;">1.5x</span>
+        </div>
+        <div class="rte__dropdown-item" data-value="1.8">
+          <span class="rte__dropdown-item-label" style="line-height: 1.8;">1.8x</span>
+        </div>
+        <div class="rte__dropdown-item" data-value="2">
+          <span class="rte__dropdown-item-label" style="line-height: 2;">Double (2.0)</span>
+        </div>
+        <div class="rte__dropdown-item" data-value="2.5">
+          <span class="rte__dropdown-item-label" style="line-height: 2.5;">2.5x</span>
+        </div>
+        <div class="rte__dropdown-item" data-value="3">
+          <span class="rte__dropdown-item-label" style="line-height: 3;">Triple (3.0)</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Code Language Dropdown -->
+<div class="rte__select-wrapper">
+  <label class="rte__select-label">Language</label>
+  <div class="rte__dropdown-container">
+    <button class="rte__dropdown-trigger" data-command="codeLanguage">
+      <span class="rte__dropdown-value">HTML</span>
+      <i class="fas fa-chevron-down"></i>
+    </button>
+    <div class="rte__dropdown-menu rte__dropdown-menu--language">
+      <div class="rte__dropdown-group">
+        <div class="rte__dropdown-item" data-value="html">
+          <i class="fab fa-html5"></i>
+          <span class="rte__dropdown-item-label">HTML</span>
+        </div>
+        <div class="rte__dropdown-item" data-value="css">
+          <i class="fab fa-css3"></i>
+          <span class="rte__dropdown-item-label">CSS</span>
+        </div>
+        <div class="rte__dropdown-item" data-value="javascript">
+          <i class="fab fa-js"></i>
+          <span class="rte__dropdown-item-label">JavaScript</span>
+        </div>
+        <div class="rte__dropdown-item" data-value="python">
+          <i class="fab fa-python"></i>
+          <span class="rte__dropdown-item-label">Python</span>
+        </div>
+        <div class="rte__dropdown-item" data-value="json">
+          <i class="fas fa-code"></i>
+          <span class="rte__dropdown-item-label">JSON</span>
+        </div>
+        <div class="rte__dropdown-item" data-value="sql">
+          <i class="fas fa-database"></i>
+          <span class="rte__dropdown-item-label">SQL</span>
+        </div>
+        <div class="rte__dropdown-item" data-value="php">
+          <i class="fab fa-php"></i>
+          <span class="rte__dropdown-item-label">PHP</span>
+        </div>
+        <div class="rte__dropdown-item" data-value="java">
+          <i class="fab fa-java"></i>
+          <span class="rte__dropdown-item-label">Java</span>
+        </div>
+        <div class="rte__dropdown-item" data-value="csharp">
+          <i class="fas fa-code"></i>
+          <span class="rte__dropdown-item-label">C#</span>
+        </div>
+        <div class="rte__dropdown-item" data-value="cpp">
+          <i class="fas fa-code"></i>
+          <span class="rte__dropdown-item-label">C++</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

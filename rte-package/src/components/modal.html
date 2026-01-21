@@ -1,0 +1,188 @@
+<!-- 
+  MODAL / DIALOG COMPONENT
+  For Link insertion, image upload, table creation, etc.
+-->
+
+<template id="rte-modal-template">
+  <div class="rte__modal" role="dialog" aria-modal="true">
+    <div class="rte__modal-backdrop"></div>
+    <div class="rte__modal-content">
+      <div class="rte__modal-header">
+        <h3 class="rte__modal-title"></h3>
+        <button class="rte__modal-close" aria-label="Close" type="button">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+      <div class="rte__modal-body"></div>
+      <div class="rte__modal-footer">
+        <button class="rte__btn rte__btn--secondary" type="button">Cancel</button>
+        <button class="rte__btn rte__btn--primary" type="button">OK</button>
+      </div>
+    </div>
+  </div>
+</template>
+
+<!-- Link Modal Example -->
+<div class="rte__modal" role="dialog" aria-modal="true" aria-labelledby="link-modal-title" style="display: none;">
+  <div class="rte__modal-backdrop"></div>
+  <div class="rte__modal-content">
+    <div class="rte__modal-header">
+      <h3 class="rte__modal-title" id="link-modal-title">
+        <i class="fas fa-link"></i> Insert Link
+      </h3>
+      <button class="rte__modal-close" aria-label="Close" type="button">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+    
+    <div class="rte__modal-body">
+      <form class="rte__modal-form">
+        <div class="rte__form-group">
+          <label for="link-url" class="rte__form-label">URL <span class="rte__required">*</span></label>
+          <input 
+            type="url" 
+            id="link-url" 
+            class="rte__form-input" 
+            placeholder="https://example.com"
+            required>
+          <small class="rte__form-help">Enter the complete URL including http:// or https://</small>
+        </div>
+        
+        <div class="rte__form-group">
+          <label for="link-text" class="rte__form-label">Display Text</label>
+          <input 
+            type="text" 
+            id="link-text" 
+            class="rte__form-input" 
+            placeholder="Link text (optional)">
+          <small class="rte__form-help">Leave empty to use URL as display text</small>
+        </div>
+        
+        <div class="rte__form-group rte__form-group--checkbox">
+          <input 
+            type="checkbox" 
+            id="link-target" 
+            class="rte__form-checkbox">
+          <label for="link-target" class="rte__form-label rte__form-label--checkbox">
+            Open in new window
+          </label>
+        </div>
+      </form>
+    </div>
+    
+    <div class="rte__modal-footer">
+      <button class="rte__btn" type="button" aria-label="Cancel">Cancel</button>
+      <button class="rte__btn rte__btn--primary" type="button" aria-label="Insert Link">
+        <i class="fas fa-check"></i> Insert Link
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Image Modal Example -->
+<div class="rte__modal" role="dialog" aria-modal="true" aria-labelledby="image-modal-title" style="display: none;">
+  <div class="rte__modal-backdrop"></div>
+  <div class="rte__modal-content">
+    <div class="rte__modal-header">
+      <h3 class="rte__modal-title" id="image-modal-title">
+        <i class="fas fa-image"></i> Insert Image
+      </h3>
+      <button class="rte__modal-close" aria-label="Close" type="button">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+    
+    <div class="rte__modal-body">
+      <div class="rte__upload-zone">
+        <input type="file" id="image-upload" class="rte__file-input" accept="image/*" style="display: none;">
+        <label for="image-upload" class="rte__upload-label">
+          <i class="fas fa-cloud-upload-alt"></i>
+          <span>Click to upload or drag image here</span>
+          <small>PNG, JPG, GIF up to 5MB</small>
+        </label>
+      </div>
+      
+      <div class="rte__form-group" style="margin-top: 1rem;">
+        <label for="image-url" class="rte__form-label">Or paste image URL</label>
+        <input 
+          type="url" 
+          id="image-url" 
+          class="rte__form-input" 
+          placeholder="https://example.com/image.jpg">
+      </div>
+      
+      <div class="rte__form-group">
+        <label for="image-alt" class="rte__form-label">Alternative Text <span class="rte__required">*</span></label>
+        <input 
+          type="text" 
+          id="image-alt" 
+          class="rte__form-input" 
+          placeholder="Describe the image for accessibility">
+      </div>
+    </div>
+    
+    <div class="rte__modal-footer">
+      <button class="rte__btn" type="button">Cancel</button>
+      <button class="rte__btn rte__btn--primary" type="button">
+        <i class="fas fa-check"></i> Insert Image
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Table Modal Example -->
+<div class="rte__modal" role="dialog" aria-modal="true" aria-labelledby="table-modal-title" style="display: none;">
+  <div class="rte__modal-backdrop"></div>
+  <div class="rte__modal-content">
+    <div class="rte__modal-header">
+      <h3 class="rte__modal-title" id="table-modal-title">
+        <i class="fas fa-table"></i> Insert Table
+      </h3>
+      <button class="rte__modal-close" aria-label="Close" type="button">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+    
+    <div class="rte__modal-body">
+      <div class="rte__form-group">
+        <label for="table-rows" class="rte__form-label">Rows</label>
+        <input 
+          type="number" 
+          id="table-rows" 
+          class="rte__form-input" 
+          value="3" 
+          min="1" 
+          max="50">
+      </div>
+      
+      <div class="rte__form-group">
+        <label for="table-cols" class="rte__form-label">Columns</label>
+        <input 
+          type="number" 
+          id="table-cols" 
+          class="rte__form-input" 
+          value="3" 
+          min="1" 
+          max="20">
+      </div>
+      
+      <div class="rte__form-group rte__form-group--checkbox">
+        <input 
+          type="checkbox" 
+          id="table-header" 
+          class="rte__form-checkbox"
+          checked>
+        <label for="table-header" class="rte__form-label rte__form-label--checkbox">
+          Include header row
+        </label>
+      </div>
+    </div>
+    
+    <div class="rte__modal-footer">
+      <button class="rte__btn" type="button">Cancel</button>
+      <button class="rte__btn rte__btn--primary" type="button">
+        <i class="fas fa-check"></i> Create Table
+      </button>
+    </div>
+  </div>
+</div>

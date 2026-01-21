@@ -1,0 +1,235 @@
+<!-- 
+  TOOLBAR SEPARATOR / DIVIDER COMPONENT
+  Visual divider between toolbar groups
+-->
+
+<template id="rte-separator-template">
+  <div class="rte__toolbar-separator" role="separator" aria-orientation="vertical"></div>
+</template>
+
+<!-- Usage Examples -->
+
+<!-- Vertical Separator (Default) -->
+<div class="rte__toolbar-separator"></div>
+
+<!-- Small Separator -->
+<div class="rte__toolbar-separator rte__toolbar-separator--small"></div>
+
+<!-- Thick Separator -->
+<div class="rte__toolbar-separator rte__toolbar-separator--thick"></div>
+
+<!-- ============================================
+   TOOLBAR GROUP WRAPPER
+   ============================================ -->
+
+<!-- Clipboard Group -->
+<div class="rte__toolbar-group" data-group="clipboard" aria-label="Clipboard Actions">
+  <!-- Buttons go here -->
+</div>
+
+<!-- Text Formatting Group -->
+<div class="rte__toolbar-group" data-group="formatting" aria-label="Text Formatting">
+  <!-- Buttons go here -->
+</div>
+
+<!-- Paragraph Group -->
+<div class="rte__toolbar-group" data-group="paragraph" aria-label="Paragraph Format">
+  <!-- Buttons go here -->
+</div>
+
+<!-- Alignment Group -->
+<div class="rte__toolbar-group" data-group="alignment" aria-label="Text Alignment">
+  <!-- Buttons go here -->
+</div>
+
+<!-- Insert Group -->
+<div class="rte__toolbar-group" data-group="insert" aria-label="Insert Elements">
+  <!-- Buttons go here -->
+</div>
+
+<!-- Typography Group -->
+<div class="rte__toolbar-group" data-group="typography" aria-label="Typography">
+  <!-- Buttons go here -->
+</div>
+
+<!-- Transform Group -->
+<div class="rte__toolbar-group" data-group="transform" aria-label="Text Transform">
+  <!-- Buttons go here -->
+</div>
+
+<!-- View Group -->
+<div class="rte__toolbar-group" data-group="view" aria-label="View Options">
+  <!-- Buttons go here -->
+</div>
+
+<!-- Complete Example Toolbar -->
+<div class="rte__toolbar" role="toolbar" aria-label="Text Formatting Toolbar">
+  <!-- Clipboard Group -->
+  <div class="rte__toolbar-group" data-group="clipboard">
+    <button class="rte__btn" data-command="undo" aria-label="Undo (Ctrl+Z)" title="Undo">
+      <i class="fas fa-undo"></i>
+    </button>
+    <button class="rte__btn" data-command="redo" aria-label="Redo (Ctrl+Y)" title="Redo">
+      <i class="fas fa-redo"></i>
+    </button>
+    <button class="rte__btn" data-command="cut" aria-label="Cut" title="Cut">
+      <i class="fas fa-cut"></i>
+    </button>
+    <button class="rte__btn" data-command="copy" aria-label="Copy" title="Copy">
+      <i class="fas fa-copy"></i>
+    </button>
+    <button class="rte__btn" data-command="paste" aria-label="Paste" title="Paste">
+      <i class="fas fa-paste"></i>
+    </button>
+  </div>
+  
+  <div class="rte__toolbar-separator"></div>
+  
+  <!-- Text Formatting Group -->
+  <div class="rte__toolbar-group" data-group="formatting">
+    <button class="rte__btn" data-command="bold" aria-label="Bold (Ctrl+B)" title="Bold">
+      <i class="fas fa-bold"></i>
+    </button>
+    <button class="rte__btn" data-command="italic" aria-label="Italic (Ctrl+I)" title="Italic">
+      <i class="fas fa-italic"></i>
+    </button>
+    <button class="rte__btn" data-command="underline" aria-label="Underline (Ctrl+U)" title="Underline">
+      <i class="fas fa-underline"></i>
+    </button>
+    <button class="rte__btn" data-command="strikeThrough" aria-label="Strikethrough" title="Strikethrough">
+      <i class="fas fa-strikethrough"></i>
+    </button>
+    <button class="rte__btn" data-command="superscript" aria-label="Superscript" title="Superscript">
+      <i class="fas fa-superscript"></i>
+    </button>
+    <button class="rte__btn" data-command="subscript" aria-label="Subscript" title="Subscript">
+      <i class="fas fa-subscript"></i>
+    </button>
+    <button class="rte__btn" data-command="code" aria-label="Code" title="Code">
+      <i class="fas fa-code"></i>
+    </button>
+    <button class="rte__btn" data-command="clearFormatting" aria-label="Clear Formatting" title="Clear All Formatting">
+      <i class="fas fa-eraser"></i>
+    </button>
+  </div>
+  
+  <div class="rte__toolbar-separator"></div>
+  
+  <!-- Paragraph Group -->
+  <div class="rte__toolbar-group" data-group="paragraph">
+    <select class="rte__select" data-command="formatBlock" aria-label="Paragraph Format">
+      <option value="">Paragraph</option>
+      <option value="p">Paragraph</option>
+      <option value="h1">Heading 1</option>
+      <option value="h2">Heading 2</option>
+      <option value="h3">Heading 3</option>
+      <option value="h4">Heading 4</option>
+      <option value="h5">Heading 5</option>
+      <option value="h6">Heading 6</option>
+    </select>
+    <button class="rte__btn" data-command="insertUnorderedList" aria-label="Bulleted List" title="Bulleted List">
+      <i class="fas fa-list-ul"></i>
+    </button>
+    <button class="rte__btn" data-command="insertOrderedList" aria-label="Numbered List" title="Numbered List">
+      <i class="fas fa-list-ol"></i>
+    </button>
+    <button class="rte__btn" data-command="insertBlockquote" aria-label="Block Quote" title="Block Quote">
+      <i class="fas fa-quote-left"></i>
+    </button>
+  </div>
+  
+  <div class="rte__toolbar-separator"></div>
+  
+  <!-- Alignment Group -->
+  <div class="rte__toolbar-group" data-group="alignment">
+    <button class="rte__btn" data-command="justifyLeft" aria-label="Align Left" title="Align Left">
+      <i class="fas fa-align-left"></i>
+    </button>
+    <button class="rte__btn" data-command="justifyCenter" aria-label="Align Center" title="Align Center">
+      <i class="fas fa-align-center"></i>
+    </button>
+    <button class="rte__btn" data-command="justifyRight" aria-label="Align Right" title="Align Right">
+      <i class="fas fa-align-right"></i>
+    </button>
+    <button class="rte__btn" data-command="justifyFull" aria-label="Justify" title="Justify">
+      <i class="fas fa-align-justify"></i>
+    </button>
+    <button class="rte__btn" data-command="indent" aria-label="Increase Indent" title="Increase Indent">
+      <i class="fas fa-indent"></i>
+    </button>
+    <button class="rte__btn" data-command="outdent" aria-label="Decrease Indent" title="Decrease Indent">
+      <i class="fas fa-outdent"></i>
+    </button>
+  </div>
+  
+  <div class="rte__toolbar-separator"></div>
+  
+  <!-- Insert Group -->
+  <div class="rte__toolbar-group" data-group="insert">
+    <button class="rte__btn" data-command="createLink" aria-label="Link" title="Insert Link">
+      <i class="fas fa-link"></i>
+    </button>
+    <button class="rte__btn" data-command="insertImage" aria-label="Image" title="Insert Image">
+      <i class="fas fa-image"></i>
+    </button>
+    <button class="rte__btn" data-command="insertAudio" aria-label="Audio" title="Insert Audio">
+      <i class="fas fa-volume-up"></i>
+    </button>
+    <button class="rte__btn" data-command="insertVideo" aria-label="Video" title="Insert Video">
+      <i class="fas fa-video"></i>
+    </button>
+    <button class="rte__btn" data-command="insertTable" aria-label="Table" title="Insert Table">
+      <i class="fas fa-table"></i>
+    </button>
+    <button class="rte__btn" data-command="insertEmoji" aria-label="Emoji" title="Insert Emoji">
+      <i class="fas fa-grin"></i>
+    </button>
+    <button class="rte__btn" data-command="insertHorizontalRule" aria-label="Horizontal Line" title="Insert Horizontal Line">
+      <i class="fas fa-minus"></i>
+    </button>
+  </div>
+  
+  <div class="rte__toolbar-separator"></div>
+  
+  <!-- Typography Group -->
+  <div class="rte__toolbar-group" data-group="typography">
+    <select class="rte__select" data-command="fontName" aria-label="Font Family">
+      <option value="">Font</option>
+      <option value="Arial">Arial</option>
+      <option value="Georgia">Georgia</option>
+      <option value="Times New Roman">Times New Roman</option>
+      <option value="Verdana">Verdana</option>
+    </select>
+    <select class="rte__select" data-command="fontSize" aria-label="Font Size">
+      <option value="">Size</option>
+      <option value="12px">12px</option>
+      <option value="14px">14px</option>
+      <option value="16px">16px</option>
+      <option value="18px">18px</option>
+    </select>
+    <div class="rte__color-picker-wrapper">
+      <button class="rte__color-picker-button" aria-label="Text Color">
+        <i class="fas fa-palette"></i>
+      </button>
+      <input type="color" class="rte__color-picker-input" data-command="foreColor" value="#000000">
+    </div>
+    <div class="rte__color-picker-wrapper">
+      <button class="rte__color-picker-button" aria-label="Highlight Color">
+        <i class="fas fa-highlighter"></i>
+      </button>
+      <input type="color" class="rte__color-picker-input" data-command="backColor" value="#ffff00">
+    </div>
+  </div>
+  
+  <div class="rte__toolbar-separator"></div>
+  
+  <!-- View Group -->
+  <div class="rte__toolbar-group" data-group="view">
+    <button class="rte__btn" data-command="toggleSource" aria-label="Source Code" title="View Source Code">
+      <i class="fas fa-file-code"></i>
+    </button>
+    <button class="rte__btn" data-command="toggleFullscreen" aria-label="Fullscreen" title="Toggle Fullscreen">
+      <i class="fas fa-expand"></i>
+    </button>
+  </div>
+</div>
