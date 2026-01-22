@@ -1,5 +1,13 @@
 # Changelog
 
+## v1.16.0 (2026-01-22)
+
+## What's Changed
+
+- hi (95532f2)
+
+**Full Changelog**: https://github.com/ksrivathsa2005-hub/buiild-rte/compare/v1.15.0...v1.16.0
+
 ## v1.15.0 (2026-01-22)
 
 ## What's Changed
