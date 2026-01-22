@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nalashaa RTE - Your Powerful Rich Text Editor</title>
+    <meta name="description"
+        content="A powerful, customizable rich text editor built with vanilla JavaScript. Easy to integrate, feature-rich, and developer-friendly.">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="homepage.css">
+    <link rel="stylesheet" href="../rte-package/src/styles/main.css">
+    <link rel="stylesheet" href="../rte-package/src/styles/components.css">
+    <link rel="stylesheet" href="../rte-package/src/components/modal.css">
+    <style>
+        /* Carousel Styles */
+        .carousel-container {
+            position: relative;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 0 60px;
+        }
+
+        .carousel-wrapper {
+            overflow: hidden;
+            border-radius: 24px;
+        }
+
+        .carousel-track {
+            display: flex;
+            transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .carousel-slide {
+            min-width: 100%;
+            box-sizing: border-box;
+        }
+
+        .carousel-arrow {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 48px;
+            height: 48px;
+            background: white;
+            border: 1px solid #e0e0e0;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+            color: #333;
+            transition: all 0.25s ease;
+            z-index: 10;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .carousel-arrow:hover {
+            background: #1a1a1a;
+            color: white;
+            border-color: #1a1a1a;
+            transform: translateY(-50%) scale(1.05);
+        }
+
+        .carousel-arrow.prev {
+            left: 0;
+        }
+
+        .carousel-arrow.next {
+            right: 0;
+        }
+
+        .carousel-dots {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            margin-top: 1.5rem;
+        }
+
+        .carousel-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: #ddd;
+            border: none;
+            cursor: pointer;
+            transition: all 0.25s ease;
+        }
+
+        .carousel-dot.active {
+            background: #1a1a1a;
+            transform: scale(1.2);
+        }
+
+        .carousel-dot:hover:not(.active) {
+            background: #aaa;
+        }
+
+        /* Slide Labels */
+        .slide-label {
+            text-align: center;
+            font-size: 0.85rem;
+            color: #666;
+            margin-top: 1rem;
+            font-weight: 500;
+        }
+
+        /* Updated laptop screen height for carousel */
+        .carousel-slide .laptop-screen {
+            height: 450px;
+        }
+
+        .carousel-slide .laptop-frame {
+            margin: 0;
+        }
+
+        .carousel-slide .laptop-base {
+            margin: 0 auto;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content">
+            <a href="#" class="logo">
+                <span class="logo-text">Nalashaa RTE</span>
+                <span class="version-badge">v1.0.0</span>
+            </a>
+            <nav class="nav-links">
+                <a href="https://www.npmjs.com/package/@nalashaa-sri/vanilla-rte?activeTab=readme" target="_blank"
+                    class="nav-link">Documentation</a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="announcement-banner">
+            <span>🎉 Nalashaa RTE is now available!</span>
+            <a href="https://www.npmjs.com/package/@nalashaa-sri/vanilla-rte" target="_blank">Check it out →</a>
+        </div>
+
+        <h1 class="hero-title">Your powerful rich text editor.</h1>
+
+        <div class="hero-buttons">
+            <a href="playground.html" class="btn btn-primary">
+                <i class="fas fa-play"></i> Try it out
+            </a>
+            <a href="https://www.npmjs.com/package/@nalashaa-sri/vanilla-rte?activeTab=readme" target="_blank"
+                class="btn btn-secondary">
+                <i class="fab fa-npm"></i> Install npm package
+            </a>
+            <a href="https://www.npmjs.com/package/@nalashaa-sri/vanilla-rte?activeTab=readme" target="_blank"
+                class="btn btn-secondary">
+                <i class="fas fa-book"></i> Documentation
+            </a>
+        </div>
+
+        <!-- Carousel with Editor Examples -->
+        <div class="carousel-container" id="editor-demo">
+            <button class="carousel-arrow prev" id="carousel-prev" aria-label="Previous slide">
+                <i class="fas fa-chevron-left"></i>
+            </button>
+
+            <div class="carousel-wrapper">
+                <div class="carousel-track" id="carousel-track">
+                    <!-- Slide 1: Full Featured Editor -->
+                    <div class="carousel-slide">
+                        <div class="laptop-frame">
+                            <div class="laptop-notch">
+                                <span class="notch-dot red"></span>
+                                <span class="notch-dot yellow"></span>
+                                <span class="notch-dot green"></span>
+                            </div>
+                            <div class="laptop-screen">
+                                <div class="editor-demo">
+                                    <div id="editor-container-1"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="laptop-base"></div>
+                        <p class="slide-label">Full Featured Editor</p>
+                    </div>
+
+                    <!-- Slide 2: Minimal Editor -->
+                    <div class="carousel-slide">
+                        <div class="laptop-frame">
+                            <div class="laptop-notch">
+                                <span class="notch-dot red"></span>
+                                <span class="notch-dot yellow"></span>
+                                <span class="notch-dot green"></span>
+                            </div>
+                            <div class="laptop-screen">
+                                <div class="editor-demo">
+                                    <div id="editor-container-2"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="laptop-base"></div>
+                        <p class="slide-label">Minimal Editor</p>
+                    </div>
+                </div>
+            </div>
+
+            <button class="carousel-arrow next" id="carousel-next" aria-label="Next slide">
+                <i class="fas fa-chevron-right"></i>
+            </button>
+
+            <div class="carousel-dots" id="carousel-dots">
+                <button class="carousel-dot active" data-slide="0" aria-label="Go to slide 1"></button>
+                <button class="carousel-dot" data-slide="1" aria-label="Go to slide 2"></button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features">
+        <div class="features-container">
+            <h2 class="section-title">An API Driven Rich Text Editor</h2>
+
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-code"></i>
+                    </div>
+                    <h3 class="feature-title">Built for Developers</h3>
+                    <p class="feature-description">
+                        Granular access to the editor's content and behavior through a well-documented API.
+                        Customize to your heart's content and integrate seamlessly with your application.
+                    </p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-globe"></i>
+                    </div>
+                    <h3 class="feature-title">Cross Platform</h3>
+                    <p class="feature-description">
+                        Works across all modern browsers on desktop and mobile. Built with vanilla JavaScript
+                        for maximum compatibility and zero dependencies.
+                    </p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-puzzle-piece"></i>
+                    </div>
+                    <h3 class="feature-title">Fits Like a Glove</h3>
+                    <p class="feature-description">
+                        Highly customizable toolbar, flexible configuration options, and extensive command support.
+                        Tailor the editor to match your exact requirements.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta">
+        <h2 class="cta-title">Your powerful rich text editor.</h2>
+        <div class="cta-buttons">
+            <a href="https://www.npmjs.com/package/@nalashaa-sri/vanilla-rte?activeTab=readme" target="_blank"
+                class="btn btn-primary">
+                <i class="fas fa-book"></i> Documentation
+            </a>
+            <a href="playground.html" class="btn btn-secondary">
+                <i class="fas fa-laptop-code"></i> Playground
+            </a>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <p class="footer-text">
+            Nalashaa RTE — Open source rich text editor.
+            <a href="https://www.npmjs.com/package/@nalashaa-sri/vanilla-rte" target="_blank">View on npm</a>
+        </p>
+    </footer>
+
+    <script type="module">
+        import RTE from '../rte-package/src/index.js';
+
+        // Full Featured Editor (Slide 1)
+        const editor1 = new RTE('editor-container-1', {
+            toolbar: [
+                // Clipboard Actions
+                {
+                    group: 'clipboard',
+                    items: [
+                        { type: 'button', label: 'Undo', command: 'undo', icon: '<i class="fas fa-undo"></i>' },
+                        { type: 'button', label: 'Redo', command: 'redo', icon: '<i class="fas fa-redo"></i>' },
+                        { type: 'button', label: 'Cut', command: 'cut', icon: '<i class="fas fa-cut"></i>' },
+                        { type: 'button', label: 'Copy', command: 'copy', icon: '<i class="fas fa-copy"></i>' },
+                        { type: 'button', label: 'Paste', command: 'paste', icon: '<i class="fas fa-paste"></i>' }
+                    ]
+                },
+                // Text Formatting
+                {
+                    group: 'formatting',
+                    items: [
+                        { type: 'button', label: 'Bold', command: 'bold', icon: '<i class="fas fa-bold"></i>' },
+                        { type: 'button', label: 'Italic', command: 'italic', icon: '<i class="fas fa-italic"></i>' },
+                        { type: 'button', label: 'Underline', command: 'underline', icon: '<i class="fas fa-underline"></i>' },
+                        { type: 'button', label: 'Strikethrough', command: 'strikeThrough', icon: '<i class="fas fa-strikethrough"></i>' },
+                        { type: 'button', label: 'Superscript', command: 'superscript', icon: '<i class="fas fa-superscript"></i>' },
+                        { type: 'button', label: 'Subscript', command: 'subscript', icon: '<i class="fas fa-subscript"></i>' },
+                        { type: 'button', label: 'Code', command: 'code', icon: '<i class="fas fa-code"></i>' },
+                        { type: 'button', label: 'Clear Format', command: 'clearFormatting', icon: '<i class="fas fa-eraser"></i>' }
+                    ]
+                },
+                // Paragraph & Lists
+                {
+                    group: 'paragraph',
+                    items: [
+                        {
+                            type: 'select',
+                            label: 'Paragraph',
+                            command: 'formatBlock',
+                            options: [
+                                { label: 'Paragraph', value: 'p' },
+                                { label: 'Heading 1', value: 'h1' },
+                                { label: 'Heading 2', value: 'h2' },
+                                { label: 'Heading 3', value: 'h3' },
+                                { label: 'Heading 4', value: 'h4' },
+                                { label: 'Heading 5', value: 'h5' },
+                                { label: 'Heading 6', value: 'h6' }
+                            ]
+                        },
+                        { type: 'button', label: 'Bulleted List', command: 'insertUnorderedList', icon: '<i class="fas fa-list-ul"></i>' },
+                        { type: 'button', label: 'Numbered List', command: 'insertOrderedList', icon: '<i class="fas fa-list-ol"></i>' },
+                        { type: 'button', label: 'Quote', command: 'insertBlockquote', icon: '<i class="fas fa-quote-left"></i>' }
+                    ]
+                },
+                // Checklist
+                {
+                    group: 'checklist',
+                    items: [
+                        { type: 'button', label: 'Checkbox', command: 'insertChecklist', value: 'checkbox', icon: '<i class="fas fa-check-square"></i>' },
+                        { type: 'button', label: 'Circle', command: 'insertChecklist', value: 'circle', icon: '<i class="far fa-circle"></i>' },
+                        { type: 'button', label: 'Square', command: 'insertChecklist', value: 'square', icon: '<i class="far fa-square"></i>' }
+                    ]
+                },
+                // Alignment
+                {
+                    group: 'alignment',
+                    items: [
+                        { type: 'button', label: 'Align Left', command: 'alignLeft', icon: '<i class="fas fa-align-left"></i>' },
+                        { type: 'button', label: 'Align Center', command: 'alignCenter', icon: '<i class="fas fa-align-center"></i>' },
+                        { type: 'button', label: 'Align Right', command: 'alignRight', icon: '<i class="fas fa-align-right"></i>' },
+                        { type: 'button', label: 'Justify', command: 'alignJustify', icon: '<i class="fas fa-align-justify"></i>' },
+                        { type: 'button', label: 'Indent', command: 'indent', icon: '<i class="fas fa-indent"></i>' },
+                        { type: 'button', label: 'Outdent', command: 'outdent', icon: '<i class="fas fa-outdent"></i>' }
+                    ]
+                },
+                // Insert Elements
+                {
+                    group: 'insert',
+                    items: [
+                        { type: 'button', label: 'Link', command: 'createLink', icon: '<i class="fas fa-link"></i>' },
+                        { type: 'button', label: 'Image', command: 'insertImage', icon: '<i class="fas fa-image"></i>' },
+                        { type: 'button', label: 'Audio', command: 'insertAudio', icon: '<i class="fas fa-volume-up"></i>' },
+                        { type: 'button', label: 'Video', command: 'insertVideo', icon: '<i class="fas fa-video"></i>' },
+                        { type: 'button', label: 'Table', command: 'insertTable', icon: '<i class="fas fa-table"></i>' },
+                        { type: 'button', label: 'Emoji', command: 'insertEmoji', icon: '<i class="fas fa-grin"></i>' },
+                        { type: 'button', label: 'HR', command: 'insertHorizontalRule', icon: '<i class="fas fa-minus"></i>' }
+                    ]
+                },
+                // Typography
+                {
+                    group: 'typography',
+                    items: [
+                        {
+                            type: 'select',
+                            label: 'Font',
+                            command: 'fontName',
+                            options: [
+                                { label: 'Arial', value: 'Arial' },
+                                { label: 'Verdana', value: 'Verdana' },
+                                { label: 'Georgia', value: 'Georgia' },
+                                { label: 'Times New Roman', value: 'Times New Roman' },
+                                { label: 'Courier New', value: 'Courier New' }
+                            ]
+                        },
+                        {
+                            type: 'select',
+                            label: 'Size',
+                            command: 'fontSize',
+                            options: [
+                                { label: '8', value: '1' },
+                                { label: '10', value: '2' },
+                                { label: '12', value: '3' },
+                                { label: '14', value: '4' },
+                                { label: '18', value: '5' },
+                                { label: '24', value: '6' },
+                                { label: '36', value: '7' }
+                            ]
+                        },
+                        { type: 'color', label: 'Text Color', command: 'foreColor', icon: '<i class="fas fa-palette"></i>' },
+                        { type: 'color', label: 'Highlight', command: 'backColor', icon: '<i class="fas fa-highlighter"></i>' }
+                    ]
+                },
+                // Transform
+                {
+                    group: 'transform',
+                    items: [
+                        { type: 'button', label: 'Uppercase', command: 'uppercase', icon: '<i class="fas fa-arrow-up"></i>' },
+                        { type: 'button', label: 'Lowercase', command: 'lowercase', icon: '<i class="fas fa-arrow-down"></i>' },
+                        { type: 'button', label: 'Code Block', command: 'insertCodeBlock', icon: '<i class="fas fa-code"></i>' }
+                    ]
+                },
+                // View
+                {
+                    group: 'view',
+                    items: [
+                        { type: 'button', label: 'Source', command: 'toggleSource', icon: '<i class="fas fa-file-code"></i>' },
+                        { type: 'button', label: 'Fullscreen', command: 'toggleFullscreen', icon: '<i class="fas fa-expand"></i>' }
+                    ]
+                },
+                // Tools
+                {
+                    group: 'tools',
+                    items: [
+                        { type: 'button', label: 'Find', command: 'findReplace', icon: '<i class="fas fa-search"></i>' }
+                    ]
+                }
+            ]
+        });
+
+        // Minimal Editor (Slide 2)
+        const editor2 = new RTE('editor-container-2', {
+            toolbar: [
+                {
+                    group: 'clipboard',
+                    items: [
+                        { type: 'button', label: 'Undo', command: 'undo', icon: '<i class="fas fa-undo"></i>' },
+                        { type: 'button', label: 'Redo', command: 'redo', icon: '<i class="fas fa-redo"></i>' }
+                    ]
+                },
+                {
+                    group: 'formatting',
+                    items: [
+                        { type: 'button', label: 'Bold', command: 'bold', icon: '<i class="fas fa-bold"></i>' },
+                        { type: 'button', label: 'Italic', command: 'italic', icon: '<i class="fas fa-italic"></i>' },
+                        { type: 'button', label: 'Underline', command: 'underline', icon: '<i class="fas fa-underline"></i>' },
+                        { type: 'button', label: 'Strikethrough', command: 'strikeThrough', icon: '<i class="fas fa-strikethrough"></i>' }
+                    ]
+                },
+                {
+                    group: 'paragraph',
+                    items: [
+                        {
+                            type: 'select',
+                            label: 'Heading',
+                            command: 'formatBlock',
+                            options: [
+                                { label: 'Normal', value: 'p' },
+                                { label: 'Heading 1', value: 'h1' },
+                                { label: 'Heading 2', value: 'h2' },
+                                { label: 'Heading 3', value: 'h3' }
+                            ]
+                        },
+                        { type: 'button', label: 'Bulleted List', command: 'insertUnorderedList', icon: '<i class="fas fa-list-ul"></i>' },
+                        { type: 'button', label: 'Numbered List', command: 'insertOrderedList', icon: '<i class="fas fa-list-ol"></i>' },
+                        { type: 'button', label: 'Quote', command: 'insertBlockquote', icon: '<i class="fas fa-quote-left"></i>' }
+                    ]
+                },
+                {
+                    group: 'insert',
+                    items: [
+                        { type: 'button', label: 'Link', command: 'createLink', icon: '<i class="fas fa-link"></i>' },
+                        { type: 'button', label: 'Image', command: 'insertImage', icon: '<i class="fas fa-image"></i>' },
+                        { type: 'button', label: 'Video', command: 'insertVideo', icon: '<i class="fas fa-video"></i>' }
+                    ]
+                },
+                {
+                    group: 'typography',
+                    items: [
+                        { type: 'color', label: 'Text Color', command: 'foreColor', icon: '<i class="fas fa-palette"></i>' },
+                        { type: 'color', label: 'Highlight', command: 'backColor', icon: '<i class="fas fa-highlighter"></i>' }
+                    ]
+                },
+                {
+                    group: 'view',
+                    items: [
+                        { type: 'button', label: 'Code', command: 'code', icon: '<i class="fas fa-code"></i>' }
+                    ]
+                }
+            ]
+        });
+
+        // Sample content for Full Featured Editor
+        const sampleContent1 = `
+<h1>Welcome to RTE Demo</h1>
+<p>This is a <strong>feature-rich</strong> Rich Text Editor built with vanilla JavaScript.</p>
+<h2>Key Features</h2>
+<ul>
+    <li>Full formatting support (Bold, Italic, Underline)</li>
+    <li>Headings and paragraph styles</li>
+    <li>Lists and indentation</li>
+    <li>Media insertion (Images, Audio, Video)</li>
+    <li>Link and table support</li>
+    <li>Source code editing</li>
+    <li>Sanitized output for security</li>
+</ul>
+<p><em>Try editing this content to see the editor in action!</em></p>
+`;
+
+        // Sample content for Minimal Editor
+        const sampleContent2 = `
+<h1>Nalashaa Rich Text Editor</h1>
+<p>Nalashaa RTE is a <strong>feature-rich</strong>, <a href="https://www.npmjs.com/package/@nalashaa-sri/vanilla-rte">open source</a> WYSIWYG editor built for the modern web.</p>
+<h2>Minimal Configuration</h2>
+<p>This version shows a simplified toolbar with only the essential formatting options:</p>
+<ul>
+    <li><strong>Basic formatting</strong> — Bold, italic, underline</li>
+    <li><strong>Headings</strong> — Multiple heading levels</li>
+    <li><strong>Lists</strong> — Bulleted and numbered lists</li>
+    <li><strong>Media</strong> — Links, images, and videos</li>
+</ul>
+<blockquote>
+    <p>"Simple yet powerful."</p>
+</blockquote>
+`;
+
+        editor1.setContent(sampleContent1);
+        editor2.setContent(sampleContent2);
+
+        // Carousel functionality
+        const track = document.getElementById('carousel-track');
+        const dots = document.querySelectorAll('.carousel-dot');
+        const prevBtn = document.getElementById('carousel-prev');
+        const nextBtn = document.getElementById('carousel-next');
+        let currentSlide = 0;
+        const totalSlides = 2;
+
+        function goToSlide(index) {
+            if (index < 0) index = totalSlides - 1;
+            if (index >= totalSlides) index = 0;
+            currentSlide = index;
+            track.style.transform = `translateX(-${currentSlide * 100}%)`;
+            dots.forEach((dot, i) => {
+                dot.classList.toggle('active', i === currentSlide);
+            });
+        }
+
+        prevBtn.addEventListener('click', () => goToSlide(currentSlide - 1));
+        nextBtn.addEventListener('click', () => goToSlide(currentSlide + 1));
+
+        dots.forEach(dot => {
+            dot.addEventListener('click', () => {
+                goToSlide(parseInt(dot.dataset.slide));
+            });
+        });
+
+        // Keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowLeft') goToSlide(currentSlide - 1);
+            if (e.key === 'ArrowRight') goToSlide(currentSlide + 1);
+        });
+    </script>
+</body>
+
+</html>
