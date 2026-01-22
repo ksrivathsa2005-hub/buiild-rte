@@ -1,5 +1,15 @@
 # Changelog
 
+## v1.9.0 (2026-01-22)
+
+## What's Changed
+
+- Merge pull request #16 from ksrivathsa2005-hub/new-branch (5076291)
+- new (d772beb)
+- fix (db2f624)
+
+**Full Changelog**: https://github.com/ksrivathsa2005-hub/buiild-rte/compare/v1.8.0...v1.9.0
+
 ## v1.8.0 (2026-01-22)
 
 ## What's Changed
