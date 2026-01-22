@@ -1,0 +1,116 @@
+name: Release and Publish
+
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: write
+  packages: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          registry-url: 'https://registry.npmjs.org'
+
+      - name: Configure Git
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Get current version
+        id: current_version
+        run: |
+          CURRENT_VERSION=$(node -p "require('./package.json').version")
+          echo "version=$CURRENT_VERSION" >> $GITHUB_OUTPUT
+
+      - name: Bump minor version
+        id: bump_version
+        run: |
+          npm version minor --no-git-tag-version
+          NEW_VERSION=$(node -p "require('./package.json').version")
+          echo "new_version=$NEW_VERSION" >> $GITHUB_OUTPUT
+
+      - name: Generate changelog
+        id: changelog
+        run: |
+          # Get the latest tag or use initial commit if no tags exist
+          LATEST_TAG=$(git describe --tags --abbrev=0 2>/dev/null || git rev-list --max-parents=0 HEAD)
+          
+          # Generate changelog from commits since last tag
+          echo "## What's Changed" > /tmp/changelog.md
+          echo "" >> /tmp/changelog.md
+          
+          git log ${LATEST_TAG}..HEAD --pretty=format:"- %s (%h)" >> /tmp/changelog.md
+          
+          echo "" >> /tmp/changelog.md
+          echo "" >> /tmp/changelog.md
+          echo "**Full Changelog**: https://github.com/${{ github.repository }}/compare/${LATEST_TAG}...v${{ steps.bump_version.outputs.new_version }}" >> /tmp/changelog.md
+          
+          # Save changelog for release notes
+          cat /tmp/changelog.md
+          
+          # Update CHANGELOG.md file
+          if [ -f CHANGELOG.md ]; then
+            echo "# Changelog" > /tmp/full_changelog.md
+            echo "" >> /tmp/full_changelog.md
+            echo "## v${{ steps.bump_version.outputs.new_version }} ($(date +%Y-%m-%d))" >> /tmp/full_changelog.md
+            echo "" >> /tmp/full_changelog.md
+            cat /tmp/changelog.md >> /tmp/full_changelog.md
+            echo "" >> /tmp/full_changelog.md
+            tail -n +3 CHANGELOG.md >> /tmp/full_changelog.md
+            mv /tmp/full_changelog.md CHANGELOG.md
+          else
+            echo "# Changelog" > CHANGELOG.md
+            echo "" >> CHANGELOG.md
+            echo "## v${{ steps.bump_version.outputs.new_version }} ($(date +%Y-%m-%d))" >> CHANGELOG.md
+            echo "" >> CHANGELOG.md
+            cat /tmp/changelog.md >> CHANGELOG.md
+          fi
+
+      - name: Commit version bump and changelog
+        run: |
+          git add package.json CHANGELOG.md
+          git commit -m "chore(release): v${{ steps.bump_version.outputs.new_version }}"
+
+      - name: Create and push tag
+        run: |
+          git tag -a "v${{ steps.bump_version.outputs.new_version }}" -m "Release v${{ steps.bump_version.outputs.new_version }}"
+          git push origin main --follow-tags
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: v${{ steps.bump_version.outputs.new_version }}
+          name: v${{ steps.bump_version.outputs.new_version }}
+          body_path: /tmp/changelog.md
+          generate_release_notes: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Publish to npm
+        run: npm publish --access public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      - name: Summary
+        run: |
+          echo "## 🚀 Release Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "- **Previous Version**: ${{ steps.current_version.outputs.version }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **New Version**: ${{ steps.bump_version.outputs.new_version }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Tag**: v${{ steps.bump_version.outputs.new_version }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **npm**: https://www.npmjs.com/package/$(node -p \"require('./package.json').name\")" >> $GITHUB_STEP_SUMMARY

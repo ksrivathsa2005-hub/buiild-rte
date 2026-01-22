@@ -2,18 +2,29 @@
   "name": "editor-structure",
   "version": "1.0.0",
   "description": "A professional, **configuration-driven**, **vanilla JavaScript** WYSIWYG Rich Text Editor built with modern frontend standards. Fully reusable as an NPM package with a complete demo application.",
-  "main": "CONFIGURATION_EXAMPLES.js",
+  "main": "rte-package/src/index.js",
+  "files": [
+    "rte-package/src",
+    "CONFIGURATION_EXAMPLES.js",
+    "README.md"
+  ],
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "release": "npm version minor && git push --follow-tags && npm publish"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/ksrivathsa2005-hub/buiild-rte.git"
   },
-  "keywords": [],
+  "keywords": [
+    "rte",
+    "wysiwyg",
+    "editor",
+    "javascript"
+  ],
   "author": "sri",
   "license": "ISC",
-  "type": "commonjs",
+  "type": "module",
   "bugs": {
     "url": "https://github.com/ksrivathsa2005-hub/buiild-rte/issues"
   },
