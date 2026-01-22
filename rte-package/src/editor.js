@@ -231,6 +231,9 @@ export class RTE {
     this.sourceView = source;
     wrapper.appendChild(source);
 
+    // Create Selection Bubble Toolbar
+    this._createBubbleToolbar(wrapper);
+
     this.container.appendChild(wrapper);
 
     // Initialize DraggableImage
@@ -242,6 +245,117 @@ export class RTE {
     this._bindEvents();
   }
 
+  _createBubbleToolbar(wrapper) {
+    const bubble = document.createElement('div');
+    bubble.className = 'rte__bubble-toolbar';
+    bubble.style.cssText = `
+      position: absolute;
+      display: none;
+      background: #1a1a1a;
+      border-radius: 6px;
+      padding: 6px 8px;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+      z-index: 1000;
+      gap: 2px;
+      align-items: center;
+      transform: translateX(-50%);
+    `;
+
+    // Bubble toolbar items - minimal formatting tools
+    const bubbleItems = [
+      { label: 'Bold', command: 'bold', icon: '<b>B</b>' },
+      { label: 'Italic', command: 'italic', icon: '<i>I</i>' },
+      { label: 'Underline', command: 'underline', icon: '<u>U</u>' },
+      { label: 'Strikethrough', command: 'strikeThrough', icon: '<s>S</s>' },
+      { type: 'separator' },
+      { label: 'Link', command: 'createLink', icon: '🔗' },
+      { label: 'Code', command: 'code', icon: '{ }' }
+    ];
+
+    bubbleItems.forEach(item => {
+      if (item.type === 'separator') {
+        const sep = document.createElement('span');
+        sep.style.cssText = 'width: 1px; height: 20px; background: #444; margin: 0 4px;';
+        bubble.appendChild(sep);
+        return;
+      }
+
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.innerHTML = item.icon;
+      btn.title = item.label;
+      btn.dataset.command = item.command;
+      btn.style.cssText = `
+        background: transparent;
+        border: none;
+        color: white;
+        cursor: pointer;
+        padding: 6px 10px;
+        font-size: 14px;
+        font-weight: 600;
+        border-radius: 4px;
+        transition: background 0.15s;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-width: 32px;
+        height: 32px;
+      `;
+      btn.onmouseenter = () => btn.style.background = '#333';
+      btn.onmouseleave = () => btn.style.background = 'transparent';
+      btn.onmousedown = (e) => {
+        e.preventDefault(); // Prevent losing selection
+        this.commandHandler.execute(item.command);
+        this._hideBubbleToolbar();
+      };
+      bubble.appendChild(btn);
+    });
+
+    // Arrow pointer
+    const arrow = document.createElement('div');
+    arrow.style.cssText = `
+      position: absolute;
+      bottom: -6px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 0;
+      height: 0;
+      border-left: 6px solid transparent;
+      border-right: 6px solid transparent;
+      border-top: 6px solid #1a1a1a;
+    `;
+    bubble.appendChild(arrow);
+
+    this.bubbleToolbar = bubble;
+    wrapper.appendChild(bubble);
+  }
+
+  _showBubbleToolbar() {
+    const selection = window.getSelection();
+    if (!selection.rangeCount || selection.isCollapsed) {
+      this._hideBubbleToolbar();
+      return;
+    }
+
+    const range = selection.getRangeAt(0);
+    const rect = range.getBoundingClientRect();
+    const wrapperRect = this.editor.parentElement.getBoundingClientRect();
+
+    // Position bubble above the selection
+    const left = rect.left + rect.width / 2 - wrapperRect.left;
+    const top = rect.top - wrapperRect.top - 50; // 50px above selection
+
+    this.bubbleToolbar.style.left = `${left}px`;
+    this.bubbleToolbar.style.top = `${Math.max(10, top)}px`;
+    this.bubbleToolbar.style.display = 'flex';
+  }
+
+  _hideBubbleToolbar() {
+    if (this.bubbleToolbar) {
+      this.bubbleToolbar.style.display = 'none';
+    }
+  }
+
   _bindEvents() {
     this.editor.addEventListener('keydown', (e) => {
       // Hide quick toolbar when typing (except for modifier keys)
@@ -249,6 +363,71 @@ export class RTE {
         this.quickToolbar.hide();
       }
 
+      // Check if we're inside a checklist
+      const selection = window.getSelection();
+      if (selection.rangeCount > 0) {
+        const range = selection.getRangeAt(0);
+        let node = range.startContainer;
+
+        // Find if we're inside a checklist item
+        let checklistItem = null;
+        let checklist = null;
+        while (node && node !== this.editor) {
+          if (node.nodeType === Node.ELEMENT_NODE) {
+            if (node.tagName === 'LI' && node.closest('.rte-checklist')) {
+              checklistItem = node;
+              checklist = node.closest('.rte-checklist');
+              break;
+            }
+          }
+          node = node.parentNode;
+        }
+
+        // Handle checklist-specific keys
+        if (checklistItem && checklist) {
+          if (e.key === 'Enter' && !e.shiftKey) {
+            e.preventDefault();
+            this._addChecklistItem(checklistItem, checklist);
+            return;
+          }
+
+          if (e.key === 'Tab') {
+            e.preventDefault();
+            if (e.shiftKey) {
+              this._outdentChecklistItem(checklistItem);
+            } else {
+              this._indentChecklistItem(checklistItem);
+            }
+            return;
+          }
+
+          if (e.key === 'Backspace') {
+            const textContent = checklistItem.textContent.trim();
+            const checkbox = checklistItem.querySelector('input[type="checkbox"]');
+            const textOnly = textContent.replace(checkbox ? '' : '', '').trim();
+
+            if (textOnly === '' || textOnly === 'List item') {
+              const prevItem = checklistItem.previousElementSibling;
+              if (prevItem) {
+                e.preventDefault();
+                checklistItem.remove();
+
+                // Focus previous item
+                const prevSpan = prevItem.querySelector('span');
+                if (prevSpan) {
+                  const newRange = document.createRange();
+                  newRange.selectNodeContents(prevSpan);
+                  newRange.collapse(false);
+                  selection.removeAllRanges();
+                  selection.addRange(newRange);
+                }
+              }
+            }
+          }
+        }
+      }
+
+      // Standard keyboard shortcuts
       if (e.ctrlKey || e.metaKey) {
         const key = e.key.toLowerCase();
         if (['b', 'i', 'u', 'z', 'y'].includes(key)) {
@@ -262,10 +441,33 @@ export class RTE {
     this.editor.addEventListener('mouseup', (e) => {
       this.stateManager.updateButtonStates();
       this._handleQuickToolbar(e);
+      // Show bubble toolbar if text is selected
+      setTimeout(() => this._showBubbleToolbar(), 10);
     });
 
-    this.editor.addEventListener('keyup', () => {
+    this.editor.addEventListener('keyup', (e) => {
       this.stateManager.updateButtonStates();
+      // Show bubble toolbar on shift+arrow selection
+      if (e.shiftKey && ['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown'].includes(e.key)) {
+        setTimeout(() => this._showBubbleToolbar(), 10);
+      } else if (!e.shiftKey) {
+        this._hideBubbleToolbar();
+      }
+    });
+
+    // Hide bubble toolbar when clicking outside editor
+    document.addEventListener('mousedown', (e) => {
+      if (!this.container.contains(e.target)) {
+        this._hideBubbleToolbar();
+      }
+    });
+
+    // Hide bubble toolbar when selection is cleared
+    document.addEventListener('selectionchange', () => {
+      const selection = window.getSelection();
+      if (selection.isCollapsed || !this.editor.contains(selection.anchorNode)) {
+        this._hideBubbleToolbar();
+      }
     });
 
     this.editor.addEventListener('paste', (e) => {
@@ -329,6 +531,80 @@ export class RTE {
       // Hide toolbar if clicking elsewhere
       this.quickToolbar.hide();
     }, 50);
+  _addChecklistItem(currentItem, checklist) {
+    const checkboxType = checklist.dataset.checkboxType || 'checkbox';
+    const li = document.createElement('li');
+    li.style.display = 'flex';
+    li.style.alignItems = 'flex-start';
+    li.style.marginBottom = '0.5rem';
+
+    const checkbox = document.createElement('input');
+    checkbox.type = 'checkbox';
+    checkbox.className = `rte-checkbox rte-checkbox--${checkboxType}`;
+    checkbox.style.marginTop = '4px';
+    checkbox.style.marginRight = '8px';
+    checkbox.onclick = (e) => {
+      if (e.target.checked) {
+        e.target.setAttribute('checked', 'checked');
+      } else {
+        e.target.removeAttribute('checked');
+      }
+    };
+
+    const textSpan = document.createElement('span');
+    textSpan.innerHTML = '<br>';
+
+    li.appendChild(checkbox);
+    li.appendChild(textSpan);
+
+    // Insert after current item
+    if (currentItem.nextSibling) {
+      currentItem.parentNode.insertBefore(li, currentItem.nextSibling);
+    } else {
+      currentItem.parentNode.appendChild(li);
+    }
+
+    // Focus the new item
+    const selection = window.getSelection();
+    const newRange = document.createRange();
+    newRange.selectNodeContents(textSpan);
+    newRange.collapse(true);
+    selection.removeAllRanges();
+    selection.addRange(newRange);
+  }
+
+  _indentChecklistItem(item) {
+    const prevSibling = item.previousElementSibling;
+    if (!prevSibling) return;
+
+    // Check if previous sibling already has a nested list
+    let nestedList = prevSibling.querySelector('ul.rte-checklist');
+    if (!nestedList) {
+      nestedList = document.createElement('ul');
+      nestedList.className = 'rte-checklist rte-checklist--nested';
+      nestedList.style.listStyleType = 'none';
+      nestedList.style.paddingLeft = '1.5rem';
+      nestedList.style.marginTop = '0.5rem';
+      prevSibling.appendChild(nestedList);
+    }
+
+    nestedList.appendChild(item);
+  }
+
+  _outdentChecklistItem(item) {
+    const parentList = item.parentNode;
+    if (!parentList.classList.contains('rte-checklist--nested')) return;
+
+    const grandparentItem = parentList.parentNode;
+    const grandparentList = grandparentItem.parentNode;
+
+    // Move item after grandparent item
+    grandparentList.insertBefore(item, grandparentItem.nextSibling);
+
+    // Remove empty nested list
+    if (parentList.children.length === 0) {
+      parentList.remove();
+    }
   }
 
   async executeCommand(command, value = null) {

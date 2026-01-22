@@ -551,6 +551,22 @@ export class ModalManager {
       let input;
       if (field.type === 'textarea') {
         input = document.createElement('textarea');
+      } else if (field.type === 'select') {
+        input = document.createElement('select');
+        input.className = 'rte__form-input rte__form-select';
+        
+        // Add options
+        if (field.options && Array.isArray(field.options)) {
+          field.options.forEach(option => {
+            const opt = document.createElement('option');
+            opt.value = option.value;
+            opt.textContent = option.label || option.value;
+            if (field.value && field.value === option.value) {
+              opt.selected = true;
+            }
+            input.appendChild(opt);
+          });
+        }
       } else {
         input = document.createElement('input');
         input.type = field.type || 'text';
@@ -558,9 +574,11 @@ export class ModalManager {
 
       input.id = field.id;
       input.name = field.id;
-      input.className = 'rte__form-input';
+      if (!field.type || field.type !== 'select') {
+        input.className = 'rte__form-input';
+      }
       if (field.placeholder) input.placeholder = field.placeholder;
-      if (field.value) input.value = field.value;
+      if (field.value && field.type !== 'select') input.value = field.value;
       if (field.required) input.required = field.required;
 
       if (field.type === 'checkbox') {

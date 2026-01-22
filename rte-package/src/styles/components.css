@@ -26,6 +26,18 @@
   user-select: none;
 }
 
+/* Small button variant */
+.rte__btn--small {
+  padding: 2px 4px;
+  min-width: 20px;
+  min-height: 20px;
+  font-size: 10px;
+}
+
+.rte__btn--small i {
+  font-size: 10px;
+}
+
 /* Icon styling in buttons */
 .rte__btn i {
   font-size: 13px;
@@ -171,6 +183,37 @@
   background-color: #f5f5f5;
   cursor: not-allowed;
   border-color: #ddd;
+}
+
+/* Heading/Paragraph format dropdown styling */
+select[data-command="formatBlock"] option[value="p"] {
+  font-size: 14px;
+  font-weight: normal;
+}
+
+select[data-command="formatBlock"] option[value="h1"] {
+  font-size: 24px;
+  font-weight: bold;
+}
+
+select[data-command="formatBlock"] option[value="h2"] {
+  font-size: 20px;
+  font-weight: bold;
+}
+
+select[data-command="formatBlock"] option[value="h3"] {
+  font-size: 18px;
+  font-weight: 600;
+}
+
+select[data-command="formatBlock"] option[value="h4"] {
+  font-size: 16px;
+  font-weight: 600;
+}
+
+select[data-command="formatBlock"] option[value="pre"] {
+  font-family: 'Courier New', monospace;
+  font-size: 13px;
 }
 
 /* ============================================

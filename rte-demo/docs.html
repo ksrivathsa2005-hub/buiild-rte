@@ -1,0 +1,876 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Documentation - Nalashaa RTE</title>
+    <meta name="description"
+        content="Nalashaa RTE documentation - Learn how to install, configure, and customize the rich text editor.">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css">
+    <link rel="stylesheet" href="docs.css">
+    <link rel="stylesheet" href="../rte-package/src/styles/main.css">
+    <link rel="stylesheet" href="../rte-package/src/styles/components.css">
+    <link rel="stylesheet" href="../rte-package/src/components/modal.css">
+</head>
+
+<body>
+    <!-- Header -->
+    <header class="docs-header">
+        <div class="docs-header-left">
+            <a href="homepage.html" class="docs-logo">
+                <span>Nalashaa RTE</span>
+                <span class="docs-logo-badge">v1.0.0</span>
+            </a>
+            <nav class="docs-breadcrumb">
+                <a href="docs.html">Documentation</a>
+                <span>›</span>
+                <span>Quickstart</span>
+            </nav>
+        </div>
+        <div class="docs-header-right">
+            <a href="https://www.npmjs.com/package/@nalashaa-sri/vanilla-rte" target="_blank" class="docs-header-link">
+                <i class="fab fa-npm"></i> npm
+            </a>
+            <a href="playground.html" class="docs-header-link">
+                <i class="fas fa-laptop-code"></i> Playground
+            </a>
+        </div>
+    </header>
+
+    <!-- Sidebar -->
+    <aside class="docs-sidebar">
+        <div class="sidebar-section">
+            <ul class="sidebar-nav">
+                <li><a href="#quickstart" class="active">Quickstart</a></li>
+                <li><a href="#installation">Installation</a></li>
+                <li><a href="#configuration">Configuration</a></li>
+            </ul>
+        </div>
+
+        <div class="sidebar-section">
+            <div class="sidebar-title">Toolbar</div>
+            <ul class="sidebar-nav">
+                <li><a href="#toolbar-overview">Overview</a></li>
+                <li><a href="#toolbar-types">Toolbar Types</a></li>
+                <li><a href="#toolbar-expand">Expand (Default)</a></li>
+                <li><a href="#toolbar-multirow">MultiRow</a></li>
+                <li><a href="#toolbar-scrollable">Scrollable</a></li>
+            </ul>
+        </div>
+
+        <div class="sidebar-section">
+            <div class="sidebar-title">Tools</div>
+            <ul class="sidebar-nav">
+                <li><a href="#tools-formatting">Formatting</a></li>
+                <li><a href="#tools-paragraph">Paragraph</a></li>
+                <li><a href="#tools-insert">Insert</a></li>
+                <li><a href="#tools-typography">Typography</a></li>
+                <li><a href="#tools-alignment">Alignment</a></li>
+            </ul>
+        </div>
+
+        <div class="sidebar-section">
+            <div class="sidebar-title">API</div>
+            <ul class="sidebar-nav">
+                <li><a href="#api-content">Content</a></li>
+                <li><a href="#api-formatting">Formatting</a></li>
+                <li><a href="#api-events">Events</a></li>
+            </ul>
+        </div>
+
+        <div class="sidebar-section">
+            <div class="sidebar-title">Customization</div>
+            <ul class="sidebar-nav">
+                <li><a href="#customization-themes">Themes</a></li>
+            </ul>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="docs-main">
+        <article class="docs-content">
+            <!-- Quickstart Section -->
+            <section id="quickstart">
+                <h1>Quickstart</h1>
+                <p>The best way to get started is to try a simple example. The Rich Text Editor is initialized with a
+                    DOM element to contain the editor. The contents of that element will become the initial contents of
+                    the editor.</p>
+
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-lang">HTML</span>
+                    </div>
+                    <pre><code class="language-html">&lt;!-- Include stylesheet --&gt;
+&lt;link href="rte-package/src/styles/main.css" rel="stylesheet" /&gt;
+&lt;link href="rte-package/src/styles/components.css" rel="stylesheet" /&gt;
+
+&lt;!-- Create the editor container --&gt;
+&lt;div id="editor"&gt;
+    &lt;p&gt;Hello World!&lt;/p&gt;
+    &lt;p&gt;Some initial &lt;strong&gt;bold&lt;/strong&gt; text&lt;/p&gt;
+&lt;/div&gt;
+
+&lt;!-- Include the RTE library --&gt;
+&lt;script type="module"&gt;
+    import RTE from 'rte-package/src/index.js';
+    
+    const editor = new RTE('editor', {
+        toolbar: [
+            { group: 'formatting', items: [
+                { type: 'button', label: 'Bold', command: 'bold', icon: '&lt;b&gt;B&lt;/b&gt;' },
+                { type: 'button', label: 'Italic', command: 'italic', icon: '&lt;i&gt;I&lt;/i&gt;' }
+            ]}
+        ]
+    });
+&lt;/script&gt;</code></pre>
+                </div>
+
+                <button class="run-code-btn" onclick="showDemo('quickstart-demo')">
+                    <i class="fas fa-play"></i> Run Code
+                </button>
+
+                <div id="quickstart-demo" class="demo-container" style="display: none;">
+                    <div class="demo-header">Live Demo</div>
+                    <div class="demo-content">
+                        <div id="demo-editor-1"></div>
+                    </div>
+                </div>
+
+                <p>And that's all there is to it!</p>
+            </section>
+
+            <!-- Installation Section -->
+            <section id="installation">
+                <h2>Installation</h2>
+                <p>Install the Nalashaa RTE package via npm:</p>
+
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-lang">Terminal</span>
+                    </div>
+                    <pre><code class="language-bash">npm install @nalashaa-sri/vanilla-rte</code></pre>
+                </div>
+
+                <p>Or include directly via CDN:</p>
+
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-lang">HTML</span>
+                    </div>
+                    <pre><code class="language-html">&lt;link rel="stylesheet" href="https://unpkg.com/@nalashaa-sri/vanilla-rte/dist/styles/main.css"&gt;
+&lt;script type="module" src="https://unpkg.com/@nalashaa-sri/vanilla-rte/dist/index.js"&gt;&lt;/script&gt;</code></pre>
+                </div>
+            </section>
+
+            <!-- Configuration Section -->
+            <section id="configuration">
+                <h2>Configuration</h2>
+                <p>The Rich Text Editor accepts a configuration object with various options:</p>
+
+                <table class="docs-table">
+                    <thead>
+                        <tr>
+                            <th>Option</th>
+                            <th>Type</th>
+                            <th>Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><code>toolbar</code></td>
+                            <td>Array</td>
+                            <td>Array of toolbar groups with items</td>
+                        </tr>
+                        <tr>
+                            <td><code>placeholder</code></td>
+                            <td>String</td>
+                            <td>Placeholder text when editor is empty</td>
+                        </tr>
+                        <tr>
+                            <td><code>readOnly</code></td>
+                            <td>Boolean</td>
+                            <td>Enable read-only mode</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <!-- Toolbar Overview -->
+            <section id="toolbar-overview">
+                <h2>Toolbar Overview</h2>
+                <p>The Rich Text Editor provides a powerful toolbar that enables users to format, style, and edit
+                    content efficiently. The toolbar includes essential editing tools such as bold, italic, underline,
+                    alignment, and lists, along with customization options to suit different use cases.</p>
+
+                <div class="info-box note">
+                    <div class="info-box-title">Note</div>
+                    <p>To create a Rich Text Editor with Toolbar feature, configure the <code>toolbar</code> array in
+                        the RTE options.</p>
+                </div>
+            </section>
+
+            <!-- Toolbar Types -->
+            <section id="toolbar-types">
+                <h2>Toolbar Types</h2>
+                <p>The Rich Text Editor allows you to configure different types of toolbar using the <code>type</code>
+                    field in <code>toolbarSettings</code> property. The types of toolbar are:</p>
+
+                <ul>
+                    <li><strong>Expand</strong> — Default mode, hides overflow in expandable section</li>
+                    <li><strong>MultiRow</strong> — Displays toolbar items in multiple rows</li>
+                    <li><strong>Scrollable</strong> — Horizontal scrolling for overflow items</li>
+                </ul>
+            </section>
+
+            <!-- Expand Toolbar -->
+            <section id="toolbar-expand">
+                <h2>Expand (Default)</h2>
+                <p>The default mode of the toolbar is <strong>Expand</strong>. This mode wraps any overflowing toolbar
+                    items to the next row, allowing all tools to remain visible.</p>
+
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-lang">JavaScript</span>
+                    </div>
+                    <pre><code class="language-javascript">const editor = new RTE('editor', {
+    toolbar: [
+        {
+            group: 'clipboard',
+            items: [
+                { type: 'button', label: 'Undo', command: 'undo', icon: '&lt;i class="fas fa-undo"&gt;&lt;/i&gt;' },
+                { type: 'button', label: 'Redo', command: 'redo', icon: '&lt;i class="fas fa-redo"&gt;&lt;/i&gt;' }
+            ]
+        },
+        {
+            group: 'formatting',
+            items: [
+                { type: 'button', label: 'Bold', command: 'bold', icon: '&lt;i class="fas fa-bold"&gt;&lt;/i&gt;' },
+                { type: 'button', label: 'Italic', command: 'italic', icon: '&lt;i class="fas fa-italic"&gt;&lt;/i&gt;' },
+                { type: 'button', label: 'Underline', command: 'underline', icon: '&lt;i class="fas fa-underline"&gt;&lt;/i&gt;' }
+            ]
+        }
+    ]
+});</code></pre>
+                </div>
+
+                <button class="run-code-btn" onclick="showDemo('expand-demo')">
+                    <i class="fas fa-play"></i> Run Code
+                </button>
+
+                <div id="expand-demo" class="demo-container" style="display: none;">
+                    <div class="demo-header">Expand Toolbar Demo</div>
+                    <div class="demo-content">
+                        <div id="demo-editor-expand"></div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- MultiRow Toolbar -->
+            <section id="toolbar-multirow">
+                <h2>MultiRow Toolbar</h2>
+                <p>The MultiRow mode displays all toolbar items across multiple rows, ensuring every tool is immediately
+                    visible without scrolling or expanding.</p>
+
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-lang">JavaScript</span>
+                    </div>
+                    <pre><code class="language-javascript">const editor = new RTE('editor', {
+    toolbar: [
+        // Row 1: Clipboard & Formatting
+        {
+            group: 'clipboard',
+            items: [
+                { type: 'button', label: 'Undo', command: 'undo', icon: '&lt;i class="fas fa-undo"&gt;&lt;/i&gt;' },
+                { type: 'button', label: 'Redo', command: 'redo', icon: '&lt;i class="fas fa-redo"&gt;&lt;/i&gt;' },
+                { type: 'button', label: 'Cut', command: 'cut', icon: '&lt;i class="fas fa-cut"&gt;&lt;/i&gt;' },
+                { type: 'button', label: 'Copy', command: 'copy', icon: '&lt;i class="fas fa-copy"&gt;&lt;/i&gt;' },
+                { type: 'button', label: 'Paste', command: 'paste', icon: '&lt;i class="fas fa-paste"&gt;&lt;/i&gt;' }
+            ]
+        },
+        {
+            group: 'formatting',
+            items: [
+                { type: 'button', label: 'Bold', command: 'bold', icon: '&lt;i class="fas fa-bold"&gt;&lt;/i&gt;' },
+                { type: 'button', label: 'Italic', command: 'italic', icon: '&lt;i class="fas fa-italic"&gt;&lt;/i&gt;' },
+                { type: 'button', label: 'Underline', command: 'underline', icon: '&lt;i class="fas fa-underline"&gt;&lt;/i&gt;' },
+                { type: 'button', label: 'Strikethrough', command: 'strikeThrough', icon: '&lt;i class="fas fa-strikethrough"&gt;&lt;/i&gt;' }
+            ]
+        },
+        // Row 2: Paragraph & Lists
+        {
+            group: 'paragraph',
+            items: [
+                { type: 'select', label: 'Heading', command: 'formatBlock', options: [
+                    { label: 'Paragraph', value: 'p' },
+                    { label: 'Heading 1', value: 'h1' },
+                    { label: 'Heading 2', value: 'h2' },
+                    { label: 'Heading 3', value: 'h3' }
+                ]},
+                { type: 'button', label: 'Bullet List', command: 'insertUnorderedList', icon: '&lt;i class="fas fa-list-ul"&gt;&lt;/i&gt;' },
+                { type: 'button', label: 'Number List', command: 'insertOrderedList', icon: '&lt;i class="fas fa-list-ol"&gt;&lt;/i&gt;' }
+            ]
+        },
+        // Row 3: Insert & Typography
+        {
+            group: 'insert',
+            items: [
+                { type: 'button', label: 'Link', command: 'createLink', icon: '&lt;i class="fas fa-link"&gt;&lt;/i&gt;' },
+                { type: 'button', label: 'Image', command: 'insertImage', icon: '&lt;i class="fas fa-image"&gt;&lt;/i&gt;' },
+                { type: 'button', label: 'Table', command: 'insertTable', icon: '&lt;i class="fas fa-table"&gt;&lt;/i&gt;' }
+            ]
+        },
+        {
+            group: 'typography',
+            items: [
+                { type: 'color', label: 'Text Color', command: 'foreColor' },
+                { type: 'color', label: 'Highlight', command: 'backColor' }
+            ]
+        }
+    ]
+});</code></pre>
+                </div>
+
+                <button class="run-code-btn" onclick="showDemo('multirow-demo')">
+                    <i class="fas fa-play"></i> Run Code
+                </button>
+
+                <div id="multirow-demo" class="demo-container" style="display: none;">
+                    <div class="demo-header">MultiRow Toolbar Demo</div>
+                    <div class="demo-content">
+                        <div id="demo-editor-multirow"></div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Scrollable Toolbar -->
+            <section id="toolbar-scrollable">
+                <h2>Scrollable Toolbar</h2>
+                <p>The Scrollable mode keeps all toolbar items in a single row with horizontal scrolling for overflow.
+                    This is useful for compact layouts.</p>
+
+                <div class="info-box tip">
+                    <div class="info-box-title">Tip</div>
+                    <p>Use CSS to enable horizontal scrolling:
+                        <code>.rte__toolbar { flex-wrap: nowrap; overflow-x: auto; }</code>
+                    </p>
+                </div>
+
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-lang">CSS</span>
+                    </div>
+                    <pre><code class="language-css">/* Scrollable toolbar style */
+.rte__toolbar {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+.rte__toolbar::-webkit-scrollbar {
+    height: 6px;
+}
+
+.rte__toolbar::-webkit-scrollbar-thumb {
+    background: #ccc;
+    border-radius: 3px;
+}</code></pre>
+                </div>
+            </section>
+
+            <!-- Tools: Formatting -->
+            <section id="tools-formatting">
+                <h2>Formatting Tools</h2>
+                <p>Basic text formatting tools available in the toolbar:</p>
+
+                <table class="docs-table">
+                    <thead>
+                        <tr>
+                            <th>Tool</th>
+                            <th>Command</th>
+                            <th>Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Bold</strong></td>
+                            <td><code>bold</code></td>
+                            <td>Apply bold formatting</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Italic</strong></td>
+                            <td><code>italic</code></td>
+                            <td>Apply italic formatting</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Underline</strong></td>
+                            <td><code>underline</code></td>
+                            <td>Apply underline formatting</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Strikethrough</strong></td>
+                            <td><code>strikeThrough</code></td>
+                            <td>Apply strikethrough formatting</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Superscript</strong></td>
+                            <td><code>superscript</code></td>
+                            <td>Apply superscript formatting</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Subscript</strong></td>
+                            <td><code>subscript</code></td>
+                            <td>Apply subscript formatting</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Code</strong></td>
+                            <td><code>code</code></td>
+                            <td>Apply inline code formatting</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Clear Format</strong></td>
+                            <td><code>clearFormatting</code></td>
+                            <td>Remove all formatting from selection</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <!-- Tools: Paragraph -->
+            <section id="tools-paragraph">
+                <h2>Paragraph Tools</h2>
+                <p>Tools for structuring content with headings, lists, and quotes:</p>
+
+                <table class="docs-table">
+                    <thead>
+                        <tr>
+                            <th>Tool</th>
+                            <th>Command</th>
+                            <th>Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Heading</strong></td>
+                            <td><code>formatBlock</code></td>
+                            <td>Apply heading levels (h1-h6) or paragraph</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Bulleted List</strong></td>
+                            <td><code>insertUnorderedList</code></td>
+                            <td>Create or toggle bulleted list</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Numbered List</strong></td>
+                            <td><code>insertOrderedList</code></td>
+                            <td>Create or toggle numbered list</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Block Quote</strong></td>
+                            <td><code>insertBlockquote</code></td>
+                            <td>Insert a block quote</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Checklist</strong></td>
+                            <td><code>insertChecklist</code></td>
+                            <td>Insert interactive checklist</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <!-- Tools: Insert -->
+            <section id="tools-insert">
+                <h2>Insert Tools</h2>
+                <p>Tools for inserting media and interactive elements:</p>
+
+                <table class="docs-table">
+                    <thead>
+                        <tr>
+                            <th>Tool</th>
+                            <th>Command</th>
+                            <th>Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Link</strong></td>
+                            <td><code>createLink</code></td>
+                            <td>Insert or edit hyperlink</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Image</strong></td>
+                            <td><code>insertImage</code></td>
+                            <td>Insert image from URL or file</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Video</strong></td>
+                            <td><code>insertVideo</code></td>
+                            <td>Embed video from URL</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Audio</strong></td>
+                            <td><code>insertAudio</code></td>
+                            <td>Embed audio file</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Table</strong></td>
+                            <td><code>insertTable</code></td>
+                            <td>Insert table with specified rows/columns</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Emoji</strong></td>
+                            <td><code>insertEmoji</code></td>
+                            <td>Insert emoji character</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Horizontal Rule</strong></td>
+                            <td><code>insertHorizontalRule</code></td>
+                            <td>Insert horizontal line separator</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Code Block</strong></td>
+                            <td><code>insertCodeBlock</code></td>
+                            <td>Insert syntax-highlighted code block</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <!-- Tools: Typography -->
+            <section id="tools-typography">
+                <h2>Typography Tools</h2>
+                <p>Tools for customizing fonts and colors:</p>
+
+                <table class="docs-table">
+                    <thead>
+                        <tr>
+                            <th>Tool</th>
+                            <th>Command</th>
+                            <th>Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Font Family</strong></td>
+                            <td><code>fontName</code></td>
+                            <td>Change font family</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Font Size</strong></td>
+                            <td><code>fontSize</code></td>
+                            <td>Change font size</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Text Color</strong></td>
+                            <td><code>foreColor</code></td>
+                            <td>Change text color</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Background Color</strong></td>
+                            <td><code>backColor</code></td>
+                            <td>Change text highlight/background color</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <!-- Tools: Alignment -->
+            <section id="tools-alignment">
+                <h2>Alignment Tools</h2>
+                <p>Tools for aligning and indenting content:</p>
+
+                <table class="docs-table">
+                    <thead>
+                        <tr>
+                            <th>Tool</th>
+                            <th>Command</th>
+                            <th>Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Align Left</strong></td>
+                            <td><code>alignLeft</code></td>
+                            <td>Align text to the left</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Align Center</strong></td>
+                            <td><code>alignCenter</code></td>
+                            <td>Center align text</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Align Right</strong></td>
+                            <td><code>alignRight</code></td>
+                            <td>Align text to the right</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Justify</strong></td>
+                            <td><code>alignJustify</code></td>
+                            <td>Justify text alignment</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Indent</strong></td>
+                            <td><code>indent</code></td>
+                            <td>Increase indentation</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Outdent</strong></td>
+                            <td><code>outdent</code></td>
+                            <td>Decrease indentation</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <!-- API: Content -->
+            <section id="api-content">
+                <h2>Content API</h2>
+                <p>Methods for getting and setting editor content:</p>
+
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-lang">JavaScript</span>
+                    </div>
+                    <pre><code class="language-javascript">// Get HTML content
+const html = editor.getContent();
+
+// Set HTML content
+editor.setContent('&lt;h1&gt;New Content&lt;/h1&gt;&lt;p&gt;Hello World&lt;/p&gt;');
+
+// Clear content
+editor.clearContent();
+
+// Load from JSON
+editor.loadFromJSON({ content: '&lt;p&gt;Loaded content&lt;/p&gt;' });
+
+// Load from HTML file
+editor.loadFromHTML(htmlString);</code></pre>
+                </div>
+            </section>
+
+            <!-- API: Formatting -->
+            <section id="api-formatting">
+                <h2>Formatting API</h2>
+                <p>Execute formatting commands programmatically:</p>
+
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-lang">JavaScript</span>
+                    </div>
+                    <pre><code class="language-javascript">// Execute a command
+editor.execute('bold');
+editor.execute('foreColor', '#ff0000');
+editor.execute('formatBlock', 'h2');
+
+// Check if command is active
+const isBold = editor.queryCommandState('bold');</code></pre>
+                </div>
+            </section>
+
+            <!-- API: Events -->
+            <section id="api-events">
+                <h2>Events</h2>
+                <p>Listen to editor events:</p>
+
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-lang">JavaScript</span>
+                    </div>
+                    <pre><code class="language-javascript">// Content change event
+editor.on('content-change', (content) => {
+    console.log('Content changed:', content);
+});
+
+// Selection change event
+editor.on('selection-change', (selection) => {
+    console.log('Selection:', selection);
+});</code></pre>
+                </div>
+            </section>
+
+            <!-- Customization: Themes -->
+            <section id="customization-themes">
+                <h2>Themes</h2>
+                <p>Customize the editor appearance using CSS variables:</p>
+
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-lang">CSS</span>
+                    </div>
+                    <pre><code class="language-css">:root {
+    --color-primary: #333333;
+    --color-primary-dark: #1a1a1a;
+    --color-primary-light: #f5f5f5;
+    --color-bg: #ffffff;
+    --color-border: #e0e0e0;
+    --color-text: #2c3e50;
+    --color-text-light: #6c757d;
+    --font-family-base: 'Segoe UI', sans-serif;
+}
+
+/* Dark theme example */
+.rte.dark-theme {
+    --color-bg: #1a1a1a;
+    --color-text: #e0e0e0;
+    --color-border: #333;
+}</code></pre>
+                </div>
+            </section>
+        </article>
+    </main>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-javascript.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-css.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-markup.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-bash.min.js"></script>
+
+    <script type="module">
+        import RTE from '../rte-package/src/index.js';
+
+        // Demo editors
+        const demos = {
+            'quickstart-demo': null,
+            'expand-demo': null,
+            'multirow-demo': null
+        };
+
+        window.showDemo = function (demoId) {
+            const container = document.getElementById(demoId);
+            if (container.style.display === 'none') {
+                container.style.display = 'block';
+                initDemo(demoId);
+            } else {
+                container.style.display = 'none';
+            }
+        };
+
+        function initDemo(demoId) {
+            if (demos[demoId]) return;
+
+            if (demoId === 'quickstart-demo') {
+                demos[demoId] = new RTE('demo-editor-1', {
+                    toolbar: [
+                        {
+                            group: 'formatting',
+                            items: [
+                                { type: 'button', label: 'Bold', command: 'bold', icon: '<i class="fas fa-bold"></i>' },
+                                { type: 'button', label: 'Italic', command: 'italic', icon: '<i class="fas fa-italic"></i>' }
+                            ]
+                        }
+                    ]
+                });
+                demos[demoId].setContent('<p>Hello World!</p><p>Some initial <strong>bold</strong> text</p>');
+            }
+
+            if (demoId === 'expand-demo') {
+                demos[demoId] = new RTE('demo-editor-expand', {
+                    toolbar: [
+                        {
+                            group: 'clipboard',
+                            items: [
+                                { type: 'button', label: 'Undo', command: 'undo', icon: '<i class="fas fa-undo"></i>' },
+                                { type: 'button', label: 'Redo', command: 'redo', icon: '<i class="fas fa-redo"></i>' }
+                            ]
+                        },
+                        {
+                            group: 'formatting',
+                            items: [
+                                { type: 'button', label: 'Bold', command: 'bold', icon: '<i class="fas fa-bold"></i>' },
+                                { type: 'button', label: 'Italic', command: 'italic', icon: '<i class="fas fa-italic"></i>' },
+                                { type: 'button', label: 'Underline', command: 'underline', icon: '<i class="fas fa-underline"></i>' }
+                            ]
+                        }
+                    ]
+                });
+                demos[demoId].setContent('<h2>Expand Toolbar</h2><p>This editor uses the default expand toolbar mode.</p>');
+            }
+
+            if (demoId === 'multirow-demo') {
+                demos[demoId] = new RTE('demo-editor-multirow', {
+                    toolbar: [
+                        {
+                            group: 'clipboard',
+                            items: [
+                                { type: 'button', label: 'Undo', command: 'undo', icon: '<i class="fas fa-undo"></i>' },
+                                { type: 'button', label: 'Redo', command: 'redo', icon: '<i class="fas fa-redo"></i>' },
+                                { type: 'button', label: 'Cut', command: 'cut', icon: '<i class="fas fa-cut"></i>' },
+                                { type: 'button', label: 'Copy', command: 'copy', icon: '<i class="fas fa-copy"></i>' },
+                                { type: 'button', label: 'Paste', command: 'paste', icon: '<i class="fas fa-paste"></i>' }
+                            ]
+                        },
+                        {
+                            group: 'formatting',
+                            items: [
+                                { type: 'button', label: 'Bold', command: 'bold', icon: '<i class="fas fa-bold"></i>' },
+                                { type: 'button', label: 'Italic', command: 'italic', icon: '<i class="fas fa-italic"></i>' },
+                                { type: 'button', label: 'Underline', command: 'underline', icon: '<i class="fas fa-underline"></i>' },
+                                { type: 'button', label: 'Strikethrough', command: 'strikeThrough', icon: '<i class="fas fa-strikethrough"></i>' }
+                            ]
+                        },
+                        {
+                            group: 'paragraph',
+                            items: [
+                                {
+                                    type: 'select',
+                                    label: 'Heading',
+                                    command: 'formatBlock',
+                                    options: [
+                                        { label: 'Paragraph', value: 'p' },
+                                        { label: 'Heading 1', value: 'h1' },
+                                        { label: 'Heading 2', value: 'h2' },
+                                        { label: 'Heading 3', value: 'h3' }
+                                    ]
+                                },
+                                { type: 'button', label: 'Bullet List', command: 'insertUnorderedList', icon: '<i class="fas fa-list-ul"></i>' },
+                                { type: 'button', label: 'Number List', command: 'insertOrderedList', icon: '<i class="fas fa-list-ol"></i>' }
+                            ]
+                        },
+                        {
+                            group: 'insert',
+                            items: [
+                                { type: 'button', label: 'Link', command: 'createLink', icon: '<i class="fas fa-link"></i>' },
+                                { type: 'button', label: 'Image', command: 'insertImage', icon: '<i class="fas fa-image"></i>' },
+                                { type: 'button', label: 'Table', command: 'insertTable', icon: '<i class="fas fa-table"></i>' }
+                            ]
+                        },
+                        {
+                            group: 'typography',
+                            items: [
+                                { type: 'color', label: 'Text Color', command: 'foreColor' },
+                                { type: 'color', label: 'Highlight', command: 'backColor' }
+                            ]
+                        }
+                    ]
+                });
+                demos[demoId].setContent('<h2>MultiRow Toolbar</h2><p>This editor displays all tools in a multi-row layout.</p>');
+            }
+        }
+
+        // Active link tracking
+        const sidebarLinks = document.querySelectorAll('.sidebar-nav a');
+        const sections = document.querySelectorAll('section[id]');
+
+        window.addEventListener('scroll', () => {
+            let current = '';
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop - 100;
+                if (scrollY >= sectionTop) {
+                    current = section.getAttribute('id');
+                }
+            });
+
+            sidebarLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href') === '#' + current) {
+                    link.classList.add('active');
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>

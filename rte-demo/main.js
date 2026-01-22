@@ -35,7 +35,7 @@ const editor = new RTE('editor-container', {
             items: [
                 {
                     type: 'select',
-                    label: 'Paragraph',
+                    label: 'Heading',
                     command: 'formatBlock',
                     icon: '<i class="fas fa-heading"></i>',
                     options: [
@@ -44,13 +44,22 @@ const editor = new RTE('editor-container', {
                         { label: 'Heading 2', value: 'h2' },
                         { label: 'Heading 3', value: 'h3' },
                         { label: 'Heading 4', value: 'h4' },
-                        { label: 'Heading 5', value: 'h5' },
-                        { label: 'Heading 6', value: 'h6' }
+                        { label: 'Preformatted', value: 'pre' }
                     ]
                 },
                 { type: 'button', label: 'Bulleted List', command: 'insertUnorderedList', icon: '<i class="fas fa-list-ul"></i>' },
                 { type: 'button', label: 'Numbered List', command: 'insertOrderedList', icon: '<i class="fas fa-list-ol"></i>' },
                 { type: 'button', label: 'Block Quote', command: 'insertBlockquote', icon: '<i class="fas fa-quote-left"></i>' }
+            ]
+        },
+
+        // Checklist Group
+        {
+            group: 'checklist',
+            items: [
+                { type: 'button', label: 'Checkbox', command: 'insertChecklist', value: 'checkbox', icon: '<i class="fas fa-check-square"></i>' },
+                { type: 'button', label: 'Circle', command: 'insertChecklist', value: 'circle', icon: '<i class="far fa-circle"></i>' },
+                { type: 'button', label: 'Square', command: 'insertChecklist', value: 'square', icon: '<i class="far fa-square"></i>' }
             ]
         },
 
@@ -97,24 +106,42 @@ const editor = new RTE('editor-container', {
                         { label: 'Georgia', value: 'Georgia' },
                         { label: 'Times New Roman', value: 'Times New Roman' },
                         { label: 'Courier New', value: 'Courier New' },
-                        { label: 'Trebuchet MS', value: 'Trebuchet MS' }
+                        { label: 'Trebuchet MS', value: 'Trebuchet MS' },
+                        { label: 'System UI', value: 'system-ui' }
                     ]
                 },
                 {
                     type: 'select',
-                    label: 'Size',
+                    label: 'Font Size',
                     command: 'fontSize',
                     icon: '<i class="fas fa-text-height"></i>',
                     options: [
-                        { label: 'Small', value: '12px' },
-                        { label: 'Normal', value: '16px' },
-                        { label: 'Large', value: '18px' },
-                        { label: 'XL', value: '24px' },
-                        { label: '2XL', value: '32px' }
+                        { label: '8', value: '1' },
+                        { label: '10', value: '2' },
+                        { label: '12', value: '3' },
+                        { label: '14', value: '4' },
+                        { label: '18', value: '5' },
+                        { label: '24', value: '6' },
+                        { label: '36', value: '7' }
                     ]
                 },
                 { type: 'color', label: 'Text Color', command: 'foreColor', icon: '<i class="fas fa-palette"></i>' },
-                { type: 'color', label: 'Highlight', command: 'backColor', icon: '<i class="fas fa-highlighter"></i>' }
+                { type: 'color', label: 'Highlight', command: 'backColor', icon: '<i class="fas fa-highlighter"></i>' },
+                {
+                    type: 'select',
+                    label: 'Line Height',
+                    command: 'lineHeight',
+                    icon: '<i class="fas fa-text-height"></i>',
+                    options: [
+                        { label: '1.0', value: '1.0' },
+                        { label: '1.15', value: '1.15' },
+                        { label: '1.5', value: '1.5' },
+                        { label: '1.8', value: '1.8' },
+                        { label: '2.0', value: '2.0' },
+                        { label: '2.5', value: '2.5' },
+                        { label: '3.0', value: '3.0' }
+                    ]
+                }
             ]
         },
 
@@ -124,7 +151,27 @@ const editor = new RTE('editor-container', {
             items: [
                 { type: 'button', label: 'Uppercase', command: 'uppercase', icon: '<i class="fas fa-arrow-up"></i>' },
                 { type: 'button', label: 'Lowercase', command: 'lowercase', icon: '<i class="fas fa-arrow-down"></i>' },
-                { type: 'button', label: 'Code Block', command: 'insertCodeBlock', icon: '<i class="fas fa-code"></i>' }
+                {
+                    type: 'select',
+                    label: 'Code Block',
+                    command: 'insertCodeBlock',
+                    icon: '<i class="fas fa-code"></i>',
+                    options: [
+                        { label: 'HTML', value: 'html' },
+                        { label: 'Java', value: 'java' },
+                        { label: 'JavaScript', value: 'javascript' },
+                        { label: 'PHP', value: 'php' },
+                        { label: 'Python', value: 'python' },
+                        { label: 'Ruby', value: 'ruby' },
+                        { label: 'SQL', value: 'sql' },
+                        { label: 'TypeScript', value: 'typescript' },
+                        { label: 'XML', value: 'xml' },
+                        { label: 'CSS', value: 'css' },
+                        { label: 'C#', value: 'csharp' },
+                        { label: 'C++', value: 'cpp' },
+                        { label: 'JSON', value: 'json' }
+                    ]
+                }
             ]
         },
 
@@ -181,6 +228,53 @@ document.getElementById('clear-btn').addEventListener('click', async () => {
 
 document.getElementById('load-sample-btn').addEventListener('click', () => {
     editor.setContent(sampleContent);
+});
+
+// Parsing demo handlers
+document.getElementById('load-json-btn').addEventListener('click', () => {
+    document.getElementById('json-file-input').click();
+});
+
+document.getElementById('json-file-input').addEventListener('change', (e) => {
+    const file = e.target.files[0];
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = (event) => {
+            try {
+                const json = JSON.parse(event.target.result);
+                // If JSON has content/html property, use it; otherwise format JSON as readable HTML
+                if (json.content || json.html) {
+                    window.contentManager.loadFromJSON(json);
+                } else {
+                    // Format JSON as readable HTML for display
+                    const formattedHtml = `<h2>JSON Content</h2><pre style="background:#f5f5f5;padding:1rem;border-radius:4px;overflow-x:auto;">${JSON.stringify(json, null, 2)}</pre>`;
+                    editor.setContent(formattedHtml);
+                }
+            } catch (err) {
+                alert('Invalid JSON file: ' + err.message);
+            }
+        };
+        reader.readAsText(file);
+    }
+    e.target.value = '';
+});
+
+document.getElementById('load-html-btn').addEventListener('click', () => {
+    document.getElementById('html-file-input').click();
+});
+
+document.getElementById('html-file-input').addEventListener('change', (e) => {
+    const file = e.target.files[0];
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = (event) => {
+            // Set the HTML content directly
+            editor.setContent(event.target.result);
+            console.log('Loaded HTML file');
+        };
+        reader.readAsText(file);
+    }
+    e.target.value = '';
 });
 
 // Content Source Management - Support for different content sources

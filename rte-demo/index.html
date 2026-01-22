@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>RTE Demo - Advanced Professional Editor</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css">
     <link rel="stylesheet" href="../rte-package/src/styles/main.css">
     <link rel="stylesheet" href="../rte-package/src/styles/components.css">
     <link rel="stylesheet" href="../rte-package/src/components/modal.css">
@@ -145,6 +146,17 @@
             border-color: #000;
         }
 
+        .actions button.secondary {
+            background: #fff;
+            color: #333;
+            border: 1px solid #ccc;
+        }
+
+        .actions button.secondary:hover {
+            background: #f5f5f5;
+            border-color: #bbb;
+        }
+
         .actions button:active {
             transform: translateY(0);
             box-shadow: 0 2px 8px rgba(52, 152, 219, 0.25);
@@ -233,6 +245,23 @@
     <div class="container">
         <div class="editor-section">
             <div id="editor-container"></div>
+
+            <div class="actions">
+                <button type="button" id="get-content-btn"><i class="fas fa-code"></i> Get HTML</button>
+
+                <!-- File Inputs -->
+                <input type="file" id="json-file-input" accept=".json" style="display:none">
+                <input type="file" id="html-file-input" accept=".html" style="display:none">
+
+                <button type="button" id="load-json-btn" class="secondary"><i class="fas fa-file-code"></i> Load
+                    JSON</button>
+                <button type="button" id="load-html-btn" class="secondary"><i class="fas fa-file-alt"></i> Load
+                    HTML</button>
+
+                <button type="button" id="load-sample-btn" class="secondary"><i class="fas fa-sync"></i> Reset</button>
+                <button type="button" id="clear-btn" class="secondary"><i class="fas fa-trash"></i> Clear</button>
+            </div>
+
             <div id="output-view" class="output">
                 <h3>Output</h3>
                 <pre id="output-code"></pre>
@@ -240,6 +269,24 @@
         </div>
     </div>
 
+    <script>
+        // Configure Prism for manual highlighting (required for contentEditable)
+        window.Prism = window.Prism || {};
+        window.Prism.manual = true;
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-javascript.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-java.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-python.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-php.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-ruby.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-sql.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-typescript.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-markup.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-css.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-csharp.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-cpp.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-json.min.js"></script>
     <script type="module" src="main.js"></script>
 </body>
 
