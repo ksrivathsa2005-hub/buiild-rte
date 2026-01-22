@@ -1,5 +1,13 @@
 # Changelog
 
+## v1.24.0 (2026-01-22)
+
+## What's Changed
+
+- home page minor (0635efc)
+
+**Full Changelog**: https://github.com/ksrivathsa2005-hub/buiild-rte/compare/v1.23.0...v1.24.0
+
 ## v1.23.0 (2026-01-22)
 
 ## What's Changed
