@@ -1,5 +1,13 @@
 # Changelog
 
+## v1.10.0 (2026-01-22)
+
+## What's Changed
+
+- added nalashaa logo (7ba0023)
+
+**Full Changelog**: https://github.com/ksrivathsa2005-hub/buiild-rte/compare/v1.9.0...v1.10.0
+
 ## v1.9.0 (2026-01-22)
 
 ## What's Changed
