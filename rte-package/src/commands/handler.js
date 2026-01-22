@@ -845,6 +845,8 @@ export class CommandHandler {
     const pre = document.createElement('pre');
     pre.className = `language-${prismLang}`;
     pre.setAttribute('data-language', prismLang);
+    // Preserve the originally chosen language so the toolbar can reflect it later
+    pre.setAttribute('data-source-language', language);
     pre.contentEditable = 'false'; // Make pre non-editable
     pre.style.position = 'relative';
     
@@ -884,25 +886,32 @@ export class CommandHandler {
     }
     
     // Apply syntax highlighting immediately
-    setTimeout(() => {
-      if (window.Prism) {
-        Prism.highlightElement(code);
-      }
-    }, 10);
+    if (window.Prism) {
+      // Use Prism.highlightElement for better compatibility
+      Prism.highlightElement(code);
+    }
     
     // Add input listener for live syntax highlighting on this specific code block
     code.addEventListener('input', () => {
       if (window.Prism) {
         // Store cursor position
         const sel = window.getSelection();
+        if (!sel.rangeCount) return;
+        
         const range = sel.getRangeAt(0);
         const preCaretRange = range.cloneRange();
         preCaretRange.selectNodeContents(code);
         preCaretRange.setEnd(range.endContainer, range.endOffset);
         const caretOffset = preCaretRange.toString().length;
         
-        // Re-highlight
-        Prism.highlightElement(code);
+        // Store the plain text content before highlighting
+        const text = code.textContent;
+        
+        // Re-apply the language class in case it was lost
+        code.className = `language-${prismLang}`;
+        
+        // Re-highlight using Prism
+        code.innerHTML = Prism.highlight(text, Prism.languages[prismLang] || Prism.languages.javascript, prismLang);
         
         // Restore cursor position
         setTimeout(() => {

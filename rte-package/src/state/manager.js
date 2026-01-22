@@ -33,6 +33,71 @@ export class StateManager {
         }
       });
     });
+
+    // Keep the code language dropdown in sync with the currently focused code block
+    this._syncCodeLanguageDropdown();
+  }
+
+  _syncCodeLanguageDropdown() {
+    const select = document.querySelector('select[data-command="insertCodeBlock"]');
+    if (!select) return;
+
+    const selection = window.getSelection();
+    if (!selection || selection.rangeCount === 0) {
+      select.value = '';
+      return;
+    }
+
+    const anchorNode = selection.anchorNode;
+    const pre = this._closestPre(anchorNode);
+
+    if (!pre) {
+      select.value = '';
+      return;
+    }
+
+    const sourceLang = pre.getAttribute('data-source-language');
+    const prismLang = pre.getAttribute('data-language');
+    const resolvedLang = sourceLang || this._mapPrismToLanguage(prismLang);
+
+    if (resolvedLang && this._hasOption(select, resolvedLang)) {
+      select.value = resolvedLang;
+    } else {
+      select.value = '';
+    }
+  }
+
+  _closestPre(node) {
+    let current = node;
+    while (current) {
+      if (current.nodeType === 1 && current.tagName === 'PRE') {
+        return current;
+      }
+      current = current.parentNode;
+    }
+    return null;
+  }
+
+  _mapPrismToLanguage(prismLang) {
+    const map = {
+      'markup': 'html',
+      'javascript': 'javascript',
+      'typescript': 'typescript',
+      'java': 'java',
+      'python': 'python',
+      'php': 'php',
+      'ruby': 'ruby',
+      'sql': 'sql',
+      'css': 'css',
+      'csharp': 'csharp',
+      'cpp': 'cpp',
+      'json': 'json'
+    };
+    return map[prismLang] || prismLang || '';
+  }
+
+  _hasOption(select, value) {
+    return Array.from(select.options).some(opt => opt.value === value);
   }
 
   setButtonState(command, state) {
