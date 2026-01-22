@@ -1,5 +1,13 @@
 # Changelog
 
+## v1.18.0 (2026-01-22)
+
+## What's Changed
+
+- version history updated (4ab318d)
+
+**Full Changelog**: https://github.com/ksrivathsa2005-hub/buiild-rte/compare/v1.17.0...v1.18.0
+
 ## v1.17.0 (2026-01-22)
 
 ## What's Changed
