@@ -1,5 +1,14 @@
 # Changelog
 
+## v1.6.0 (2026-01-22)
+
+## What's Changed
+
+- Merge pull request #14 from ksrivathsa2005-hub/sri (6718118)
+- fix(ci): fix syntax error in release workflow summary (ce54e25)
+
+**Full Changelog**: https://github.com/ksrivathsa2005-hub/buiild-rte/compare/v1.5.0...v1.6.0
+
 ## v1.5.0 (2026-01-22)
 
 ## What's Changed
