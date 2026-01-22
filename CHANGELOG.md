@@ -1,5 +1,13 @@
 # Changelog
 
+## v1.19.0 (2026-01-22)
+
+## What's Changed
+
+- export button added (294f4e2)
+
+**Full Changelog**: https://github.com/ksrivathsa2005-hub/buiild-rte/compare/v1.18.0...v1.19.0
+
 ## v1.18.0 (2026-01-22)
 
 ## What's Changed
