@@ -1,5 +1,14 @@
 # Changelog
 
+## v1.23.0 (2026-01-22)
+
+## What's Changed
+
+- Merge pull request #18 from ksrivathsa2005-hub/alan-1 (4cbb08f)
+- fix:emoji,labels (4d6f708)
+
+**Full Changelog**: https://github.com/ksrivathsa2005-hub/buiild-rte/compare/v1.22.0...v1.23.0
+
 ## v1.22.0 (2026-01-22)
 
 ## What's Changed
