@@ -180,6 +180,9 @@ export class CommandHandler {
           this.editor.toggleFullscreen();
         }
         break;
+      case 'print':
+        this._printContent();
+        break;
 
       default:
         console.warn(`Unknown command: ${command}`);
@@ -1581,5 +1584,74 @@ export class CommandHandler {
       selection.removeAllRanges();
       selection.addRange(newRange);
     }
+  }
+
+  /**
+   * Print editor content
+   */
+  _printContent() {
+    // Get the editor content
+    const content = this.editor.getContent();
+    
+    // Create a new window for printing
+    const printWindow = window.open('', '_blank', 'width=800,height=600');
+    
+    if (!printWindow) {
+      alert('Please allow pop-ups to print the document.');
+      return;
+    }
+    
+    // Write the content with basic styling
+    printWindow.document.write(`
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <title>Print Document</title>
+        <style>
+          body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            padding: 20px;
+            max-width: 800px;
+            margin: 0 auto;
+          }
+          img {
+            max-width: 100%;
+            height: auto;
+          }
+          table {
+            border-collapse: collapse;
+            width: 100%;
+            margin: 10px 0;
+          }
+          table, th, td {
+            border: 1px solid #ddd;
+          }
+          th, td {
+            padding: 8px;
+            text-align: left;
+          }
+          @media print {
+            body {
+              padding: 0;
+            }
+          }
+        </style>
+      </head>
+      <body>
+        ${content}
+      </body>
+      </html>
+    `);
+    
+    printWindow.document.close();
+    
+    // Wait for content to load, then print
+    printWindow.onload = function() {
+      printWindow.focus();
+      printWindow.print();
+      // Close the window after printing (optional)
+      setTimeout(() => printWindow.close(), 100);
+    };
   }
 }

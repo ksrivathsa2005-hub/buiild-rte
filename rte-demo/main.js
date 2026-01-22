@@ -210,7 +210,8 @@ const editor = new RTE('editor-container', {
             group: 'view',
             items: [
                 { type: 'button', label: 'Source Code', command: 'toggleSource', icon: '<i class="fas fa-file-code"></i>' },
-                { type: 'button', label: 'Fullscreen', command: 'toggleFullscreen', icon: '<i class="fas fa-expand"></i>' }
+                { type: 'button', label: 'Fullscreen', command: 'toggleFullscreen', icon: '<i class="fas fa-expand"></i>' },
+                { type: 'button', label: 'Print', command: 'print', icon: '<i class="fas fa-print"></i>' }
             ]
         },
 

@@ -73,7 +73,7 @@
   flex-wrap: nowrap;
   gap: 2px;
   padding: 4px 6px 12px 6px;
-  overflow-x: clip;
+  overflow-x: auto;
   overflow-y: visible;
   align-items: center;
   position: relative;
