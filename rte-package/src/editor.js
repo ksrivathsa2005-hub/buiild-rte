@@ -231,7 +231,8 @@ export class RTE {
           group: 'view',
           items: [
             { type: 'button', label: 'Source', command: 'toggleSource', icon: 'Source' },
-            { type: 'button', label: 'Fullscreen', command: 'toggleFullscreen', icon: '⛶' }
+            { type: 'button', label: 'Fullscreen', command: 'toggleFullscreen', icon: '⛶' },
+            { type: 'button', label: 'Theme', command: 'uploadTheme', icon: '🎨' }
           ]
         }
       ]
@@ -258,6 +259,9 @@ export class RTE {
       execute: (cmd, val) => this.commandHandler.execute(cmd, val)
     });
     this.container.appendChild(this.toolbar);
+
+    // Initialize custom theme structure
+    this._initCustomTheme();
 
     // Create Editor Wrapper
     const wrapper = document.createElement('div');
@@ -305,6 +309,18 @@ export class RTE {
     }
 
     this._bindEvents();
+  }
+
+  _initCustomTheme() {
+    // Create a style element for custom themes if it doesn't exist
+    if (!document.getElementById('rte-custom-theme')) {
+      const style = document.createElement('style');
+      style.id = 'rte-custom-theme';
+      document.head.appendChild(style);
+      this.customThemeStyle = style;
+    } else {
+      this.customThemeStyle = document.getElementById('rte-custom-theme');
+    }
   }
 
   _recoverContent() {
@@ -619,7 +635,7 @@ export class RTE {
       if (this.modules && this.modules.includes('PasteCleanup')) {
         try {
           e.preventDefault();
-        } catch (err) {}
+        } catch (err) { }
         this.commandHandler.handlePasteEvent(e);
       }
     });
@@ -787,6 +803,31 @@ export class RTE {
         });
         if (url) document.execCommand(command, false, url);
       } catch (e) { }
+    } else if (command === 'uploadTheme') {
+      const input = document.createElement('input');
+      input.type = 'file';
+      input.accept = '.css';
+      input.style.display = 'none';
+
+      input.onchange = (e) => {
+        const file = e.target.files[0];
+        if (file) {
+          const reader = new FileReader();
+          reader.onload = (event) => {
+            const cssContent = event.target.result;
+            if (this.customThemeStyle) {
+              this.customThemeStyle.textContent = cssContent;
+              // Optional: Provide feedback or notification
+              console.log('Custom theme applied');
+            }
+          };
+          reader.readAsText(file);
+        }
+      };
+
+      document.body.appendChild(input);
+      input.click();
+      document.body.removeChild(input);
     } else {
       document.execCommand(command, false, value);
     }
