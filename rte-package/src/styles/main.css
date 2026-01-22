@@ -150,6 +150,7 @@
   border-right: 1px solid var(--color-border);
   padding-right: 3px;
   margin-right: 3px;
+  overflow: visible;
 }
 
 .rte__toolbar-group:last-child {
@@ -346,44 +347,116 @@
 [data-tooltip]:hover::after {
   content: attr(data-tooltip);
   position: absolute;
-  top: 100%;
+  top: calc(100% + 10px);
   left: 50%;
-  transform: translateX(-50%);
-  padding: 6px 10px;
-  background-color: #333;
-  color: white;
-  font-size: 12px;
+  transform: translateX(-50%) translateY(0);
+  padding: 6px 14px;
+  background-color: #212529;
+  color: #ffffff;
+  font-size: 11.5px;
+  font-weight: 500;
   white-space: nowrap;
-  border-radius: 4px;
+  border-radius: 6px;
   pointer-events: none;
-  z-index: 10000;
-  margin-top: 8px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
-  animation: tooltipFadeIn 0.2s ease-in-out;
+  z-index: 999999;
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+  animation: tooltipFadeIn 0.2s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  letter-spacing: 0.2px;
 }
 
+/* Arrow for Tooltip */
 [data-tooltip]:hover::before {
   content: '';
   position: absolute;
   top: 100%;
   left: 50%;
-  transform: translateX(-50%) translateY(-2px);
+  transform: translateX(-50%);
   border: 6px solid transparent;
-  border-bottom-color: #333;
+  border-bottom-color: #212529;
   pointer-events: none;
-  z-index: 10000;
-  margin-top: 2px;
+  z-index: 999999;
+  margin-top: -1px;
+}
+
+/* Special Case: Smart alignment for buttons near the left/right screen edges */
+/* If the button is the very first in the toolbar, align tooltip to the left */
+.rte__toolbar-group:first-child [data-tooltip]:first-child:hover::after,
+.rte__toolbar-group:first-child [data-tooltip]:first-child:hover::before {
+  left: 0;
+  transform: translateX(0);
+}
+
+/* Specific fix for Undo and first items */
+[data-command="undo"]:hover::after,
+.rte__toolbar-group:first-child [data-tooltip]:first-child:hover::after {
+  left: 0 !important;
+  transform: translateX(0) !important;
+}
+
+[data-command="undo"]:hover::before,
+.rte__toolbar-group:first-child [data-tooltip]:first-child:hover::before {
+  left: 12px !important;
+  transform: translateX(0) !important;
+}
+
+/* Specific fix for Save and last items */
+.rte__toolbar-group:last-child [data-tooltip]:last-child:hover::after {
+  left: auto !important;
+  right: 0 !important;
+  transform: translateX(0) !important;
+}
+
+.rte__toolbar-group:last-child [data-tooltip]:last-child:hover::before {
+  left: auto !important;
+  right: 12px !important;
+  transform: translateX(0) !important;
 }
 
 @keyframes tooltipFadeIn {
   from {
     opacity: 0;
-    transform: translateX(-50%) translateY(5px);
+    transform: translateX(-50%) translateY(8px);
   }
 
   to {
     opacity: 1;
     transform: translateX(-50%) translateY(0);
+  }
+}
+
+/* Specialized Fade for Edge Tooltips */
+[data-command="undo"]:hover::after,
+.rte__toolbar-group:first-child [data-tooltip]:first-child:hover::after,
+.rte__toolbar-group:last-child [data-tooltip]:last-child:hover::after {
+  animation-name: tooltipFadeInEdge;
+}
+
+@keyframes tooltipFadeInEdge {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Override animation for Left-aligned tooltips */
+[data-command="undo"]:hover::after {
+  animation: tooltipFadeInLeft 0.2s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+@keyframes tooltipFadeInLeft {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 }
 
