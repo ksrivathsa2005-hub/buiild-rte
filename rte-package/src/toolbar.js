@@ -42,7 +42,7 @@ export const createToolbar = (config, actions) => {
               actions.execute(item.command, e.target.value);
               // Only reset for certain commands (like insertCodeBlock)
               // Keep the selection for font, size, and lineHeight
-              const keepSelectionCommands = ['fontName', 'fontSize', 'lineHeight'];
+              const keepSelectionCommands = ['fontName', 'fontSize', 'lineHeight', 'insertCodeBlock'];
               if (!keepSelectionCommands.includes(item.command)) {
                 e.target.selectedIndex = 0;
               }
