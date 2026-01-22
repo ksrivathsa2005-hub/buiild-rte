@@ -26,6 +26,18 @@
   user-select: none;
 }
 
+/* Small button variant */
+.rte__btn--small {
+  padding: 2px 4px;
+  min-width: 20px;
+  min-height: 20px;
+  font-size: 10px;
+}
+
+.rte__btn--small i {
+  font-size: 10px;
+}
+
 /* Icon styling in buttons */
 .rte__btn i {
   font-size: 13px;

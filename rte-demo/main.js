@@ -49,8 +49,17 @@ const editor = new RTE('editor-container', {
                 },
                 { type: 'button', label: 'Bulleted List', command: 'insertUnorderedList', icon: '<i class="fas fa-list-ul"></i>' },
                 { type: 'button', label: 'Numbered List', command: 'insertOrderedList', icon: '<i class="fas fa-list-ol"></i>' },
-                { type: 'button', label: 'Checklist', command: 'insertChecklist', icon: '<i class="fas fa-check-square"></i>' },
                 { type: 'button', label: 'Block Quote', command: 'insertBlockquote', icon: '<i class="fas fa-quote-left"></i>' }
+            ]
+        },
+
+        // Checklist Group
+        {
+            group: 'checklist',
+            items: [
+                { type: 'button', label: 'Checkbox', command: 'insertChecklist', value: 'checkbox', icon: '<i class="fas fa-check-square"></i>' },
+                { type: 'button', label: 'Circle', command: 'insertChecklist', value: 'circle', icon: '<i class="far fa-circle"></i>' },
+                { type: 'button', label: 'Square', command: 'insertChecklist', value: 'square', icon: '<i class="far fa-square"></i>' }
             ]
         },
 
@@ -107,14 +116,13 @@ const editor = new RTE('editor-container', {
                     command: 'fontSize',
                     icon: '<i class="fas fa-text-height"></i>',
                     options: [
-                        { label: 'Default', value: '3' },
-                        { label: '8 pt', value: '1' },
-                        { label: '10 pt', value: '2' },
-                        { label: '12 pt', value: '3' },
-                        { label: '14 pt', value: '4' },
-                        { label: '18 pt', value: '5' },
-                        { label: '24 pt', value: '6' },
-                        { label: '36 pt', value: '7' }
+                        { label: '8', value: '1' },
+                        { label: '10', value: '2' },
+                        { label: '12', value: '3' },
+                        { label: '14', value: '4' },
+                        { label: '18', value: '5' },
+                        { label: '24', value: '6' },
+                        { label: '36', value: '7' }
                     ]
                 },
                 { type: 'color', label: 'Text Color', command: 'foreColor', icon: '<i class="fas fa-palette"></i>' },

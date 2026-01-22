@@ -154,7 +154,7 @@ export class CommandHandler {
         await this._insertSpecialChar();
         break;
       case 'insertChecklist':
-        this._insertChecklist();
+        this._insertChecklist(value || 'checkbox');
         break;
       case 'findReplace':
         await this._findReplace();
@@ -1026,9 +1026,10 @@ export class CommandHandler {
     }
   }
 
-  _insertChecklist() {
+  _insertChecklist(type = 'checkbox') {
     const ul = document.createElement('ul');
     ul.className = 'rte-checklist';
+    ul.dataset.checkboxType = type;
     ul.style.listStyleType = 'none';
     ul.style.paddingLeft = '0';
 
@@ -1039,6 +1040,7 @@ export class CommandHandler {
 
     const checkbox = document.createElement('input');
     checkbox.type = 'checkbox';
+    checkbox.className = `rte-checkbox rte-checkbox--${type}`;
     checkbox.style.marginTop = '4px';
     checkbox.style.marginRight = '8px';
     checkbox.onclick = (e) => {
@@ -1050,8 +1052,7 @@ export class CommandHandler {
     };
 
     const textSpan = document.createElement('span');
-    textSpan.textContent = 'List item';
-    // textSpan.contentEditable = true; // Use editor's contentEditable
+    textSpan.innerHTML = '<br>'; // Empty, user can type immediately
 
     li.appendChild(checkbox);
     li.appendChild(textSpan);

@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Playground - Nalashaa RTE</title>
+    <meta name="description" content="Try the Nalashaa Rich Text Editor with all features enabled.">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../rte-package/src/styles/main.css">
+    <link rel="stylesheet" href="../rte-package/src/styles/components.css">
+    <link rel="stylesheet" href="../rte-package/src/components/modal.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: #f5f5f5;
+            color: #1a1a1a;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .playground-header {
+            background: white;
+            border-bottom: 1px solid #e0e0e0;
+            padding: 0 2rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 60px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            text-decoration: none;
+            color: #1a1a1a;
+            font-weight: 700;
+            font-size: 1.25rem;
+        }
+
+        .logo-badge {
+            background: #f4d35e;
+            color: #1a1a1a;
+            font-size: 0.65rem;
+            font-weight: 600;
+            padding: 0.2rem 0.4rem;
+            border-radius: 4px;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .header-link {
+            color: #666;
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+
+        .header-link:hover {
+            color: #1a1a1a;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            font-size: 0.875rem;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.2s;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn-primary {
+            background: #1a1a1a;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #333;
+        }
+
+        .playground-main {
+            flex: 1;
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .editor-wrapper {
+            flex: 1;
+            max-width: 1400px;
+            width: 100%;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        #editor-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .rte {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            border: none;
+            border-radius: 0;
+        }
+
+        .rte__toolbar {
+            background: #fafafa;
+            border-bottom: 1px solid #e5e5e5;
+            padding: 10px 16px;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .rte__content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 2rem;
+            font-size: 1rem;
+            line-height: 1.7;
+            min-height: 400px;
+        }
+
+        .actions-bar {
+            padding: 1rem 1.5rem;
+            border-top: 1px solid #e5e5e5;
+            background: #fafafa;
+            display: flex;
+            gap: 0.75rem;
+            flex-wrap: wrap;
+        }
+
+        .actions-bar button {
+            padding: 0.5rem 1rem;
+            border: 1px solid #ddd;
+            background: white;
+            color: #1a1a1a;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 500;
+            font-size: 0.85rem;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        .actions-bar button:hover {
+            background: #f5f5f5;
+            border-color: #ccc;
+        }
+
+        .actions-bar button.primary {
+            background: #1a1a1a;
+            color: white;
+            border-color: #1a1a1a;
+        }
+
+        .actions-bar button.primary:hover {
+            background: #333;
+        }
+
+        .output {
+            max-height: 250px;
+            padding: 1.25rem 1.5rem;
+            border-top: 1px solid #e5e5e5;
+            background: white;
+            overflow-y: auto;
+            display: none;
+        }
+
+        .output.active {
+            display: block;
+        }
+
+        .output h3 {
+            margin: 0 0 0.75rem;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: #666;
+        }
+
+        .output pre {
+            margin: 0;
+            padding: 1rem;
+            background: #f5f5f5;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            overflow-x: auto;
+            white-space: pre-wrap;
+            word-break: break-all;
+        }
+
+        /* File inputs */
+        input[type="file"] {
+            display: none;
+        }
+
+        @media (max-width: 768px) {
+            .playground-header {
+                padding: 0 1rem;
+            }
+
+            .playground-main {
+                padding: 1rem;
+            }
+
+            .rte__content {
+                padding: 1rem;
+                min-height: 300px;
+            }
+
+            .actions-bar {
+                padding: 0.75rem 1rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <header class="playground-header">
+        <div class="header-content">
+            <a href="homepage.html" class="logo">
+                <span>Nalashaa RTE</span>
+                <span class="logo-badge">Playground</span>
+            </a>
+            <div class="header-actions">
+                <a href="homepage.html" class="header-link">← Back to Home</a>
+                <a href="https://www.npmjs.com/package/@nalashaa-sri/vanilla-rte?activeTab=readme" target="_blank"
+                    class="btn btn-primary">
+                    <i class="fas fa-book"></i> Documentation
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <main class="playground-main">
+        <div class="editor-wrapper">
+            <div id="editor-container"></div>
+
+            <div class="actions-bar">
+                <button type="button" id="get-content-btn" class="primary">
+                    <i class="fas fa-code"></i> Get HTML
+                </button>
+                <input type="file" id="json-file-input" accept=".json">
+                <input type="file" id="html-file-input" accept=".html">
+                <button type="button" id="load-json-btn">
+                    <i class="fas fa-file-code"></i> Load JSON
+                </button>
+                <button type="button" id="load-html-btn">
+                    <i class="fas fa-file-alt"></i> Load HTML
+                </button>
+                <button type="button" id="load-sample-btn">
+                    <i class="fas fa-sync"></i> Reset
+                </button>
+                <button type="button" id="clear-btn">
+                    <i class="fas fa-trash"></i> Clear
+                </button>
+            </div>
+
+            <div id="output-view" class="output">
+                <h3>Output</h3>
+                <pre id="output-code"></pre>
+            </div>
+        </div>
+    </main>
+
+    <script type="module">
+        import RTE from '../rte-package/src/index.js';
+
+        const editor = new RTE('editor-container', {
+            toolbar: [
+                // Clipboard Actions Group
+                {
+                    group: 'clipboard',
+                    items: [
+                        { type: 'button', label: 'Undo', command: 'undo', icon: '<i class="fas fa-undo"></i>' },
+                        { type: 'button', label: 'Redo', command: 'redo', icon: '<i class="fas fa-redo"></i>' },
+                        { type: 'button', label: 'Cut', command: 'cut', icon: '<i class="fas fa-cut"></i>' },
+                        { type: 'button', label: 'Copy', command: 'copy', icon: '<i class="fas fa-copy"></i>' },
+                        { type: 'button', label: 'Paste', command: 'paste', icon: '<i class="fas fa-paste"></i>' }
+                    ]
+                },
+
+                // Text Formatting Group
+                {
+                    group: 'formatting',
+                    items: [
+                        { type: 'button', label: 'Bold', command: 'bold', icon: '<i class="fas fa-bold"></i>' },
+                        { type: 'button', label: 'Italic', command: 'italic', icon: '<i class="fas fa-italic"></i>' },
+                        { type: 'button', label: 'Underline', command: 'underline', icon: '<i class="fas fa-underline"></i>' },
+                        { type: 'button', label: 'Strikethrough', command: 'strikeThrough', icon: '<i class="fas fa-strikethrough"></i>' },
+                        { type: 'button', label: 'Superscript', command: 'superscript', icon: '<i class="fas fa-superscript"></i>' },
+                        { type: 'button', label: 'Subscript', command: 'subscript', icon: '<i class="fas fa-subscript"></i>' },
+                        { type: 'button', label: 'Code', command: 'code', icon: '<i class="fas fa-code"></i>' },
+                        { type: 'button', label: 'Clear Format', command: 'clearFormatting', icon: '<i class="fas fa-eraser"></i>' }
+                    ]
+                },
+
+                // Paragraph & List Formatting Group
+                {
+                    group: 'paragraph',
+                    items: [
+                        {
+                            type: 'select',
+                            label: 'Paragraph',
+                            command: 'formatBlock',
+                            icon: '<i class="fas fa-heading"></i>',
+                            options: [
+                                { label: 'Paragraph', value: 'p' },
+                                { label: 'Heading 1', value: 'h1' },
+                                { label: 'Heading 2', value: 'h2' },
+                                { label: 'Heading 3', value: 'h3' },
+                                { label: 'Heading 4', value: 'h4' },
+                                { label: 'Heading 5', value: 'h5' },
+                                { label: 'Heading 6', value: 'h6' }
+                            ]
+                        },
+                        { type: 'button', label: 'Bulleted List', command: 'insertUnorderedList', icon: '<i class="fas fa-list-ul"></i>' },
+                        { type: 'button', label: 'Numbered List', command: 'insertOrderedList', icon: '<i class="fas fa-list-ol"></i>' },
+                        { type: 'button', label: 'Block Quote', command: 'insertBlockquote', icon: '<i class="fas fa-quote-left"></i>' }
+                    ]
+                },
+
+                // Checklist Group
+                {
+                    group: 'checklist',
+                    items: [
+                        { type: 'button', label: 'Checkbox', command: 'insertChecklist', value: 'checkbox', icon: '<i class="fas fa-check-square"></i>' },
+                        { type: 'button', label: 'Circle', command: 'insertChecklist', value: 'circle', icon: '<i class="far fa-circle"></i>' },
+                        { type: 'button', label: 'Square', command: 'insertChecklist', value: 'square', icon: '<i class="far fa-square"></i>' }
+                    ]
+                },
+
+                // Alignment & Indentation Group
+                {
+                    group: 'alignment',
+                    items: [
+                        { type: 'button', label: 'Align Left', command: 'alignLeft', icon: '<i class="fas fa-align-left"></i>' },
+                        { type: 'button', label: 'Align Center', command: 'alignCenter', icon: '<i class="fas fa-align-center"></i>' },
+                        { type: 'button', label: 'Align Right', command: 'alignRight', icon: '<i class="fas fa-align-right"></i>' },
+                        { type: 'button', label: 'Justify', command: 'alignJustify', icon: '<i class="fas fa-align-justify"></i>' },
+                        { type: 'button', label: 'Increase Indent', command: 'indent', icon: '<i class="fas fa-indent"></i>' },
+                        { type: 'button', label: 'Decrease Indent', command: 'outdent', icon: '<i class="fas fa-outdent"></i>' }
+                    ]
+                },
+
+                // Insert Elements Group
+                {
+                    group: 'insert',
+                    items: [
+                        { type: 'button', label: 'Link', command: 'createLink', icon: '<i class="fas fa-link"></i>' },
+                        { type: 'button', label: 'Image', command: 'insertImage', icon: '<i class="fas fa-image"></i>' },
+                        { type: 'button', label: 'Audio', command: 'insertAudio', icon: '<i class="fas fa-volume-up"></i>' },
+                        { type: 'button', label: 'Video', command: 'insertVideo', icon: '<i class="fas fa-video"></i>' },
+                        { type: 'button', label: 'Table', command: 'insertTable', icon: '<i class="fas fa-table"></i>' },
+                        { type: 'button', label: 'Emoji', command: 'insertEmoji', icon: '<i class="fas fa-grin"></i>' },
+                        { type: 'button', label: 'Special Character', command: 'insertSpecialChar', icon: '<i class="fas fa-keyboard"></i>' },
+                        { type: 'button', label: 'Horizontal Line', command: 'insertHorizontalRule', icon: '<i class="fas fa-minus"></i>' }
+                    ]
+                },
+
+                // Font & Style Group
+                {
+                    group: 'typography',
+                    items: [
+                        {
+                            type: 'select',
+                            label: 'Font',
+                            command: 'fontName',
+                            icon: '<i class="fas fa-font"></i>',
+                            options: [
+                                { label: 'Arial', value: 'Arial' },
+                                { label: 'Verdana', value: 'Verdana' },
+                                { label: 'Georgia', value: 'Georgia' },
+                                { label: 'Times New Roman', value: 'Times New Roman' },
+                                { label: 'Courier New', value: 'Courier New' },
+                                { label: 'Trebuchet MS', value: 'Trebuchet MS' },
+                                { label: 'System UI', value: 'system-ui' }
+                            ]
+                        },
+                        {
+                            type: 'select',
+                            label: 'Size',
+                            command: 'fontSize',
+                            icon: '<i class="fas fa-text-height"></i>',
+                            options: [
+                                { label: '8', value: '1' },
+                                { label: '10', value: '2' },
+                                { label: '12', value: '3' },
+                                { label: '14', value: '4' },
+                                { label: '18', value: '5' },
+                                { label: '24', value: '6' },
+                                { label: '36', value: '7' }
+                            ]
+                        },
+                        { type: 'color', label: 'Text Color', command: 'foreColor', icon: '<i class="fas fa-palette"></i>' },
+                        { type: 'color', label: 'Highlight', command: 'backColor', icon: '<i class="fas fa-highlighter"></i>' }
+                    ]
+                },
+
+                // Text Case & Code Group
+                {
+                    group: 'transform',
+                    items: [
+                        { type: 'button', label: 'Uppercase', command: 'uppercase', icon: '<i class="fas fa-arrow-up"></i>' },
+                        { type: 'button', label: 'Lowercase', command: 'lowercase', icon: '<i class="fas fa-arrow-down"></i>' },
+                        { type: 'button', label: 'Code Block', command: 'insertCodeBlock', icon: '<i class="fas fa-code"></i>' }
+                    ]
+                },
+
+                // View Options Group
+                {
+                    group: 'view',
+                    items: [
+                        { type: 'button', label: 'Source Code', command: 'toggleSource', icon: '<i class="fas fa-file-code"></i>' },
+                        { type: 'button', label: 'Fullscreen', command: 'toggleFullscreen', icon: '<i class="fas fa-expand"></i>' }
+                    ]
+                },
+
+                // Tools Group
+                {
+                    group: 'tools',
+                    items: [
+                        { type: 'button', label: 'Find & Replace', command: 'findReplace', icon: '<i class="fas fa-search"></i>' }
+                    ]
+                }
+            ]
+        });
+
+        // Sample content
+        const sampleContent = `
+<h1>Welcome to RTE Playground</h1>
+<p>This is a <strong>feature-rich</strong> Rich Text Editor built with vanilla JavaScript.</p>
+<h2>Key Features</h2>
+<ul>
+    <li>Full formatting support (Bold, Italic, Underline)</li>
+    <li>Headings and paragraph styles</li>
+    <li>Lists and indentation</li>
+    <li>Media insertion (Images, Audio, Video)</li>
+    <li>Link and table support</li>
+    <li>Source code editing</li>
+    <li>Sanitized output for security</li>
+</ul>
+<p><em>Try editing this content and click "Get HTML" to see the clean output!</em></p>
+`;
+
+        document.getElementById('get-content-btn').addEventListener('click', () => {
+            const content = editor.getContent();
+            document.getElementById('output-view').classList.add('active');
+            document.getElementById('output-code').textContent = content;
+        });
+
+        document.getElementById('clear-btn').addEventListener('click', async () => {
+            const confirmed = await editor.modal.confirm('Clear Content', 'Are you sure you want to clear all contents? This cannot be undone.');
+            if (confirmed) {
+                editor.clearContent();
+                document.getElementById('output-view').classList.remove('active');
+            }
+        });
+
+        document.getElementById('load-sample-btn').addEventListener('click', () => {
+            editor.setContent(sampleContent);
+            document.getElementById('output-view').classList.remove('active');
+        });
+
+        // File loading handlers
+        document.getElementById('load-json-btn').addEventListener('click', () => {
+            document.getElementById('json-file-input').click();
+        });
+
+        document.getElementById('json-file-input').addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = (event) => {
+                    try {
+                        const json = JSON.parse(event.target.result);
+                        if (json.content || json.html) {
+                            editor.setContent(json.content || json.html);
+                        } else {
+                            const formattedHtml = `<h2>JSON Content</h2><pre style="background:#f5f5f5;padding:1rem;border-radius:4px;overflow-x:auto;">${JSON.stringify(json, null, 2)}</pre>`;
+                            editor.setContent(formattedHtml);
+                        }
+                    } catch (err) {
+                        alert('Invalid JSON file: ' + err.message);
+                    }
+                };
+                reader.readAsText(file);
+            }
+            e.target.value = '';
+        });
+
+        document.getElementById('load-html-btn').addEventListener('click', () => {
+            document.getElementById('html-file-input').click();
+        });
+
+        document.getElementById('html-file-input').addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = (event) => {
+                    editor.setContent(event.target.result);
+                };
+                reader.readAsText(file);
+            }
+            e.target.value = '';
+        });
+
+        // Load sample on startup
+        editor.setContent(sampleContent);
+    </script>
+</body>
+
+</html>
