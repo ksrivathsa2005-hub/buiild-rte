@@ -27,13 +27,13 @@ export class RTE {
     const defaultConfig = {
       autosave: {
         enabled: true,
-        delay: 1000,
-        key: 'rte_autosave_content'
+        delay: 5000,
+        key: `rte_autosave_${this.container.id || 'default'}`
       },
       versionHistory: {
         enabled: true,
         maxVersions: 20,
-        key: 'rte_version_history'
+        key: `rte_history_${this.container.id || 'default'}`
       },
       toolbar: [
         {
@@ -303,9 +303,13 @@ export class RTE {
     // Initialize QuickToolbar after DOM is ready
     this.quickToolbar = new QuickToolbar(this);
 
+    // Initialize dirty flag for autosave
+    this.isDirty = false;
+
     // Recover content from autosave if enabled
     if (this.config.autosave.enabled) {
       this._recoverContent();
+      this._startAutosaveInterval();
     }
 
     // Save initial state to history
@@ -333,17 +337,25 @@ export class RTE {
     }
   }
 
-  _handleAutosave() {
-    if (!this.config.autosave.enabled) return;
+  _startAutosaveInterval() {
+    // Clear any existing interval
+    if (this._autosaveInterval) clearInterval(this._autosaveInterval);
 
-    if (this._autosaveTimer) clearTimeout(this._autosaveTimer);
-    this._autosaveTimer = setTimeout(() => {
-      const content = this.editor.innerHTML;
-      localStorage.setItem(this.config.autosave.key, content);
-
-      // Also potentially save a version snapshot if enough time has passed
-      this._autoSnapshot();
+    // Set up new interval
+    this._autosaveInterval = setInterval(() => {
+      this._handleAutosave();
     }, this.config.autosave.delay);
+  }
+
+  _handleAutosave() {
+    if (!this.config.autosave.enabled || !this.isDirty) return;
+
+    const content = this.editor.innerHTML;
+    localStorage.setItem(this.config.autosave.key, content);
+    this.isDirty = false;
+
+    // Also potentially save a version snapshot if enough time has passed
+    this._autoSnapshot();
   }
 
   _autoSnapshot() {
@@ -524,7 +536,7 @@ export class RTE {
     let debounceTimer;
 
     this.editor.addEventListener('input', () => {
-      this._handleAutosave();
+      this.isDirty = true;
 
       // Debounce history save
       if (debounceTimer) clearTimeout(debounceTimer);

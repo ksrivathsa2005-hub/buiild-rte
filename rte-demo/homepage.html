@@ -821,8 +821,12 @@
 </blockquote>
 `;
 
-        editor1.setContent(sampleContent1);
-        editor2.setContent(sampleContent2);
+        if (!editor1.getContent()) {
+            editor1.setContent(sampleContent1);
+        }
+        if (!editor2.getContent()) {
+            editor2.setContent(sampleContent2);
+        }
 
         // Carousel functionality
         const track = document.getElementById('carousel-track');

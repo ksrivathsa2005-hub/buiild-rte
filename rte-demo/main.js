@@ -85,26 +85,26 @@ const editor = new RTE('editor-container', {
         },
 
         // Alignment & Indentation Group
-         // Alignment
+        // Alignment
+        {
+            group: 'alignment',
+            items: [
                 {
-                    group: 'alignment',
-                    items: [
-                        {
-                            type: 'select',
-                            label: 'Align',
-                            command: 'align',
-                            options: [
-                                { label: '← Left', value: 'left' },
-                                { label: '↔ Center', value: 'center' },
-                                { label: '→ Right', value: 'right' },
-                                { label: '⇌ Justify', value: 'justify' }
-                            ]
-                        },
-                        { type: 'button', label: 'Indent', command: 'indent', icon: '<i class="fas fa-indent"></i>' },
-                        { type: 'button', label: 'Outdent', command: 'outdent', icon: '<i class="fas fa-outdent"></i>' }
+                    type: 'select',
+                    label: 'Align',
+                    command: 'align',
+                    options: [
+                        { label: '← Left', value: 'left' },
+                        { label: '↔ Center', value: 'center' },
+                        { label: '→ Right', value: 'right' },
+                        { label: '⇌ Justify', value: 'justify' }
                     ]
                 },
-               
+                { type: 'button', label: 'Indent', command: 'indent', icon: '<i class="fas fa-indent"></i>' },
+                { type: 'button', label: 'Outdent', command: 'outdent', icon: '<i class="fas fa-outdent"></i>' }
+            ]
+        },
+
 
         // Insert Elements Group
         {
@@ -380,5 +380,7 @@ async function loadFromDatabase() {
     });
 }
 
-// Load sample on startup
-editor.setContent(sampleContent);
+// Load sample on startup if no content exists (persisted)
+if (!editor.getContent()) {
+    editor.setContent(sampleContent);
+}
