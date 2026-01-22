@@ -25,7 +25,8 @@ const editor = new RTE('editor-container', {
                 { type: 'button', label: 'Superscript', command: 'superscript', icon: '<i class="fas fa-superscript"></i>' },
                 { type: 'button', label: 'Subscript', command: 'subscript', icon: '<i class="fas fa-subscript"></i>' },
                 { type: 'button', label: 'Code', command: 'code', icon: '<i class="fas fa-code"></i>' },
-                { type: 'button', label: 'Clear Format', command: 'clearFormatting', icon: '<i class="fas fa-eraser"></i>' }
+                { type: 'button', label: 'Clear Format', command: 'clearFormatting', icon: '<i class="fas fa-eraser"></i>' },
+                { type: 'button', label: 'Export', command: 'export', icon: '<i class="fas fa-file-export"></i>' }
             ]
         },
 

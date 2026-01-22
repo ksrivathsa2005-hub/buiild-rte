@@ -186,6 +186,9 @@ export class CommandHandler {
       case 'print':
         this._printContent();
         break;
+      case 'export':
+        await this._exportContent();
+        break;
 
       default:
         console.warn(`Unknown command: ${command}`);
@@ -1605,6 +1608,70 @@ export class CommandHandler {
       selection.removeAllRanges();
       selection.addRange(newRange);
     }
+  }
+
+  async _exportContent() {
+    try {
+      const format = await this.editor.modal.prompt({
+        title: 'Export Content',
+        fields: [
+          {
+            id: 'format',
+            label: 'Select Format',
+            type: 'select',
+            options: [
+              { label: 'JSON', value: 'json' },
+              { label: 'HTML', value: 'html' },
+              { label: 'PDF', value: 'pdf' }
+            ],
+            value: 'json',
+            required: true
+          },
+          {
+            id: 'filename',
+            label: 'Filename (optional)',
+            type: 'text',
+            placeholder: 'document'
+          }
+        ],
+        okLabel: 'Export'
+      });
+
+      if (!format) return;
+
+      const type = typeof format === 'object' ? format.format : format;
+      const name = (typeof format === 'object' && format.filename) ? format.filename : 'document';
+      const content = this.editor.getContent();
+
+      if (type === 'pdf') {
+        this._printContent();
+      } else if (type === 'json') {
+        const data = {
+          content: content,
+          exportedAt: new Date().toISOString()
+        };
+        this._downloadFile(JSON.stringify(data, null, 2), `${name}.json`, 'application/json');
+      } else if (type === 'html') {
+        const html = `<!DOCTYPE html>
+<html>
+<head><meta charset="UTF-8"><title>${name}</title></head>
+<body>${content}</body>
+</html>`;
+        this._downloadFile(html, `${name}.html`, 'text/html');
+      }
+
+    } catch (e) {
+      console.log('Export cancelled', e);
+    }
+  }
+
+  _downloadFile(content, filename, contentType) {
+    const a = document.createElement('a');
+    const file = new Blob([content], { type: contentType });
+    a.href = URL.createObjectURL(file);
+    a.download = filename;
+    a.click();
+    URL.revokeObjectURL(a.href);
   }
 
   /**
