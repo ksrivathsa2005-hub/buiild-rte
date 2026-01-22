@@ -8,7 +8,7 @@
     <meta name="description"
         content="A powerful, customizable rich text editor built with vanilla JavaScript. Easy to integrate, feature-rich, and developer-friendly.">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css">
+
     <link rel="stylesheet" href="homepage.css">
     <link rel="stylesheet" href="../rte-package/src/styles/main.css">
     <link rel="stylesheet" href="../rte-package/src/styles/components.css">
@@ -448,7 +448,7 @@
         </div>
     </section>
 
-  
+
 
     <!-- Features Section -->
     <section class="features">
@@ -513,24 +513,8 @@
         </p>
     </footer>
 
-    <script>
-        // Configure Prism for manual highlighting (required for contentEditable)
-        window.Prism = window.Prism || {};
-        window.Prism.manual = true;
-    </script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-javascript.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-java.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-python.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-php.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-ruby.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-sql.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-typescript.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-markup.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-css.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-csharp.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-cpp.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-json.min.js"></script>
+
+
     <script type="module" src="main.js"></script>
 
     <script type="module">
@@ -543,20 +527,20 @@
                 {
                     group: 'clipboard',
                     items: [
-                            { type: 'button', label: 'Undo', command: 'undo', icon: '<i class="fas fa-undo"></i>' },
-                            { type: 'button', label: 'Redo', command: 'redo', icon: '<i class="fas fa-redo"></i>' },
-                            { type: 'button', label: 'Cut', command: 'cut', icon: '<i class="fas fa-cut"></i>' },
-                            { type: 'button', label: 'Copy', command: 'copy', icon: '<i class="fas fa-copy"></i>' },
-                            {
-                                type: 'select',
-                                label: 'Paste',
-                                command: 'paste',
-                                options: [
-                                    { label: 'Paste', value: 'default' },
-                                    { label: 'Paste from Word', value: 'word' },
-                                    { label: 'Paste as Plain Text', value: 'plain' }
-                                ]
-                            }
+                        { type: 'button', label: 'Undo', command: 'undo', icon: '<i class="fas fa-undo"></i>' },
+                        { type: 'button', label: 'Redo', command: 'redo', icon: '<i class="fas fa-redo"></i>' },
+                        { type: 'button', label: 'Cut', command: 'cut', icon: '<i class="fas fa-cut"></i>' },
+                        { type: 'button', label: 'Copy', command: 'copy', icon: '<i class="fas fa-copy"></i>' },
+                        {
+                            type: 'select',
+                            label: 'Paste',
+                            command: 'paste',
+                            options: [
+                                { label: 'Paste', value: 'default' },
+                                { label: 'Paste from Word', value: 'word' },
+                                { label: 'Paste as Plain Text', value: 'plain' }
+                            ]
+                        }
                     ]
                 },
                 // Text Formatting
@@ -694,34 +678,34 @@
                 },
                 // Transform
                 {
-            group: 'transform',
-            items: [
-                { type: 'button', label: 'Uppercase', command: 'uppercase', icon: '<i class="fas fa-arrow-up"></i>' },
-                { type: 'button', label: 'Lowercase', command: 'lowercase', icon: '<i class="fas fa-arrow-down"></i>' },
-                {
-                    type: 'select',
-                    label: 'Code Block',
-                    command: 'insertCodeBlock',
-                    icon: '<i class="fas fa-code"></i>',
-                    options: [
-                        { label: 'HTML', value: 'html' },
-                        { label: 'Java', value: 'java' },
-                        { label: 'JavaScript', value: 'javascript' },
-                        { label: 'PHP', value: 'php' },
-                        { label: 'Python', value: 'python' },
-                        { label: 'Ruby', value: 'ruby' },
-                        { label: 'SQL', value: 'sql' },
-                        { label: 'TypeScript', value: 'typescript' },
-                        { label: 'XML', value: 'xml' },
-                        { label: 'CSS', value: 'css' },
-                        { label: 'C#', value: 'csharp' },
-                        { label: 'C++', value: 'cpp' },
-                        { label: 'JSON', value: 'json' }
+                    group: 'transform',
+                    items: [
+                        { type: 'button', label: 'Uppercase', command: 'uppercase', icon: '<i class="fas fa-arrow-up"></i>' },
+                        { type: 'button', label: 'Lowercase', command: 'lowercase', icon: '<i class="fas fa-arrow-down"></i>' },
+                        {
+                            type: 'select',
+                            label: 'Code Block',
+                            command: 'insertCodeBlock',
+                            icon: '<i class="fas fa-code"></i>',
+                            options: [
+                                { label: 'HTML', value: 'html' },
+                                { label: 'Java', value: 'java' },
+                                { label: 'JavaScript', value: 'javascript' },
+                                { label: 'PHP', value: 'php' },
+                                { label: 'Python', value: 'python' },
+                                { label: 'Ruby', value: 'ruby' },
+                                { label: 'SQL', value: 'sql' },
+                                { label: 'TypeScript', value: 'typescript' },
+                                { label: 'XML', value: 'xml' },
+                                { label: 'CSS', value: 'css' },
+                                { label: 'C#', value: 'csharp' },
+                                { label: 'C++', value: 'cpp' },
+                                { label: 'JSON', value: 'json' }
+                            ]
+                        }
                     ]
-                }
-            ]
-        },
-// View
+                },
+                // View
                 {
                     group: 'view',
                     items: [
@@ -801,7 +785,7 @@
             ]
         });
 
-       // Sample content for Full Featured Editor
+        // Sample content for Full Featured Editor
         const sampleContent1 = `
 <h1>Welcome to RTE Demo</h1>
 <p>This is a <strong>feature-rich</strong> Rich Text Editor built with vanilla JavaScript.</p>

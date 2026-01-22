@@ -8,7 +8,7 @@
     <meta name="description"
         content="Nalashaa RTE documentation - Learn how to install, configure, and customize the rich text editor.">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css">
+
     <link rel="stylesheet" href="docs.css">
     <link rel="stylesheet" href="../rte-package/src/styles/main.css">
     <link rel="stylesheet" href="../rte-package/src/styles/components.css">
@@ -174,19 +174,24 @@
                     <div class="info-box-title">Icon Dependencies</div>
                     <p>DEFAULT_TOOLBAR uses Font Awesome icons. Include Font Awesome in your project:</p>
                     <pre><code class="language-html">&lt;link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"&gt;</code></pre>
-                    <p>You can customize icons or use your own icon library by modifying the <code>icon</code> property in toolbar items.</p>
+                    <p>You can customize icons or use your own icon library by modifying the <code>icon</code> property
+                        in toolbar items.</p>
                 </div>
             </section>
 
             <!-- Configuration Section -->
             <section id="configuration">
                 <h2>Configuration</h2>
-                <p>The Rich Text Editor is <strong>90% configurable</strong>, allowing you to customize nearly every aspect. 
-                All default configurations are defined in <code>rte-package/src/config/defaults.js</code>.</p>
+                <p>The Rich Text Editor is <strong>90% configurable</strong>, allowing you to customize nearly every
+                    aspect.
+                    All default configurations are defined in <code>rte-package/src/config/defaults.js</code>.</p>
 
                 <div class="info-box note">
                     <div class="info-box-title">Recommended Approach</div>
-                    <p>Import and use <code>DEFAULT_TOOLBAR</code>, <code>DEFAULT_THEME</code>, <code>DEFAULT_FEATURES</code>, and other defaults from <code>config/defaults.js</code> for easy setup. See <a href="../CONFIGURATION_GUIDE.md">CONFIGURATION_GUIDE.md</a> for detailed examples.</p>
+                    <p>Import and use <code>DEFAULT_TOOLBAR</code>, <code>DEFAULT_THEME</code>,
+                        <code>DEFAULT_FEATURES</code>, and other defaults from <code>config/defaults.js</code> for easy
+                        setup. See <a href="../CONFIGURATION_GUIDE.md">CONFIGURATION_GUIDE.md</a> for detailed examples.
+                    </p>
                 </div>
 
                 <table class="docs-table">
@@ -236,7 +241,8 @@
 
                 <div class="info-box note">
                     <div class="info-box-title">Best Practice</div>
-                    <p>Use <code>DEFAULT_TOOLBAR</code> from <code>config/defaults.js</code> and filter/customize as needed:</p>
+                    <p>Use <code>DEFAULT_TOOLBAR</code> from <code>config/defaults.js</code> and filter/customize as
+                        needed:</p>
                     <pre><code>import { DEFAULT_TOOLBAR } from 'rte-package/src/config/defaults.js';
 
 // Use only specific groups
@@ -695,11 +701,7 @@ editor.on('selection-change', (selection) => {
         </article>
     </main>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-javascript.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-css.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-markup.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-bash.min.js"></script>
+
 
     <script type="module">
         import RTE from '../rte-package/src/index.js';

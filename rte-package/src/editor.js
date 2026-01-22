@@ -390,7 +390,7 @@ export class RTE {
 
   setContent(content) {
     const sanitized = this.sanitizer(content);
-    if this.isSourceMode) {
+    if (this.isSourceMode) {
       this.sourceView.value = sanitized;
     }
     this.editor.innerHTML = sanitized;
