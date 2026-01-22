@@ -1,5 +1,13 @@
 # Changelog
 
+## v1.8.0 (2026-01-22)
+
+## What's Changed
+
+- updated homepage (306d3e7)
+
+**Full Changelog**: https://github.com/ksrivathsa2005-hub/buiild-rte/compare/v1.7.0...v1.8.0
+
 ## v1.7.0 (2026-01-22)
 
 ## What's Changed
