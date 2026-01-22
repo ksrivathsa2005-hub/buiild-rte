@@ -1,5 +1,16 @@
 # Changelog
 
+## v1.5.0 (2026-01-22)
+
+## What's Changed
+
+- Merge pull request #13 from ksrivathsa2005-hub/simon (d3e85ea)
+- Merge branch 'main' into simon (0620f52)
+- feat:dropdowns (2735884)
+- emojis changed, paste dropdwon, alignment dropdown, bullet, number dropdowns (a519317)
+
+**Full Changelog**: https://github.com/ksrivathsa2005-hub/buiild-rte/compare/v1.4.0...v1.5.0
+
 ## v1.4.0 (2026-01-22)
 
 ## What's Changed
