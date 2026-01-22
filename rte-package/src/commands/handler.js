@@ -168,6 +168,9 @@ export class CommandHandler {
       case 'history':
         await this._showVersionHistory();
         break;
+      case 'save':
+        await this._save();
+        break;
 
       // View
       case 'toggleSource':
@@ -1074,6 +1077,24 @@ export class CommandHandler {
     }
   }
 
+  async _save() {
+    try {
+      const name = await this.editor.modal.prompt({
+        title: 'Save Version',
+        fields: [
+          { id: 'name', label: 'Version Name', type: 'text', placeholder: 'e.g. Draft 1', required: true }
+        ]
+      });
+
+      if (name) {
+        this.editor._saveSnapshot(name, 'named');
+        this.editor.modal.alert('Success', 'Version saved successfully!');
+      }
+    } catch (e) {
+      // Cancelled
+    }
+  }
+
   async _showVersionHistory() {
     const snapshots = this.editor._getSnapshots();
     if (snapshots.length === 0) {
@@ -1592,15 +1613,15 @@ export class CommandHandler {
   _printContent() {
     // Get the editor content
     const content = this.editor.getContent();
-    
+
     // Create a new window for printing
     const printWindow = window.open('', '_blank', 'width=800,height=600');
-    
+
     if (!printWindow) {
       alert('Please allow pop-ups to print the document.');
       return;
     }
-    
+
     // Write the content with basic styling
     printWindow.document.write(`
       <!DOCTYPE html>
@@ -1643,11 +1664,11 @@ export class CommandHandler {
       </body>
       </html>
     `);
-    
+
     printWindow.document.close();
-    
+
     // Wait for content to load, then print
-    printWindow.onload = function() {
+    printWindow.onload = function () {
       printWindow.focus();
       printWindow.print();
       // Close the window after printing (optional)

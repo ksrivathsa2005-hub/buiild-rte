@@ -243,7 +243,7 @@ body {
 .laptop-screen {
     background: white;
     border-radius: 8px 8px 0 0;
-    overflow: hidden;
+    overflow: visible;
     height: 500px;
     display: flex;
     flex-direction: column;

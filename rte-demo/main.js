@@ -219,7 +219,9 @@ const editor = new RTE('editor-container', {
         {
             group: 'tools',
             items: [
-                { type: 'button', label: 'Find & Replace', command: 'findReplace', icon: '<i class="fas fa-search"></i>' }
+                { type: 'button', label: 'Find & Replace', command: 'findReplace', icon: '<i class="fas fa-search"></i>' },
+                { type: 'button', label: 'History', command: 'history', icon: '<i class="fas fa-history"></i>' },
+                { type: 'button', label: 'Save', command: 'save', icon: '<i class="fas fa-save"></i>' }
             ]
         }
     ]

@@ -370,7 +370,7 @@ export class RTE {
     }
   }
 
-  _saveSnapshot(label = 'Manual Save') {
+  _saveSnapshot(label = 'Manual Save', type = 'auto') {
     if (!this.config.versionHistory.enabled) return;
 
     const content = this.editor.innerHTML;
@@ -380,6 +380,7 @@ export class RTE {
       id: Date.now(),
       timestamp: new Date().toISOString(),
       label: label,
+      type: type,
       content: content
     };
 
@@ -545,6 +546,11 @@ export class RTE {
           this.commandHandler.saveState();
         }
       }, 500); // 500ms debounce for typing
+    });
+
+    // Ensure autosave happens on page unload/refresh
+    window.addEventListener('beforeunload', () => {
+      this._handleAutosave();
     });
 
     this.editor.addEventListener('keydown', (e) => {

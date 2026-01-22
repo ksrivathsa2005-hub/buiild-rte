@@ -554,7 +554,7 @@ export class ModalManager {
       } else if (field.type === 'select') {
         input = document.createElement('select');
         input.className = 'rte__form-input rte__form-select';
-        
+
         // Add options
         if (field.options && Array.isArray(field.options)) {
           field.options.forEach(option => {
@@ -612,6 +612,139 @@ export class ModalManager {
     if (firstInput) {
       setTimeout(() => firstInput.focus(), 100);
     }
+  }
+
+  /**
+   * Shows user version history
+   * @param {Array} snapshots - List of snapshot objects
+   * @returns {Promise} Resolves with selected snapshot
+   */
+  versionHistory(snapshots) {
+    return new Promise((resolve) => {
+      const modal = this._createModal({
+        title: 'Version history',
+        hideFooter: true,
+        className: 'rte__modal--version-history'
+      });
+
+      const body = modal.querySelector('.rte__modal-body');
+
+      // Filter/Search (from design "All versions" dropdown placeholder)
+      const controls = document.createElement('div');
+      controls.className = 'rte__vh-controls';
+      controls.innerHTML = `
+        <select class="rte__vh-filter">
+          <option value="all">All versions</option>
+          <option value="named">Named versions</option>
+          <option value="unnamed">Unnamed versions</option>
+        </select>
+      `;
+      body.appendChild(controls);
+
+      const listContainer = document.createElement('div');
+      listContainer.className = 'rte__vh-list';
+      body.appendChild(listContainer);
+
+      const renderList = (filter = 'all') => {
+        listContainer.innerHTML = '';
+
+        const filtered = snapshots.filter(s => {
+          if (filter === 'all') return true;
+          if (filter === 'named') return s.type === 'named';
+          if (filter === 'unnamed') return s.type !== 'named' && s.type !== 'named'; // Treat anything not 'named' as unnamed/auto
+          return true;
+        });
+
+        if (filtered.length === 0) {
+          listContainer.innerHTML = '<p class="rte__vh-empty" style="padding: 1rem; color: #666; text-align: center;">No versions found.</p>';
+          return;
+        }
+
+        // Group snapshots by Month Year
+        const groups = {};
+        filtered.forEach(snap => {
+          const date = new Date(snap.timestamp);
+          const key = date.toLocaleString('default', { month: 'long', year: 'numeric' });
+          if (!groups[key]) groups[key] = [];
+          groups[key].push(snap);
+        });
+
+        Object.keys(groups).forEach(groupKey => {
+          const groupEl = document.createElement('div');
+          groupEl.className = 'rte__vh-group';
+
+          const groupTitle = document.createElement('h4');
+          groupTitle.className = 'rte__vh-date-header';
+          groupTitle.textContent = groupKey;
+          groupEl.appendChild(groupTitle);
+
+          groups[groupKey].forEach((snap) => {
+            const date = new Date(snap.timestamp);
+            const timeStr = date.toLocaleString('default', { hour: 'numeric', minute: '2-digit' });
+            const fullDateStr = date.toLocaleString('default', { month: 'long', day: 'numeric', year: 'numeric' });
+
+            const item = document.createElement('div');
+            item.className = 'rte__vh-item';
+
+            const startUser = 'Srivathsa -IIITK';
+
+            const isCurrent = snap.id === snapshots[0].id; // Check against original list for truth
+
+            let labelHtml = '';
+            // If it's a named version, show the label
+            if (snap.type === 'named') {
+              labelHtml = `<div class="rte__vh-version-name" style="font-weight: 700; font-size: 14px; margin-bottom: 4px; color: #333;">${snap.label}</div>`;
+            }
+
+            item.innerHTML = `
+              <div class="rte__vh-item-header">
+                <div>
+                  <span class="rte__vh-time" style="${labelHtml ? 'font-size: 12px; color: #666;' : ''}">${fullDateStr}, ${timeStr}</span>
+                  ${isCurrent ? '<span class="rte__vh-current-badge">Current version</span>' : ''}
+                </div>
+                <button class="rte__vh-menu-btn"><i class="fas fa-ellipsis-v"></i></button>
+              </div>
+              ${labelHtml}
+              <div class="rte__vh-user">
+                <span class="rte__vh-user-dot"></span>
+                <span class="rte__vh-username">${startUser}</span>
+              </div>
+            `;
+
+            item.onclick = (e) => {
+              if (e.target.closest('.rte__vh-menu-btn')) return;
+              this._close(modal);
+              resolve(snap);
+            };
+
+            groupEl.appendChild(item);
+          });
+
+          listContainer.appendChild(groupEl);
+        });
+      };
+
+      // Initial render
+      renderList('all');
+
+      // Filter change handler
+      const filterSelect = controls.querySelector('.rte__vh-filter');
+      filterSelect.onchange = (e) => {
+        renderList(e.target.value);
+      };
+
+      // Close handler
+      const closeBtn = modal.querySelector('.rte__modal-close');
+      if (closeBtn) {
+        closeBtn.onclick = (e) => {
+          e.preventDefault();
+          this._close(modal);
+          resolve(null);
+        };
+      }
+
+      this._show(modal);
+    });
   }
 
   _close(modal) {
