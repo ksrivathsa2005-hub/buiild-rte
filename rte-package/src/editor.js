@@ -3,6 +3,8 @@ import { sanitizeHTML } from './utils/sanitizer.js';
 import { CommandHandler } from './commands/handler.js';
 import { StateManager } from './state/manager.js';
 import { ModalManager } from './components/modal-manager.js';
+import { DraggableImage } from './components/draggable-image.js';
+import { QuickToolbar } from './components/quick-toolbar.js';
 
 export class RTE {
   constructor(containerId, config = {}, modules = []) {
@@ -277,13 +279,193 @@ export class RTE {
     this.sourceView = source;
     wrapper.appendChild(source);
 
+    // Create Selection Bubble Toolbar
+    this._createBubbleToolbar(wrapper);
+
     this.container.appendChild(wrapper);
+
+    // Initialize DraggableImage
+    this.draggableImage = new DraggableImage(this);
+
+    // Initialize QuickToolbar after DOM is ready
+    this.quickToolbar = new QuickToolbar(this);
 
     this._bindEvents();
   }
 
+  _createBubbleToolbar(wrapper) {
+    const bubble = document.createElement('div');
+    bubble.className = 'rte__bubble-toolbar';
+    bubble.style.cssText = `
+      position: absolute;
+      display: none;
+      background: #1a1a1a;
+      border-radius: 6px;
+      padding: 6px 8px;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+      z-index: 1000;
+      gap: 2px;
+      align-items: center;
+      transform: translateX(-50%);
+    `;
+
+    // Bubble toolbar items - minimal formatting tools
+    const bubbleItems = [
+      { label: 'Bold', command: 'bold', icon: '<b>B</b>' },
+      { label: 'Italic', command: 'italic', icon: '<i>I</i>' },
+      { label: 'Underline', command: 'underline', icon: '<u>U</u>' },
+      { label: 'Strikethrough', command: 'strikeThrough', icon: '<s>S</s>' },
+      { type: 'separator' },
+      { label: 'Link', command: 'createLink', icon: '🔗' },
+      { label: 'Code', command: 'code', icon: '{ }' }
+    ];
+
+    bubbleItems.forEach(item => {
+      if (item.type === 'separator') {
+        const sep = document.createElement('span');
+        sep.style.cssText = 'width: 1px; height: 20px; background: #444; margin: 0 4px;';
+        bubble.appendChild(sep);
+        return;
+      }
+
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.innerHTML = item.icon;
+      btn.title = item.label;
+      btn.dataset.command = item.command;
+      btn.style.cssText = `
+        background: transparent;
+        border: none;
+        color: white;
+        cursor: pointer;
+        padding: 6px 10px;
+        font-size: 14px;
+        font-weight: 600;
+        border-radius: 4px;
+        transition: background 0.15s;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-width: 32px;
+        height: 32px;
+      `;
+      btn.onmouseenter = () => btn.style.background = '#333';
+      btn.onmouseleave = () => btn.style.background = 'transparent';
+      btn.onmousedown = (e) => {
+        e.preventDefault(); // Prevent losing selection
+        this.commandHandler.execute(item.command);
+        this._hideBubbleToolbar();
+      };
+      bubble.appendChild(btn);
+    });
+
+    // Arrow pointer
+    const arrow = document.createElement('div');
+    arrow.style.cssText = `
+      position: absolute;
+      bottom: -6px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 0;
+      height: 0;
+      border-left: 6px solid transparent;
+      border-right: 6px solid transparent;
+      border-top: 6px solid #1a1a1a;
+    `;
+    bubble.appendChild(arrow);
+
+    this.bubbleToolbar = bubble;
+    wrapper.appendChild(bubble);
+  }
+
+  _showBubbleToolbar() {
+    const selection = window.getSelection();
+    if (!selection.rangeCount || selection.isCollapsed) {
+      this._hideBubbleToolbar();
+      return;
+    }
+
+    const range = selection.getRangeAt(0);
+    const rect = range.getBoundingClientRect();
+    const wrapperRect = this.editor.parentElement.getBoundingClientRect();
+
+    // Position bubble above the selection
+    const left = rect.left + rect.width / 2 - wrapperRect.left;
+    const top = rect.top - wrapperRect.top - 50; // 50px above selection
+
+    this.bubbleToolbar.style.left = `${left}px`;
+    this.bubbleToolbar.style.top = `${Math.max(10, top)}px`;
+    this.bubbleToolbar.style.display = 'flex';
+  }
+
+  _hideBubbleToolbar() {
+    if (this.bubbleToolbar) {
+      this.bubbleToolbar.style.display = 'none';
+    }
+  }
+
+  _handleQuickToolbar(event) {
+    if (this.isSourceMode) return;
+
+    setTimeout(() => {
+      const target = event.target;
+
+      // Check if clicked element is an image or contains an image
+      let imageElement = null;
+
+      if (target.tagName === 'IMG') {
+        imageElement = target;
+      } else if (target.querySelector && target.querySelector('img')) {
+        imageElement = target.querySelector('img');
+      }
+
+      // If we found an image, show the quick toolbar
+      if (imageElement && this.editor.contains(imageElement)) {
+        const rect = imageElement.getBoundingClientRect();
+        this.quickToolbar.show(imageElement, 'image', rect);
+        return;
+      }
+
+      // Check if clicked element is a video or iframe (YouTube)
+      let videoElement = null;
+      if (target.tagName === 'VIDEO' || target.tagName === 'IFRAME') {
+        videoElement = target;
+      } else if (target.querySelector) {
+        videoElement = target.querySelector('video') || target.querySelector('iframe');
+      }
+
+      if (videoElement && this.editor.contains(videoElement)) {
+        const rect = videoElement.getBoundingClientRect();
+        this.quickToolbar.show(videoElement, 'video', rect);
+        return;
+      }
+
+      // Check if clicked element is audio
+      let audioElement = null;
+      if (target.tagName === 'AUDIO') {
+        audioElement = target;
+      } else if (target.querySelector && target.querySelector('audio')) {
+        audioElement = target.querySelector('audio');
+      }
+
+      if (audioElement && this.editor.contains(audioElement)) {
+        const rect = audioElement.getBoundingClientRect();
+        this.quickToolbar.show(audioElement, 'audio', rect);
+        return;
+      }
+
+      // Hide toolbar if clicking elsewhere
+      this.quickToolbar.hide();
+    }, 50);
+  }
+
   _bindEvents() {
     this.editor.addEventListener('keydown', (e) => {
+      // Hide quick toolbar when typing (except for modifier keys)
+      if (!e.ctrlKey && !e.metaKey && !e.altKey && e.key.length === 1) {
+        this.quickToolbar.hide();
+      }
+
       // Check if we're inside a checklist
       const selection = window.getSelection();
       if (selection.rangeCount > 0) {
@@ -359,12 +541,36 @@ export class RTE {
       }
     });
 
-    this.editor.addEventListener('mouseup', () => {
+    this.editor.addEventListener('mouseup', (e) => {
       this.stateManager.updateButtonStates();
+      this._handleQuickToolbar(e);
+      // Show bubble toolbar if text is selected
+      setTimeout(() => this._showBubbleToolbar(), 10);
     });
 
-    this.editor.addEventListener('keyup', () => {
+    this.editor.addEventListener('keyup', (e) => {
       this.stateManager.updateButtonStates();
+      // Show bubble toolbar on shift+arrow selection
+      if (e.shiftKey && ['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown'].includes(e.key)) {
+        setTimeout(() => this._showBubbleToolbar(), 10);
+      } else if (!e.shiftKey) {
+        this._hideBubbleToolbar();
+      }
+    });
+
+    // Hide bubble toolbar when clicking outside editor
+    document.addEventListener('mousedown', (e) => {
+      if (!this.container.contains(e.target)) {
+        this._hideBubbleToolbar();
+      }
+    });
+
+    // Hide bubble toolbar when selection is cleared
+    document.addEventListener('selectionchange', () => {
+      const selection = window.getSelection();
+      if (selection.isCollapsed || !this.editor.contains(selection.anchorNode)) {
+        this._hideBubbleToolbar();
+      }
     });
 
     this.editor.addEventListener('paste', (e) => {
@@ -376,6 +582,61 @@ export class RTE {
         this.commandHandler.handlePasteEvent(e);
       }
     });
+  }
+
+  _handleQuickToolbar(event) {
+    if (this.isSourceMode) return;
+
+    setTimeout(() => {
+      const target = event.target;
+
+      // Check if clicked element is an image or contains an image
+      let imageElement = null;
+
+      if (target.tagName === 'IMG') {
+        imageElement = target;
+      } else if (target.querySelector && target.querySelector('img')) {
+        imageElement = target.querySelector('img');
+      }
+
+      // If we found an image, show the quick toolbar
+      if (imageElement && this.editor.contains(imageElement)) {
+        const rect = imageElement.getBoundingClientRect();
+        this.quickToolbar.show(imageElement, 'image', rect);
+        return;
+      }
+
+      // Check if clicked element is a video or iframe (YouTube)
+      let videoElement = null;
+      if (target.tagName === 'VIDEO' || target.tagName === 'IFRAME') {
+        videoElement = target;
+      } else if (target.querySelector) {
+        videoElement = target.querySelector('video') || target.querySelector('iframe');
+      }
+
+      if (videoElement && this.editor.contains(videoElement)) {
+        const rect = videoElement.getBoundingClientRect();
+        this.quickToolbar.show(videoElement, 'video', rect);
+        return;
+      }
+
+      // Check if clicked element is audio
+      let audioElement = null;
+      if (target.tagName === 'AUDIO') {
+        audioElement = target;
+      } else if (target.querySelector && target.querySelector('audio')) {
+        audioElement = target.querySelector('audio');
+      }
+
+      if (audioElement && this.editor.contains(audioElement)) {
+        const rect = audioElement.getBoundingClientRect();
+        this.quickToolbar.show(audioElement, 'audio', rect);
+        return;
+      }
+
+      // Hide toolbar if clicking elsewhere
+      this.quickToolbar.hide();
+    }, 50);
   }
 
   _addChecklistItem(currentItem, checklist) {

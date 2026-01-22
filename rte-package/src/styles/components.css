@@ -554,3 +554,52 @@ select[data-command="formatBlock"] option[value="pre"] {
   outline: 2px solid #333333;
   outline-offset: 2px;
 }
+
+/* ============================================
+   QUICK TOOLBAR (Image Controls)
+   ============================================ */
+
+.rte__quick-toolbar {
+  position: absolute;
+  z-index: 10000;
+  display: flex;
+  gap: 4px;
+  padding: 6px;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  width: max-content;
+  height: max-content;
+  pointer-events: auto;
+}
+
+.rte__quick-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  background: transparent;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  color: #495057;
+  font-size: 14px;
+}
+
+.rte__quick-btn:hover {
+  background: #f0f1f3;
+  border-color: #e0e3e7;
+  color: #2c3e50;
+}
+
+.rte__quick-btn:active {
+  background: #e0e3e7;
+  transform: scale(0.95);
+}
+
+.rte__quick-btn i {
+  pointer-events: none;
+}

@@ -275,19 +275,7 @@ document.getElementById('html-file-input').addEventListener('change', (e) => {
         reader.readAsText(file);
     }
     e.target.value = '';
-});
-
-// Content Source Management - Support for different content sources
-window.contentManager = {
-    // Load from static HTML
-    loadFromHTML(html) {
-        editor.loadFromHTML(html);
-        console.log('Loaded from HTML');
-    },
-
-    // Load from JSON
-    loadFromJSON(jsonData) {
-        editor.loadFromJSON(jsonData);
+a);
         console.log('Loaded from JSON:', jsonData);
     },
 
