@@ -1,5 +1,15 @@
 # Changelog
 
+## v1.2.0 (2026-01-22)
+
+## What's Changed
+
+- Merge pull request #12 from ksrivathsa2005-hub/alan (1d4169e)
+- Merge branch 'main' into alan (2f27a0c)
+- feat:quick toolbar, resizing (4f210ad)
+
+**Full Changelog**: https://github.com/ksrivathsa2005-hub/buiild-rte/compare/v1.1.0...v1.2.0
+
 ## v1.1.0 (2026-01-22)
 
 ## What's Changed
