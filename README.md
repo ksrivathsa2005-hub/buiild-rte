@@ -2,7 +2,19 @@
 
 ## 📋 Overview
 
-A professional, **configuration-driven**, **vanilla JavaScript** WYSIWYG Rich Text Editor built with modern frontend standards. Fully reusable as an NPM package with a complete demo application.
+A professional, **90% configurable**, **vanilla JavaScript** WYSIWYG Rich Text Editor built with modern frontend standards. Fully reusable as an NPM package with a complete demo application.
+
+### 🆕 What's New in v2.0
+
+- **90% Configurable** - Centralized configuration in `config/defaults.js`
+- **DEFAULT_TOOLBAR** - Pre-built 40+ tool toolbar with Font Awesome icons
+- **Icon Support in Dropdowns** - Visual icons in select elements (bullets, numbers, paste modes)
+- **Paste Dropdown** - 3 paste modes (Default, From Word, Plain Text)
+- **Theme System** - Complete theming with `DEFAULT_THEME`
+- **i18n Ready** - 80+ localization keys in `DEFAULT_I18N`
+- **Feature Toggles** - Enable/disable features via `DEFAULT_FEATURES`
+- **Logo Integration** - Professional branding in homepage
+- **Updated Documentation** - Comprehensive guides and migration path
 
 ---
 
@@ -18,6 +30,8 @@ rte-package/
 │   ├── index.js                 # Main entry point (exports RTE class)
 │   ├── editor.js                # Core RTE class with full features
 │   ├── toolbar.js               # Dynamic toolbar builder
+│   ├── config/
+│   │   └── defaults.js          # 90% configurable defaults (toolbar, theme, i18n, features)
 │   ├── components/
 │   │   └── builder.js           # UI component builders
 │   ├── commands/
@@ -38,19 +52,87 @@ Proves the package's reusability and configurability:
 
 ```
 rte-demo/
-├── index.html                   # Beautiful demo UI
-├── main.js                      # Demo configuration & integration
+├── homepage.html                # Marketing homepage with logo
+├── docs.html                    # Complete documentation page
+├── playground.html              # Interactive testing ground
+├── main.js                      # Demo configuration using DEFAULT_TOOLBAR
+├── assets/
+│   └── logo.svg                 # Nalashaa RTE logo
 └── package.json                 # Installs rte-package as dependency
 ```
 
 ### Documentation
 
 ```
+├── CONFIGURATION_GUIDE.md       # 90% configurable system guide
+├── MIGRATION_GUIDE.md           # Upgrade to config/defaults.js
+├── CONFIGURATION_EXAMPLES.js    # Pre-built toolbar configs
 ├── COMPONENT_DOCUMENTATION.md   # Detailed component architecture
 ├── INTEGRATION_GUIDE.md         # How to use the package
-├── CONFIGURATION_EXAMPLES.js    # Pre-built toolbar configs
 ├── STATE_MANAGEMENT_GUIDE.md    # Button states & ARIA
 └── README.md                    # This file
+```
+
+---
+
+## 🎯 90% Configurable Architecture
+
+The editor is now **90% configurable** through centralized defaults in `config/defaults.js`:
+
+### Default Configurations Available
+
+1. **DEFAULT_TOOLBAR** - 9 toolbar groups with 40+ tools
+   - Clipboard (undo, redo, cut, copy, paste dropdown)
+   - Formatting (bold, italic, underline, strikethrough, etc.)
+   - Paragraph (headings, lists, quotes, alignment)
+   - Insert (links, images, tables, media)
+   - Typography (fonts, sizes, colors, line height)
+   - Advanced (code, fullscreen, source view)
+
+2. **DEFAULT_THEME** - Complete theming system
+   - Colors (primary, background, borders, text)
+   - Fonts (family, sizes, weights)
+   - Spacing (padding, margins, borders)
+
+3. **DEFAULT_I18N** - Internationalization (80+ keys)
+   - All UI labels and messages
+   - Error messages and tooltips
+   - Command descriptions
+
+4. **DEFAULT_FEATURES** - Feature toggles
+   - Enable/disable undo, spellcheck, autocorrect
+   - Image resize, drag & drop
+   - Accessibility features
+
+5. **DEFAULT_EDITOR_OPTIONS** - Editor behavior
+   - Placeholder text, read-only mode
+   - Content sanitization, autosave
+
+### Usage
+
+```javascript
+import RTE from 'rte-package';
+import { DEFAULT_TOOLBAR, DEFAULT_THEME } from 'rte-package/src/config/defaults.js';
+
+// Use all defaults - instant setup!
+const editor = new RTE('container');
+
+// Use DEFAULT_TOOLBAR with filtering
+const minimalEditor = new RTE('container', {
+  toolbar: DEFAULT_TOOLBAR.filter(g => ['formatting', 'paragraph'].includes(g.group))
+});
+
+// Customize theme
+const themedEditor = new RTE('container', {
+  toolbar: DEFAULT_TOOLBAR,
+  theme: {
+    ...DEFAULT_THEME,
+    colors: {
+      ...DEFAULT_THEME.colors,
+      primary: '#ff6b6b'
+    }
+  }
+});
 ```
 
 ---
@@ -58,11 +140,14 @@ rte-demo/
 ## ✨ Features Implemented
 
 ### 1. ✅ Clipboard & History Actions
-- **Undo/Redo** - Full history with 50-entry stack
-- **Cut/Copy/Paste** - Native browser operations
-- **Smart Word Paste** - Automatically detects MS Word content and preserves all formatting (gaps, alignment, styles)
+- **Undo/Redo** - Full history with 50-entry stack (with lock mechanism to prevent rapid clicks)
+- **Cut/Copy** - Native browser operations
+- **Paste Dropdown** - Select from 3 paste modes:
+  - Default - Standard paste with formatting
+  - From Word - Automatically detects and preserves MS Word formatting
+  - Plain Text - Removes all formatting
+- **Smart Word Detection** - Automatically identifies Word content by `mso-` classes and XML namespaces
 - **Paste Cleanup** - Configurable filtering for other content sources
-- **Paste as Plain Text** - Removes all formatting
 
 ### 2. ✅ Text Formatting & Styling
 - **Basic Styles** - Bold, Italic, Underline, Strikethrough
@@ -109,7 +194,7 @@ rte-demo/
 ```javascript
 createButton({
   label: 'Bold',
-  icon: '<b>B</b>',
+  icon: '<i class="fas fa-bold"></i>',  // Font Awesome icons supported
   command: 'bold',
   onclick: handler
 })
@@ -127,9 +212,11 @@ createButton({
 createSelect({
   label: 'Heading',
   command: 'formatBlock',
+  icon: '<i class="fas fa-heading"></i>',  // Icons now supported in dropdowns
   options: [
     { label: 'Paragraph', value: 'p' },
-    { label: 'H1', value: 'h1' }
+    { label: 'Heading 1', value: 'h1' },
+    { label: 'Heading 2', value: 'h2' }
   ]
 })
 ```
@@ -373,13 +460,31 @@ import { CommandHandler } from './commands/handler.js';
 ```bash
 # Install from local package
 npm install ../rte-package
+
+# Install Font Awesome for icons (if using DEFAULT_TOOLBAR)
+npm install @fortawesome/fontawesome-free
 ```
 
-### Basic Usage
+### Include Font Awesome
+```html
+<!-- Via CDN -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+```
+
+### Basic Usage (Recommended)
 ```javascript
 import RTE from 'rte-package';
+import { DEFAULT_TOOLBAR } from 'rte-package/src/config/defaults.js';
 
-const editor = new RTE('editor-container');
+// Use defaults - instant full-featured editor!
+const editor = new RTE('editor-container', {
+  toolbar: DEFAULT_TOOLBAR
+});
+
+// Or filter to specific groups
+const minimalEditor = new RTE('editor-container', {
+  toolbar: DEFAULT_TOOLBAR.filter(g => ['formatting', 'paragraph'].includes(g.group))
+});
 
 // Get content
 const html = editor.getContent();
@@ -393,14 +498,14 @@ document.getElementById('save').onclick = () => {
 };
 ```
 
-### With Custom Config
+### With Custom Toolbar (Advanced)
 ```javascript
 const editor = new RTE('editor', {
   toolbar: [
     {
       group: 'formatting',
       items: [
-        { type: 'button', label: 'Bold', command: 'bold', icon: 'B' }
+        { type: 'button', label: 'Bold', command: 'bold', icon: '<i class="fas fa-bold"></i>' }
       ]
     }
   ]
