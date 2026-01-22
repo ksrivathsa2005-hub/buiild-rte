@@ -1,6 +1,6 @@
 {
   "name": "editor-structure",
-  "version": "1.3.0",
+  "version": "1.4.0",
   "description": "A professional, **configuration-driven**, **vanilla JavaScript** WYSIWYG Rich Text Editor built with modern frontend standards. Fully reusable as an NPM package with a complete demo application.",
   "main": "rte-package/src/index.js",
   "files": [

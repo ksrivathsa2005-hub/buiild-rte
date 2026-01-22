@@ -1,5 +1,14 @@
 # Changelog
 
+## v1.4.0 (2026-01-22)
+
+## What's Changed
+
+- Merge branch 'main' of https://github.com/ksrivathsa2005-hub/buiild-rte (9f42b93)
+- resolved (2ab26ce)
+
+**Full Changelog**: https://github.com/ksrivathsa2005-hub/buiild-rte/compare/v1.3.0...v1.4.0
+
 ## v1.3.0 (2026-01-22)
 
 ## What's Changed
