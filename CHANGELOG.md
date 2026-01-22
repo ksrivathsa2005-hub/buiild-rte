@@ -1,5 +1,14 @@
 # Changelog
 
+## v1.12.0 (2026-01-22)
+
+## What's Changed
+
+- updated readme (b6ddc17)
+- updated documentation (8f4bfe3)
+
+**Full Changelog**: https://github.com/ksrivathsa2005-hub/buiild-rte/compare/v1.11.0...v1.12.0
+
 ## v1.11.0 (2026-01-22)
 
 ## What's Changed
