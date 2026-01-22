@@ -1,5 +1,13 @@
 # Changelog
 
+## v1.3.0 (2026-01-22)
+
+## What's Changed
+
+- chore: trigger release retry (e4b3a26)
+
+**Full Changelog**: https://github.com/ksrivathsa2005-hub/buiild-rte/compare/v1.2.0...v1.3.0
+
 ## v1.2.0 (2026-01-22)
 
 ## What's Changed
