@@ -1178,8 +1178,19 @@ export class CommandHandler {
         resizer.contentEditable = 'false';
         resizer.style.border = '1px solid transparent'; // visual cue
 
+        // Helper to convert Google Drive share links to direct image links
+        const convertDriveLink = (url) => {
+          if (!url) return url;
+          // Regex to extract file ID from common Drive patterns
+          const match = url.match(/\/file\/d\/([a-zA-Z0-9_-]+)/);
+          if (match && match[1]) {
+            return `https://drive.google.com/uc?export=view&id=${match[1]}`;
+          }
+          return url;
+        };
+
         const img = document.createElement('img');
-        img.src = data.url;
+        img.src = convertDriveLink(data.url);
         img.alt = data.alt || 'Image';
         img.style.width = '100%';
         img.style.height = '100%';
