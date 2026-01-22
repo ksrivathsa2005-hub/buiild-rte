@@ -340,40 +340,40 @@ export class CommandHandler {
   _setLineHeight(value) {
     // Focus editor first
     this.editor.editor.focus();
-    
+
     const selection = window.getSelection();
     if (selection.rangeCount === 0) return;
 
     const range = selection.getRangeAt(0);
-    
+
     // Get all block-level elements within the selection
     const blockElements = new Set();
-    
+
     // If nothing is selected (collapsed), find the block containing cursor
     if (range.collapsed) {
       let node = selection.anchorNode;
-      
+
       // If it's a text node, get its parent element
       if (node && node.nodeType === Node.TEXT_NODE) {
         node = node.parentElement;
       }
-      
+
       // Find the closest block-level element that's not the editor itself
       while (node && node !== this.editor.editor) {
         if (node.nodeType === Node.ELEMENT_NODE && node.parentElement === this.editor.editor) {
           // We're at a top-level block in the editor
           const tagName = node.tagName;
-          if (tagName === 'P' || tagName === 'DIV' || 
-              tagName === 'LI' || tagName.match(/^H[1-6]$/) || 
-              tagName === 'BLOCKQUOTE' || tagName === 'PRE') {
+          if (tagName === 'P' || tagName === 'DIV' ||
+            tagName === 'LI' || tagName.match(/^H[1-6]$/) ||
+            tagName === 'BLOCKQUOTE' || tagName === 'PRE') {
             blockElements.add(node);
             break;
           }
         } else if (node.nodeType === Node.ELEMENT_NODE) {
           const tagName = node.tagName;
-          if (tagName === 'P' || tagName === 'DIV' || 
-              tagName === 'LI' || tagName.match(/^H[1-6]$/) || 
-              tagName === 'BLOCKQUOTE' || tagName === 'PRE') {
+          if (tagName === 'P' || tagName === 'DIV' ||
+            tagName === 'LI' || tagName.match(/^H[1-6]$/) ||
+            tagName === 'BLOCKQUOTE' || tagName === 'PRE') {
             blockElements.add(node);
             break;
           }
@@ -384,26 +384,26 @@ export class CommandHandler {
       // Text is selected - find all block elements that contain selected content
       const startContainer = range.startContainer;
       const endContainer = range.endContainer;
-      
+
       // Helper function to get the block parent of a node
       const getBlockParent = (node) => {
         let current = node.nodeType === Node.TEXT_NODE ? node.parentElement : node;
         while (current && current !== this.editor.editor) {
           const tagName = current.tagName;
-          if (current.nodeType === Node.ELEMENT_NODE && 
-              (tagName === 'P' || tagName === 'DIV' || tagName === 'LI' || 
-               tagName.match(/^H[1-6]$/) || tagName === 'BLOCKQUOTE' || tagName === 'PRE')) {
+          if (current.nodeType === Node.ELEMENT_NODE &&
+            (tagName === 'P' || tagName === 'DIV' || tagName === 'LI' ||
+              tagName.match(/^H[1-6]$/) || tagName === 'BLOCKQUOTE' || tagName === 'PRE')) {
             return current;
           }
           current = current.parentElement;
         }
         return null;
       };
-      
+
       // Get start and end blocks
       const startBlock = getBlockParent(startContainer);
       const endBlock = getBlockParent(endContainer);
-      
+
       if (startBlock && endBlock) {
         if (startBlock === endBlock) {
           // Selection within a single block
@@ -411,20 +411,20 @@ export class CommandHandler {
         } else {
           // Selection spans multiple blocks
           blockElements.add(startBlock);
-          
+
           // Find all blocks between start and end
           let currentNode = startBlock.nextSibling;
           while (currentNode && currentNode !== endBlock) {
             if (currentNode.nodeType === Node.ELEMENT_NODE) {
               const tagName = currentNode.tagName;
-              if (tagName === 'P' || tagName === 'DIV' || tagName === 'LI' || 
-                  tagName.match(/^H[1-6]$/) || tagName === 'BLOCKQUOTE' || tagName === 'PRE') {
+              if (tagName === 'P' || tagName === 'DIV' || tagName === 'LI' ||
+                tagName.match(/^H[1-6]$/) || tagName === 'BLOCKQUOTE' || tagName === 'PRE') {
                 blockElements.add(currentNode);
               }
             }
             currentNode = currentNode.nextSibling;
           }
-          
+
           blockElements.add(endBlock);
         }
       } else if (startBlock) {
@@ -433,7 +433,7 @@ export class CommandHandler {
         blockElements.add(endBlock);
       }
     }
-    
+
     // Apply line height to all found block elements
     if (blockElements.size > 0) {
       blockElements.forEach(element => {
@@ -448,7 +448,7 @@ export class CommandHandler {
       p.style.lineHeight = value;
       p.innerHTML = '<br>';
       range.insertNode(p);
-      
+
       // Move cursor into the new paragraph
       const newRange = document.createRange();
       newRange.setStart(p, 0);
@@ -456,7 +456,7 @@ export class CommandHandler {
       selection.removeAllRanges();
       selection.addRange(newRange);
     }
-    
+
     // Restore focus
     this.editor.editor.focus();
   }
@@ -472,9 +472,9 @@ export class CommandHandler {
       '6': '24pt',  // 24 pt
       '7': '36pt'   // 36 pt
     };
-    
+
     const fontSize = sizeMap[value] || value;
-    
+
     const selection = window.getSelection();
     if (selection.rangeCount === 0) {
       // If no selection, set for future typing
@@ -483,14 +483,14 @@ export class CommandHandler {
     }
 
     const range = selection.getRangeAt(0);
-    
+
     // If no text is selected, insert a zero-width space with the font size
     if (range.collapsed) {
       const span = document.createElement('span');
       span.style.fontSize = fontSize;
       span.innerHTML = '&#8203;'; // Zero-width space
       range.insertNode(span);
-      
+
       // Move cursor inside the span
       range.setStart(span, 1);
       range.collapse(true);
@@ -500,7 +500,7 @@ export class CommandHandler {
       // Text is selected, wrap it in a span with font size
       const span = document.createElement('span');
       span.style.fontSize = fontSize;
-      
+
       try {
         range.surroundContents(span);
       } catch (e) {
@@ -509,37 +509,37 @@ export class CommandHandler {
         span.appendChild(contents);
         range.insertNode(span);
       }
-      
+
       // Restore selection
       selection.removeAllRanges();
       selection.addRange(range);
     }
-    
+
     this.editor.editor.focus();
   }
 
   async _setCustomLineHeight() {
     // Store the current focused/active element in the editor BEFORE modal opens
     this.editor.editor.focus();
-    
+
     const selection = window.getSelection();
     let targetElement = null;
-    
+
     if (selection.rangeCount > 0) {
       // Get the element at cursor position
       let node = selection.anchorNode;
-      
+
       // If it's a text node, get its parent
       if (node && node.nodeType === Node.TEXT_NODE) {
         node = node.parentElement;
       }
-      
+
       // Traverse up to find the closest block element
       while (node && node !== this.editor.editor) {
         if (node.nodeType === Node.ELEMENT_NODE) {
           const tagName = node.tagName;
-          if (tagName === 'P' || tagName === 'DIV' || tagName === 'LI' || 
-              tagName.match(/^H[1-6]$/) || tagName === 'BLOCKQUOTE') {
+          if (tagName === 'P' || tagName === 'DIV' || tagName === 'LI' ||
+            tagName.match(/^H[1-6]$/) || tagName === 'BLOCKQUOTE') {
             targetElement = node;
             break;
           }
@@ -547,10 +547,10 @@ export class CommandHandler {
         node = node.parentElement;
       }
     }
-    
+
     // Store element reference for use after modal
     const storedElement = targetElement;
-    
+
     try {
       const result = await this.editor.modal.prompt({
         title: 'Custom Line Height',
@@ -576,7 +576,7 @@ export class CommandHandler {
           para.style.lineHeight = result.lineHeight;
           para.innerHTML = '<br>';
           this.editor.editor.appendChild(para);
-          
+
           // Move cursor to new paragraph
           const range = document.createRange();
           range.setStart(para, 0);
@@ -752,13 +752,6 @@ export class CommandHandler {
         wrapper.style.margin = '1rem 0';
         wrapper.style.textAlign = 'center';
 
-        const video = document.createElement('video');
-        video.src = url;
-        video.controls = true;
-        video.style.maxWidth = '100%';
-        video.style.display = 'inline-block';
-
-        wrapper.appendChild(video);
         // Check for YouTube
         const ytMatch = data.url.match(/^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/);
         const ytId = (ytMatch && ytMatch[2].length === 11) ? ytMatch[2] : null;
@@ -861,13 +854,13 @@ export class CommandHandler {
   _insertCodeBlock(language = 'javascript') {
     // Default to javascript if no language specified
     const langLabel = this._getLanguageLabel(language);
-    
+
     // Map language names to Prism language identifiers
     const prismLang = this._getPrismLanguage(language);
-    
+
     // Focus the editor
     this.editor.editor.focus();
-    
+
     // Create elements programmatically for better control
     const pre = document.createElement('pre');
     pre.className = `language-${prismLang}`;
@@ -876,26 +869,26 @@ export class CommandHandler {
     pre.setAttribute('data-source-language', language);
     pre.contentEditable = 'false'; // Make pre non-editable
     pre.style.position = 'relative';
-    
+
     // Add language label
     const label = document.createElement('div');
     label.className = 'code-language-label';
     label.textContent = langLabel;
     label.contentEditable = 'false';
-    
+
     // Create code element
     const code = document.createElement('code');
     code.className = `language-${prismLang}`;
     code.contentEditable = 'true'; // Make code editable
     code.textContent = `// Enter your ${langLabel} code here...\n`;
-    
+
     pre.appendChild(label);
     pre.appendChild(code);
-    
+
     // Create following paragraph
     const p = document.createElement('p');
     p.innerHTML = '<br>';
-    
+
     // Insert at cursor position
     const selection = window.getSelection();
     if (selection.rangeCount > 0) {
@@ -903,7 +896,7 @@ export class CommandHandler {
       range.deleteContents();
       range.insertNode(p);
       range.insertNode(pre);
-      
+
       // Move cursor into the code block
       const newRange = document.createRange();
       newRange.selectNodeContents(code);
@@ -911,35 +904,35 @@ export class CommandHandler {
       selection.removeAllRanges();
       selection.addRange(newRange);
     }
-    
+
     // Apply syntax highlighting immediately
     if (window.Prism) {
       // Use Prism.highlightElement for better compatibility
       Prism.highlightElement(code);
     }
-    
+
     // Add input listener for live syntax highlighting on this specific code block
     code.addEventListener('input', () => {
       if (window.Prism) {
         // Store cursor position
         const sel = window.getSelection();
         if (!sel.rangeCount) return;
-        
+
         const range = sel.getRangeAt(0);
         const preCaretRange = range.cloneRange();
         preCaretRange.selectNodeContents(code);
         preCaretRange.setEnd(range.endContainer, range.endOffset);
         const caretOffset = preCaretRange.toString().length;
-        
+
         // Store the plain text content before highlighting
         const text = code.textContent;
-        
+
         // Re-apply the language class in case it was lost
         code.className = `language-${prismLang}`;
-        
+
         // Re-highlight using Prism
         code.innerHTML = Prism.highlight(text, Prism.languages[prismLang] || Prism.languages.javascript, prismLang);
-        
+
         // Restore cursor position
         setTimeout(() => {
           const textNode = this._getTextNodeAtOffset(code, caretOffset);
@@ -954,7 +947,7 @@ export class CommandHandler {
       }
     });
   }
-  
+
   _getTextNodeAtOffset(element, offset) {
     let currentOffset = 0;
     const walker = document.createTreeWalker(
@@ -963,7 +956,7 @@ export class CommandHandler {
       null,
       false
     );
-    
+
     let node;
     while ((node = walker.nextNode())) {
       const nodeLength = node.textContent.length;
@@ -975,11 +968,11 @@ export class CommandHandler {
       }
       currentOffset += nodeLength;
     }
-    
+
     return null;
   }
-  
-  
+
+
   _getPrismLanguage(language) {
     const langMap = {
       'html': 'markup',
