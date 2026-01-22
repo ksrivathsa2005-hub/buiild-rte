@@ -115,12 +115,19 @@
 &lt;!-- Include the RTE library --&gt;
 &lt;script type="module"&gt;
     import RTE from 'rte-package/src/index.js';
+    import { DEFAULT_TOOLBAR } from 'rte-package/src/config/defaults.js';
     
+    // Use DEFAULT_TOOLBAR - 90% configurable!
     const editor = new RTE('editor', {
+        toolbar: DEFAULT_TOOLBAR.filter(g => g.group === 'formatting')
+    });
+    
+    // Or use custom toolbar for more control
+    const customEditor = new RTE('editor', {
         toolbar: [
             { group: 'formatting', items: [
-                { type: 'button', label: 'Bold', command: 'bold', icon: '&lt;b&gt;B&lt;/b&gt;' },
-                { type: 'button', label: 'Italic', command: 'italic', icon: '&lt;i&gt;I&lt;/i&gt;' }
+                { type: 'button', label: 'Bold', command: 'bold', icon: '&lt;i class="fas fa-bold"&gt;&lt;/i&gt;' },
+                { type: 'button', label: 'Italic', command: 'italic', icon: '&lt;i class="fas fa-italic"&gt;&lt;/i&gt;' }
             ]}
         ]
     });
@@ -162,12 +169,25 @@
                     <pre><code class="language-html">&lt;link rel="stylesheet" href="https://unpkg.com/@nalashaa-sri/vanilla-rte/dist/styles/main.css"&gt;
 &lt;script type="module" src="https://unpkg.com/@nalashaa-sri/vanilla-rte/dist/index.js"&gt;&lt;/script&gt;</code></pre>
                 </div>
+
+                <div class="info-box tip">
+                    <div class="info-box-title">Icon Dependencies</div>
+                    <p>DEFAULT_TOOLBAR uses Font Awesome icons. Include Font Awesome in your project:</p>
+                    <pre><code class="language-html">&lt;link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"&gt;</code></pre>
+                    <p>You can customize icons or use your own icon library by modifying the <code>icon</code> property in toolbar items.</p>
+                </div>
             </section>
 
             <!-- Configuration Section -->
             <section id="configuration">
                 <h2>Configuration</h2>
-                <p>The Rich Text Editor accepts a configuration object with various options:</p>
+                <p>The Rich Text Editor is <strong>90% configurable</strong>, allowing you to customize nearly every aspect. 
+                All default configurations are defined in <code>rte-package/src/config/defaults.js</code>.</p>
+
+                <div class="info-box note">
+                    <div class="info-box-title">Recommended Approach</div>
+                    <p>Import and use <code>DEFAULT_TOOLBAR</code>, <code>DEFAULT_THEME</code>, <code>DEFAULT_FEATURES</code>, and other defaults from <code>config/defaults.js</code> for easy setup. See <a href="../CONFIGURATION_GUIDE.md">CONFIGURATION_GUIDE.md</a> for detailed examples.</p>
+                </div>
 
                 <table class="docs-table">
                     <thead>
@@ -181,17 +201,27 @@
                         <tr>
                             <td><code>toolbar</code></td>
                             <td>Array</td>
-                            <td>Array of toolbar groups with items</td>
+                            <td>Array of toolbar groups with items (use DEFAULT_TOOLBAR)</td>
                         </tr>
                         <tr>
-                            <td><code>placeholder</code></td>
-                            <td>String</td>
-                            <td>Placeholder text when editor is empty</td>
+                            <td><code>theme</code></td>
+                            <td>Object</td>
+                            <td>Theme configuration with colors, fonts, spacing (use DEFAULT_THEME)</td>
                         </tr>
                         <tr>
-                            <td><code>readOnly</code></td>
-                            <td>Boolean</td>
-                            <td>Enable read-only mode</td>
+                            <td><code>features</code></td>
+                            <td>Object</td>
+                            <td>Feature toggles for undo, spellcheck, etc. (use DEFAULT_FEATURES)</td>
+                        </tr>
+                        <tr>
+                            <td><code>i18n</code></td>
+                            <td>Object</td>
+                            <td>Internationalization strings (use DEFAULT_I18N)</td>
+                        </tr>
+                        <tr>
+                            <td><code>editor</code></td>
+                            <td>Object</td>
+                            <td>Editor options like placeholder, readOnly (use DEFAULT_EDITOR_OPTIONS)</td>
                         </tr>
                     </tbody>
                 </table>
@@ -205,9 +235,14 @@
                     alignment, and lists, along with customization options to suit different use cases.</p>
 
                 <div class="info-box note">
-                    <div class="info-box-title">Note</div>
-                    <p>To create a Rich Text Editor with Toolbar feature, configure the <code>toolbar</code> array in
-                        the RTE options.</p>
+                    <div class="info-box-title">Best Practice</div>
+                    <p>Use <code>DEFAULT_TOOLBAR</code> from <code>config/defaults.js</code> and filter/customize as needed:</p>
+                    <pre><code>import { DEFAULT_TOOLBAR } from 'rte-package/src/config/defaults.js';
+
+// Use only specific groups
+const editor = new RTE('editor', {
+  toolbar: DEFAULT_TOOLBAR.filter(g => ['formatting', 'paragraph'].includes(g.group))
+});</code></pre>
                 </div>
             </section>
 
@@ -234,24 +269,10 @@
                     <div class="code-header">
                         <span class="code-lang">JavaScript</span>
                     </div>
-                    <pre><code class="language-javascript">const editor = new RTE('editor', {
-    toolbar: [
-        {
-            group: 'clipboard',
-            items: [
-                { type: 'button', label: 'Undo', command: 'undo', icon: '&lt;i class="fas fa-undo"&gt;&lt;/i&gt;' },
-                { type: 'button', label: 'Redo', command: 'redo', icon: '&lt;i class="fas fa-redo"&gt;&lt;/i&gt;' }
-            ]
-        },
-        {
-            group: 'formatting',
-            items: [
-                { type: 'button', label: 'Bold', command: 'bold', icon: '&lt;i class="fas fa-bold"&gt;&lt;/i&gt;' },
-                { type: 'button', label: 'Italic', command: 'italic', icon: '&lt;i class="fas fa-italic"&gt;&lt;/i&gt;' },
-                { type: 'button', label: 'Underline', command: 'underline', icon: '&lt;i class="fas fa-underline"&gt;&lt;/i&gt;' }
-            ]
-        }
-    ]
+                    <pre><code class="language-javascript">import { DEFAULT_TOOLBAR } from 'rte-package/src/config/defaults.js';
+
+const editor = new RTE('editor', {
+    toolbar: DEFAULT_TOOLBAR.filter(g => ['clipboard', 'formatting'].includes(g.group))
 });</code></pre>
                 </div>
 
@@ -277,59 +298,11 @@
                     <div class="code-header">
                         <span class="code-lang">JavaScript</span>
                     </div>
-                    <pre><code class="language-javascript">const editor = new RTE('editor', {
-    toolbar: [
-        // Row 1: Clipboard & Formatting
-        {
-            group: 'clipboard',
-            items: [
-                { type: 'button', label: 'Undo', command: 'undo', icon: '&lt;i class="fas fa-undo"&gt;&lt;/i&gt;' },
-                { type: 'button', label: 'Redo', command: 'redo', icon: '&lt;i class="fas fa-redo"&gt;&lt;/i&gt;' },
-                { type: 'button', label: 'Cut', command: 'cut', icon: '&lt;i class="fas fa-cut"&gt;&lt;/i&gt;' },
-                { type: 'button', label: 'Copy', command: 'copy', icon: '&lt;i class="fas fa-copy"&gt;&lt;/i&gt;' },
-                { type: 'button', label: 'Paste', command: 'paste', icon: '&lt;i class="fas fa-paste"&gt;&lt;/i&gt;' }
-            ]
-        },
-        {
-            group: 'formatting',
-            items: [
-                { type: 'button', label: 'Bold', command: 'bold', icon: '&lt;i class="fas fa-bold"&gt;&lt;/i&gt;' },
-                { type: 'button', label: 'Italic', command: 'italic', icon: '&lt;i class="fas fa-italic"&gt;&lt;/i&gt;' },
-                { type: 'button', label: 'Underline', command: 'underline', icon: '&lt;i class="fas fa-underline"&gt;&lt;/i&gt;' },
-                { type: 'button', label: 'Strikethrough', command: 'strikeThrough', icon: '&lt;i class="fas fa-strikethrough"&gt;&lt;/i&gt;' }
-            ]
-        },
-        // Row 2: Paragraph & Lists
-        {
-            group: 'paragraph',
-            items: [
-                { type: 'select', label: 'Heading', command: 'formatBlock', options: [
-                    { label: 'Paragraph', value: 'p' },
-                    { label: 'Heading 1', value: 'h1' },
-                    { label: 'Heading 2', value: 'h2' },
-                    { label: 'Heading 3', value: 'h3' }
-                ]},
-                { type: 'button', label: 'Bullet List', command: 'insertUnorderedList', icon: '&lt;i class="fas fa-list-ul"&gt;&lt;/i&gt;' },
-                { type: 'button', label: 'Number List', command: 'insertOrderedList', icon: '&lt;i class="fas fa-list-ol"&gt;&lt;/i&gt;' }
-            ]
-        },
-        // Row 3: Insert & Typography
-        {
-            group: 'insert',
-            items: [
-                { type: 'button', label: 'Link', command: 'createLink', icon: '&lt;i class="fas fa-link"&gt;&lt;/i&gt;' },
-                { type: 'button', label: 'Image', command: 'insertImage', icon: '&lt;i class="fas fa-image"&gt;&lt;/i&gt;' },
-                { type: 'button', label: 'Table', command: 'insertTable', icon: '&lt;i class="fas fa-table"&gt;&lt;/i&gt;' }
-            ]
-        },
-        {
-            group: 'typography',
-            items: [
-                { type: 'color', label: 'Text Color', command: 'foreColor' },
-                { type: 'color', label: 'Highlight', command: 'backColor' }
-            ]
-        }
-    ]
+                    <pre><code class="language-javascript">import { DEFAULT_TOOLBAR } from 'rte-package/src/config/defaults.js';
+
+// Use full toolbar with all groups
+const editor = new RTE('editor', {
+    toolbar: DEFAULT_TOOLBAR
 });</code></pre>
                 </div>
 
@@ -730,6 +703,7 @@ editor.on('selection-change', (selection) => {
 
     <script type="module">
         import RTE from '../rte-package/src/index.js';
+        import { DEFAULT_TOOLBAR } from '../rte-package/src/config/defaults.js';
 
         // Demo editors
         const demos = {
@@ -752,99 +726,25 @@ editor.on('selection-change', (selection) => {
             if (demos[demoId]) return;
 
             if (demoId === 'quickstart-demo') {
+                // Minimal toolbar - just formatting group
                 demos[demoId] = new RTE('demo-editor-1', {
-                    toolbar: [
-                        {
-                            group: 'formatting',
-                            items: [
-                                { type: 'button', label: 'Bold', command: 'bold', icon: '<i class="fas fa-bold"></i>' },
-                                { type: 'button', label: 'Italic', command: 'italic', icon: '<i class="fas fa-italic"></i>' }
-                            ]
-                        }
-                    ]
+                    toolbar: DEFAULT_TOOLBAR.filter(g => g.group === 'formatting')
                 });
                 demos[demoId].setContent('<p>Hello World!</p><p>Some initial <strong>bold</strong> text</p>');
             }
 
             if (demoId === 'expand-demo') {
+                // Using DEFAULT_TOOLBAR with subset of groups
                 demos[demoId] = new RTE('demo-editor-expand', {
-                    toolbar: [
-                        {
-                            group: 'clipboard',
-                            items: [
-                                { type: 'button', label: 'Undo', command: 'undo', icon: '<i class="fas fa-undo"></i>' },
-                                { type: 'button', label: 'Redo', command: 'redo', icon: '<i class="fas fa-redo"></i>' }
-                            ]
-                        },
-                        {
-                            group: 'formatting',
-                            items: [
-                                { type: 'button', label: 'Bold', command: 'bold', icon: '<i class="fas fa-bold"></i>' },
-                                { type: 'button', label: 'Italic', command: 'italic', icon: '<i class="fas fa-italic"></i>' },
-                                { type: 'button', label: 'Underline', command: 'underline', icon: '<i class="fas fa-underline"></i>' }
-                            ]
-                        }
-                    ]
+                    toolbar: DEFAULT_TOOLBAR.filter(g => ['clipboard', 'formatting'].includes(g.group))
                 });
                 demos[demoId].setContent('<h2>Expand Toolbar</h2><p>This editor uses the default expand toolbar mode.</p>');
             }
 
             if (demoId === 'multirow-demo') {
+                // Using full DEFAULT_TOOLBAR
                 demos[demoId] = new RTE('demo-editor-multirow', {
-                    toolbar: [
-                        {
-                            group: 'clipboard',
-                            items: [
-                                { type: 'button', label: 'Undo', command: 'undo', icon: '<i class="fas fa-undo"></i>' },
-                                { type: 'button', label: 'Redo', command: 'redo', icon: '<i class="fas fa-redo"></i>' },
-                                { type: 'button', label: 'Cut', command: 'cut', icon: '<i class="fas fa-cut"></i>' },
-                                { type: 'button', label: 'Copy', command: 'copy', icon: '<i class="fas fa-copy"></i>' },
-                                { type: 'button', label: 'Paste', command: 'paste', icon: '<i class="fas fa-paste"></i>' }
-                            ]
-                        },
-                        {
-                            group: 'formatting',
-                            items: [
-                                { type: 'button', label: 'Bold', command: 'bold', icon: '<i class="fas fa-bold"></i>' },
-                                { type: 'button', label: 'Italic', command: 'italic', icon: '<i class="fas fa-italic"></i>' },
-                                { type: 'button', label: 'Underline', command: 'underline', icon: '<i class="fas fa-underline"></i>' },
-                                { type: 'button', label: 'Strikethrough', command: 'strikeThrough', icon: '<i class="fas fa-strikethrough"></i>' }
-                            ]
-                        },
-                        {
-                            group: 'paragraph',
-                            items: [
-                                {
-                                    type: 'select',
-                                    label: 'Heading',
-                                    command: 'formatBlock',
-                                    options: [
-                                        { label: 'Paragraph', value: 'p' },
-                                        { label: 'Heading 1', value: 'h1' },
-                                        { label: 'Heading 2', value: 'h2' },
-                                        { label: 'Heading 3', value: 'h3' }
-                                    ]
-                                },
-                                { type: 'button', label: 'Bullet List', command: 'insertUnorderedList', icon: '<i class="fas fa-list-ul"></i>' },
-                                { type: 'button', label: 'Number List', command: 'insertOrderedList', icon: '<i class="fas fa-list-ol"></i>' }
-                            ]
-                        },
-                        {
-                            group: 'insert',
-                            items: [
-                                { type: 'button', label: 'Link', command: 'createLink', icon: '<i class="fas fa-link"></i>' },
-                                { type: 'button', label: 'Image', command: 'insertImage', icon: '<i class="fas fa-image"></i>' },
-                                { type: 'button', label: 'Table', command: 'insertTable', icon: '<i class="fas fa-table"></i>' }
-                            ]
-                        },
-                        {
-                            group: 'typography',
-                            items: [
-                                { type: 'color', label: 'Text Color', command: 'foreColor' },
-                                { type: 'color', label: 'Highlight', command: 'backColor' }
-                            ]
-                        }
-                    ]
+                    toolbar: DEFAULT_TOOLBAR
                 });
                 demos[demoId].setContent('<h2>MultiRow Toolbar</h2><p>This editor displays all tools in a multi-row layout.</p>');
             }
