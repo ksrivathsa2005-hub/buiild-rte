@@ -531,7 +531,7 @@ export class ModalManager {
       if (secondaryBtn) secondaryBtn.style.display = 'none';
     }
 
-    document.body.appendChild(modal);
+    this.editor.container.appendChild(modal);
     return modal;
   }
 
