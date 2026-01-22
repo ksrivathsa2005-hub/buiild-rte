@@ -23,6 +23,7 @@ export const createButton = (config) => {
   button.setAttribute('aria-label', config.label);
   button.setAttribute('aria-pressed', 'false');
   // Use custom tooltip instead of native title for better control
+  button.title = ''; // Suppress native tooltip
   button.setAttribute('data-tooltip', config.label);
   button.dataset.command = config.command;
   button.dataset.value = config.value || '';

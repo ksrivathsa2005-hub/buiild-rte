@@ -325,7 +325,7 @@ select[data-command="formatBlock"] option[value="pre"] {
   left: 0;
   right: 0;
   bottom: 0;
-  z-index: 1000;
+  z-index: 2000000;
 }
 
 .rte__modal.active {
@@ -602,129 +602,131 @@ select[data-command="formatBlock"] option[value="pre"] {
 
 .rte__quick-btn i {
   pointer-events: none;
-}/* ============================================
+}
+
+/* ============================================
    VERSION HISTORY SIDEBAR
    ============================================ */
 
 .rte__modal--version-history.rte__modal-content {
-    position: fixed;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    margin: 0;
-    border-radius: 0;
-    width: 350px;
-    max-width: 100%;
-    max-height: 100%;
-    transform: translateX(100%);
-    animation: slideInRight 0.3s forwards;
-    display: flex;
-    flex-direction: column;
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  margin: 0;
+  border-radius: 0;
+  width: 350px;
+  max-width: 100%;
+  max-height: 100%;
+  transform: translateX(100%);
+  animation: slideInRight 0.3s forwards;
+  display: flex;
+  flex-direction: column;
 }
 
 @keyframes slideInRight {
-    from {
-        transform: translateX(100%);
-    }
+  from {
+    transform: translateX(100%);
+  }
 
-    to {
-        transform: translateX(0);
-    }
+  to {
+    transform: translateX(0);
+  }
 }
 
 .rte__vh-controls {
-    padding-bottom: 16px;
-    border-bottom: 1px solid #eee;
-    margin-bottom: 16px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid #eee;
+  margin-bottom: 16px;
 }
 
 .rte__vh-filter {
-    width: 100%;
-    padding: 8px 12px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    background: #f8f9fa;
-    font-size: 14px;
-    color: #333;
+  width: 100%;
+  padding: 8px 12px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  background: #f8f9fa;
+  font-size: 14px;
+  color: #333;
 }
 
 .rte__vh-list {
-    flex: 1;
-    overflow-y: auto;
+  flex: 1;
+  overflow-y: auto;
 }
 
 .rte__vh-date-header {
-    font-size: 13px;
-    color: #666;
-    font-weight: 600;
-    margin: 16px 0 8px 0;
-    text-transform: uppercase;
+  font-size: 13px;
+  color: #666;
+  font-weight: 600;
+  margin: 16px 0 8px 0;
+  text-transform: uppercase;
 }
 
 .rte__vh-item {
-    padding: 12px;
-    border-radius: 8px;
-    border: 1px solid #eee;
-    margin-bottom: 12px;
-    cursor: pointer;
-    transition: all 0.2s;
-    background: white;
+  padding: 12px;
+  border-radius: 8px;
+  border: 1px solid #eee;
+  margin-bottom: 12px;
+  cursor: pointer;
+  transition: all 0.2s;
+  background: white;
 }
 
 .rte__vh-item:hover {
-    border-color: #ccc;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  border-color: #ccc;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
 }
 
 .rte__vh-item-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 8px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
 }
 
 .rte__vh-time {
-    font-size: 14px;
-    font-weight: 600;
-    color: #333;
+  font-size: 14px;
+  font-weight: 600;
+  color: #333;
 }
 
 .rte__vh-current-badge {
-    font-size: 10px;
-    color: #666;
-    background: #eee;
-    padding: 2px 6px;
-    border-radius: 10px;
-    margin-left: 8px;
+  font-size: 10px;
+  color: #666;
+  background: #eee;
+  padding: 2px 6px;
+  border-radius: 10px;
+  margin-left: 8px;
 }
 
 .rte__vh-menu-btn {
-    background: none;
-    border: none;
-    color: #999;
-    cursor: pointer;
-    padding: 4px;
+  background: none;
+  border: none;
+  color: #999;
+  cursor: pointer;
+  padding: 4px;
 }
 
 .rte__vh-menu-btn:hover {
-    color: #333;
+  color: #333;
 }
 
 .rte__vh-user {
-    display: flex;
-    align-items: center;
-    gap: 8px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
 .rte__vh-user-dot {
-    width: 8px;
-    height: 8px;
-    background-color: #20c997;
-    /* Teal color from image */
-    border-radius: 50%;
+  width: 8px;
+  height: 8px;
+  background-color: #20c997;
+  /* Teal color from image */
+  border-radius: 50%;
 }
 
 .rte__vh-username {
-    font-size: 13px;
-    color: #666;
+  font-size: 13px;
+  color: #666;
 }
