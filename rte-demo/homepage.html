@@ -444,36 +444,7 @@
         </div>
     </section>
 
-    <!-- Editor Section (from index.html) -->
-    <section class="index-editor-section">
-        <div class="container">
-            <div class="editor-section">
-                <div id="editor-container"></div>
-
-                <p class="paste-note" style="margin:12px 0 0 0;color:#666;font-size:0.95rem;max-width:800px;">
-                </p>
-
-                <div class="actions">
-                    <button type="button" id="get-content-btn"><i class="fas fa-code"></i> Get HTML</button>
-
-                    <!-- File Inputs -->
-                    <input type="file" id="json-file-input" accept=".json" style="display:none">
-                    <input type="file" id="html-file-input" accept=".html" style="display:none">
-
-                    <button type="button" id="load-json-btn" class="secondary"><i class="fas fa-file-code"></i> Load JSON</button>
-                    <button type="button" id="load-html-btn" class="secondary"><i class="fas fa-file-alt"></i> Load HTML</button>
-
-                    <button type="button" id="load-sample-btn" class="secondary"><i class="fas fa-sync"></i> Reset</button>
-                    <button type="button" id="clear-btn" class="secondary"><i class="fas fa-trash"></i> Clear</button>
-                </div>
-
-                <div id="output-view" class="output">
-                    <h3>Output</h3>
-                    <pre id="output-code"></pre>
-                </div>
-            </div>
-        </div>
-    </section>
+  
 
     <!-- Features Section -->
     <section class="features">
@@ -719,14 +690,34 @@
                 },
                 // Transform
                 {
-                    group: 'transform',
-                    items: [
-                        { type: 'button', label: 'Uppercase', command: 'uppercase', icon: '<i class="fas fa-arrow-up"></i>' },
-                        { type: 'button', label: 'Lowercase', command: 'lowercase', icon: '<i class="fas fa-arrow-down"></i>' },
-                        { type: 'button', label: 'Code Block', command: 'insertCodeBlock', icon: '<i class="fas fa-code"></i>' }
+            group: 'transform',
+            items: [
+                { type: 'button', label: 'Uppercase', command: 'uppercase', icon: '<i class="fas fa-arrow-up"></i>' },
+                { type: 'button', label: 'Lowercase', command: 'lowercase', icon: '<i class="fas fa-arrow-down"></i>' },
+                {
+                    type: 'select',
+                    label: 'Code Block',
+                    command: 'insertCodeBlock',
+                    icon: '<i class="fas fa-code"></i>',
+                    options: [
+                        { label: 'HTML', value: 'html' },
+                        { label: 'Java', value: 'java' },
+                        { label: 'JavaScript', value: 'javascript' },
+                        { label: 'PHP', value: 'php' },
+                        { label: 'Python', value: 'python' },
+                        { label: 'Ruby', value: 'ruby' },
+                        { label: 'SQL', value: 'sql' },
+                        { label: 'TypeScript', value: 'typescript' },
+                        { label: 'XML', value: 'xml' },
+                        { label: 'CSS', value: 'css' },
+                        { label: 'C#', value: 'csharp' },
+                        { label: 'C++', value: 'cpp' },
+                        { label: 'JSON', value: 'json' }
                     ]
-                },
-                // View
+                }
+            ]
+        },
+// View
                 {
                     group: 'view',
                     items: [
@@ -806,7 +797,7 @@
             ]
         });
 
-        // Sample content for Full Featured Editor
+       // Sample content for Full Featured Editor
         const sampleContent1 = `
 <h1>Welcome to RTE Demo</h1>
 <p>This is a <strong>feature-rich</strong> Rich Text Editor built with vanilla JavaScript.</p>
@@ -877,5 +868,3 @@
         });
     </script>
 </body>
-
-</html>
