@@ -207,7 +207,7 @@ rte-package/src/components/
 2. **Formatting** - Bold, Italic, Underline, Strikethrough, Superscript, Subscript, Code, Clear
 3. **Paragraph** - Format block, Lists, Block quote
 4. **Alignment** - Left, Center, Right, Justify, Indent, Outdent
-5. **Insert** - Link, Image, Audio, Video, Table, Emoji, HR
+5. **Insert** - Link, Image, Audio, Video, Table, HR
 6. **Typography** - Font, Size, Color, Highlight
 7. **Transform** - Uppercase, Lowercase, Code block
 8. **View** - Source code, Fullscreen

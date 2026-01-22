@@ -25,6 +25,16 @@ export class RTE {
 
   _mergeConfig(userConfig) {
     const defaultConfig = {
+      autosave: {
+        enabled: true,
+        delay: 1000,
+        key: 'rte_autosave_content'
+      },
+      versionHistory: {
+        enabled: true,
+        maxVersions: 20,
+        key: 'rte_version_history'
+      },
       toolbar: [
         {
           group: 'clipboard',
@@ -143,7 +153,6 @@ export class RTE {
             { type: 'button', label: 'Video', command: 'insertVideo', icon: '🎬' },
             { type: 'button', label: 'Table', command: 'insertTable', icon: '▦' },
             { type: 'button', label: 'Code Block', command: 'insertCodeBlock', icon: '{}' },
-            { type: 'button', label: 'Emoji', command: 'insertEmoji', icon: '😊' },
             { type: 'button', label: 'Special Char', command: 'insertSpecialChar', icon: '§' }
           ]
         },
@@ -290,7 +299,90 @@ export class RTE {
     // Initialize QuickToolbar after DOM is ready
     this.quickToolbar = new QuickToolbar(this);
 
+    // Recover content from autosave if enabled
+    if (this.config.autosave.enabled) {
+      this._recoverContent();
+    }
+
     this._bindEvents();
+  }
+
+  _recoverContent() {
+    const saved = localStorage.getItem(this.config.autosave.key);
+    if (saved) {
+      this.editor.innerHTML = this.sanitizer(saved);
+    }
+  }
+
+  _handleAutosave() {
+    if (!this.config.autosave.enabled) return;
+
+    if (this._autosaveTimer) clearTimeout(this._autosaveTimer);
+    this._autosaveTimer = setTimeout(() => {
+      const content = this.editor.innerHTML;
+      localStorage.setItem(this.config.autosave.key, content);
+
+      // Also potentially save a version snapshot if enough time has passed
+      this._autoSnapshot();
+    }, this.config.autosave.delay);
+  }
+
+  _autoSnapshot() {
+    if (!this.config.versionHistory.enabled) return;
+
+    const now = Date.now();
+    const lastSnapshot = parseInt(localStorage.getItem(this.config.versionHistory.key + '_last') || '0');
+
+    // Auto-snapshot every 5 minutes if there are changes
+    if (now - lastSnapshot > 5 * 60 * 1000) {
+      this._saveSnapshot('Auto-save');
+    }
+  }
+
+  _saveSnapshot(label = 'Manual Save') {
+    if (!this.config.versionHistory.enabled) return;
+
+    const content = this.editor.innerHTML;
+    const snapshots = JSON.parse(localStorage.getItem(this.config.versionHistory.key) || '[]');
+
+    const newSnapshot = {
+      id: Date.now(),
+      timestamp: new Date().toISOString(),
+      label: label,
+      content: content
+    };
+
+    snapshots.unshift(newSnapshot);
+
+    // Limit snapshots
+    const limitedSnapshots = snapshots.slice(0, this.config.versionHistory.maxVersions);
+
+    localStorage.setItem(this.config.versionHistory.key, JSON.stringify(limitedSnapshots));
+    localStorage.setItem(this.config.versionHistory.key + '_last', Date.now().toString());
+  }
+
+  _getSnapshots() {
+    return JSON.parse(localStorage.getItem(this.config.versionHistory.key) || '[]');
+  }
+
+  getContent() {
+    if (this.isSourceMode) {
+      return this.sourceView.value;
+    }
+    return this.editor.innerHTML;
+  }
+
+  setContent(content) {
+    const sanitized = this.sanitizer(content);
+    if this.isSourceMode) {
+      this.sourceView.value = sanitized;
+    }
+    this.editor.innerHTML = sanitized;
+
+    // Save snapshot on manual setContent
+    if (this.config.versionHistory.enabled) {
+      this._saveSnapshot('Loaded Content');
+    }
   }
 
   _createBubbleToolbar(wrapper) {
@@ -404,62 +496,11 @@ export class RTE {
     }
   }
 
-  _handleQuickToolbar(event) {
-    if (this.isSourceMode) return;
-
-    setTimeout(() => {
-      const target = event.target;
-
-      // Check if clicked element is an image or contains an image
-      let imageElement = null;
-
-      if (target.tagName === 'IMG') {
-        imageElement = target;
-      } else if (target.querySelector && target.querySelector('img')) {
-        imageElement = target.querySelector('img');
-      }
-
-      // If we found an image, show the quick toolbar
-      if (imageElement && this.editor.contains(imageElement)) {
-        const rect = imageElement.getBoundingClientRect();
-        this.quickToolbar.show(imageElement, 'image', rect);
-        return;
-      }
-
-      // Check if clicked element is a video or iframe (YouTube)
-      let videoElement = null;
-      if (target.tagName === 'VIDEO' || target.tagName === 'IFRAME') {
-        videoElement = target;
-      } else if (target.querySelector) {
-        videoElement = target.querySelector('video') || target.querySelector('iframe');
-      }
-
-      if (videoElement && this.editor.contains(videoElement)) {
-        const rect = videoElement.getBoundingClientRect();
-        this.quickToolbar.show(videoElement, 'video', rect);
-        return;
-      }
-
-      // Check if clicked element is audio
-      let audioElement = null;
-      if (target.tagName === 'AUDIO') {
-        audioElement = target;
-      } else if (target.querySelector && target.querySelector('audio')) {
-        audioElement = target.querySelector('audio');
-      }
-
-      if (audioElement && this.editor.contains(audioElement)) {
-        const rect = audioElement.getBoundingClientRect();
-        this.quickToolbar.show(audioElement, 'audio', rect);
-        return;
-      }
-
-      // Hide toolbar if clicking elsewhere
-      this.quickToolbar.hide();
-    }, 50);
-  }
-
   _bindEvents() {
+    this.editor.addEventListener('input', () => {
+      this._handleAutosave();
+    });
+
     this.editor.addEventListener('keydown', (e) => {
       // Hide quick toolbar when typing (except for modifier keys)
       if (!e.ctrlKey && !e.metaKey && !e.altKey && e.key.length === 1) {
@@ -784,18 +825,7 @@ export class RTE {
     }
   }
 
-  getContent() {
-    return sanitizeHTML(this.isSourceMode ? this.sourceView.value : this.editor.innerHTML);
-  }
-
-  setContent(html, skipHistory = false) {
-    const sanitized = sanitizeHTML(html);
-    if (this.isSourceMode) {
-      this.sourceView.value = sanitized;
-    } else {
-      this.editor.innerHTML = sanitized;
-    }
-  }
+  // getContent() and setContent() are already defined above
 
   clearContent() {
     if (this.isSourceMode) {
