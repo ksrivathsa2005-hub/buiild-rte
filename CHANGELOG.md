@@ -1,5 +1,13 @@
 # Changelog
 
+## v1.15.0 (2026-01-22)
+
+## What's Changed
+
+- undo redo fixed (b8a8798)
+
+**Full Changelog**: https://github.com/ksrivathsa2005-hub/buiild-rte/compare/v1.14.0...v1.15.0
+
 ## v1.14.0 (2026-01-22)
 
 ## What's Changed
