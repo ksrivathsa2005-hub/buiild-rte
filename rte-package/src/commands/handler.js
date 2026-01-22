@@ -11,19 +11,15 @@ export class CommandHandler {
   }
 
   async execute(command, value = null) {
-    // Save to history before executing (for undo/redo)
-    if (!['undo', 'redo', 'toggleSource', 'toggleFullscreen'].includes(command)) {
-      this._saveToHistory();
+    if (['undo', 'redo'].includes(command)) {
+      if (command === 'undo') this._undo();
+      else this._redo();
+      this.editor.focus();
+      return;
     }
 
     switch (command) {
       // Clipboard
-      case 'undo':
-        this._undo();
-        break;
-      case 'redo':
-        this._redo();
-        break;
       case 'cut':
         document.execCommand('cut');
         break;
@@ -189,6 +185,11 @@ export class CommandHandler {
         console.warn(`Unknown command: ${command}`);
     }
 
+    // Save state after execution (excluding view toggles which don't change content)
+    if (!['toggleSource', 'toggleFullscreen', 'history', 'findReplace'].includes(command)) {
+      this.saveState();
+    }
+
     this.editor.focus();
   }
 
@@ -210,6 +211,8 @@ export class CommandHandler {
           document.execCommand('insertText', false, replacement);
           // Auto find next
           window.find(query, false, false, true, false, false, false);
+          // Save state after replace
+          this.saveState();
           return 'Replaced';
         } else {
           const found = window.find(query, false, false, true, false, false, false);
@@ -230,14 +233,28 @@ export class CommandHandler {
           document.execCommand('insertText', false, replacement);
           count++;
         }
+        // Save state after replace all
+        this.saveState();
         return `Replaced ${count} occurrences`;
       }
     });
   }
 
+  // Alias for backward compatibility
   _saveToHistory() {
+    this.saveState();
+  }
+
+  saveState() {
+    const content = this.editor.getContent();
+
+    // Don't save if content hasn't changed from the last saved state
+    if (this.history.length > 0 && this.history[this.historyIndex] === content) {
+      return;
+    }
+
     this.history = this.history.slice(0, this.historyIndex + 1);
-    this.history.push(this.editor.getContent());
+    this.history.push(content);
     this.historyIndex++;
 
     if (this.history.length > this.maxHistory) {
@@ -249,7 +266,7 @@ export class CommandHandler {
   _undo() {
     if (this.historyIndex > 0) {
       this.historyIndex--;
-      this.editor.setContent(this.history[this.historyIndex], true);
+      this.editor.setContent(this.history[this.historyIndex], true); // true = prevent recursion if setContent triggers save
     }
   }
 
@@ -316,7 +333,7 @@ export class CommandHandler {
         }
 
         if (options.mode === 'plain') {
-          const escaped = content.replace(/[&<>\"']/g, char => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
+          const escaped = content.replace(/[&<>\"']/g, char => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[char]));
           document.execCommand('insertHTML', false, escaped);
           return;
         }
@@ -407,11 +424,13 @@ export class CommandHandler {
             title: 'Paste Options',
             message: 'Choose how to clean pasted content and optionally specify denied tags/attributes or allowed styles (comma-separated).',
             fields: [
-              { id: 'mode', label: 'Format Option', type: 'select', value: options.mode, options: [
-                { label: 'Keep Format', value: 'keep' },
-                { label: 'Clean Format', value: 'clean' },
-                { label: 'Plain Text', value: 'plain' }
-              ] },
+              {
+                id: 'mode', label: 'Format Option', type: 'select', value: options.mode, options: [
+                  { label: 'Keep Format', value: 'keep' },
+                  { label: 'Clean Format', value: 'clean' },
+                  { label: 'Plain Text', value: 'plain' }
+                ]
+              },
               { id: 'deniedTags', label: 'Denied Tags (comma separated)', type: 'text', value: (options.deniedTags || []).join(',') },
               { id: 'deniedAttributes', label: 'Denied Attributes (comma separated)', type: 'text', value: (options.deniedAttributes || []).join(',') },
               { id: 'allowedStyleProperties', label: 'Allowed Style Properties (comma separated)', type: 'text', value: (options.allowedStyleProperties || []).join(',') }
@@ -444,7 +463,7 @@ export class CommandHandler {
       }
 
       if (options.mode === 'plain') {
-        const escaped = (text || html || '').replace(/[&<>\"']/g, char => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
+        const escaped = (text || html || '').replace(/[&<>\"']/g, char => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[char]));
         document.execCommand('insertHTML', false, escaped);
         return;
       }
@@ -459,7 +478,7 @@ export class CommandHandler {
       document.execCommand('insertHTML', false, content);
     } catch (err) {
       // fallback: try native paste
-      try { document.execCommand('paste'); } catch (e) {}
+      try { document.execCommand('paste'); } catch (e) { }
     }
   }
 

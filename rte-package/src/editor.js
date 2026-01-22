@@ -308,6 +308,9 @@ export class RTE {
       this._recoverContent();
     }
 
+    // Save initial state to history
+    this.commandHandler.saveState();
+
     this._bindEvents();
   }
 
@@ -388,7 +391,7 @@ export class RTE {
     return this.editor.innerHTML;
   }
 
-  setContent(content) {
+  setContent(content, preventSave = false) {
     const sanitized = this.sanitizer(content);
     if (this.isSourceMode) {
       this.sourceView.value = sanitized;
@@ -396,8 +399,13 @@ export class RTE {
     this.editor.innerHTML = sanitized;
 
     // Save snapshot on manual setContent
-    if (this.config.versionHistory.enabled) {
+    if (this.config.versionHistory.enabled && !preventSave) {
       this._saveSnapshot('Loaded Content');
+    }
+
+    // Also update history if not triggered by undo/redo
+    if (!preventSave) {
+      this.commandHandler.saveState();
     }
   }
 
@@ -513,8 +521,18 @@ export class RTE {
   }
 
   _bindEvents() {
+    let debounceTimer;
+
     this.editor.addEventListener('input', () => {
       this._handleAutosave();
+
+      // Debounce history save
+      if (debounceTimer) clearTimeout(debounceTimer);
+      debounceTimer = setTimeout(() => {
+        if (this.commandHandler && typeof this.commandHandler.saveState === 'function') {
+          this.commandHandler.saveState();
+        }
+      }, 500); // 500ms debounce for typing
     });
 
     this.editor.addEventListener('keydown', (e) => {
