@@ -1,5 +1,13 @@
 # Changelog
 
+## v1.21.0 (2026-01-22)
+
+## What's Changed
+
+- blog link fixed (72c54fc)
+
+**Full Changelog**: https://github.com/ksrivathsa2005-hub/buiild-rte/compare/v1.20.0...v1.21.0
+
 ## v1.20.0 (2026-01-22)
 
 ## What's Changed
