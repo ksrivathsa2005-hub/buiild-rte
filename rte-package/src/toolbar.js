@@ -10,6 +10,18 @@ export const createToolbar = (config, actions) => {
   toolbar.className = 'rte__toolbar';
   toolbar.setAttribute('role', 'toolbar');
 
+  // Define which groups should be in the primary (always visible) toolbar
+  const primaryGroups = ['clipboard', 'formatting'];
+  
+  // Create primary toolbar container
+  const primaryContainer = document.createElement('div');
+  primaryContainer.className = 'rte__toolbar-primary';
+  
+  // Create overflow toolbar container (hidden by default)
+  const overflowContainer = document.createElement('div');
+  overflowContainer.className = 'rte__toolbar-overflow';
+  overflowContainer.style.display = 'none';
+
   config.toolbar.forEach(group => {
     const groupEl = document.createElement('div');
     groupEl.className = 'rte__toolbar-group';
@@ -76,8 +88,42 @@ export const createToolbar = (config, actions) => {
       }
     });
 
-    toolbar.appendChild(groupEl);
+    // Determine if this group goes in primary or overflow toolbar
+    if (primaryGroups.includes(group.group)) {
+      primaryContainer.appendChild(groupEl);
+    } else {
+      overflowContainer.appendChild(groupEl);
+    }
   });
+
+  // Create the toggle button
+  const toggleButton = document.createElement('button');
+  toggleButton.className = 'rte__toolbar-toggle';
+  toggleButton.setAttribute('aria-label', 'Expand toolbar');
+  toggleButton.setAttribute('data-tooltip', 'More options');
+  toggleButton.innerHTML = '<i class="fas fa-chevron-down"></i>';
+  toggleButton.type = 'button';
+  
+  // Add toggle functionality
+  toggleButton.addEventListener('click', (e) => {
+    e.preventDefault();
+    const isExpanded = overflowContainer.style.display !== 'none';
+    
+    if (isExpanded) {
+      overflowContainer.style.display = 'none';
+      toggleButton.classList.remove('rte__toolbar-toggle--expanded');
+      toggleButton.setAttribute('aria-label', 'Expand toolbar');
+    } else {
+      overflowContainer.style.display = 'flex';
+      toggleButton.classList.add('rte__toolbar-toggle--expanded');
+      toggleButton.setAttribute('aria-label', 'Collapse toolbar');
+    }
+  });
+
+  // Append everything to the toolbar
+  primaryContainer.appendChild(toggleButton);
+  toolbar.appendChild(primaryContainer);
+  toolbar.appendChild(overflowContainer);
 
   return toolbar;
 };
