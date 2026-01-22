@@ -35,6 +35,7 @@
   background: var(--color-bg);
   overflow: hidden;
   box-shadow: var(--shadow-sm);
+  position: relative;
 }
 
 .rte__toolbar {

@@ -748,6 +748,7 @@ export class CommandHandler {
 
       if (data && data.url) {
         const wrapper = document.createElement('div');
+        wrapper.className = 'rte__video-wrapper';
         wrapper.style.margin = '1rem 0';
         wrapper.style.textAlign = 'center';
 
@@ -831,6 +832,7 @@ export class CommandHandler {
         table.style.border = '1px solid #ccc';
         table.style.borderCollapse = 'collapse';
         table.style.width = '100%';
+        table.style.margin = '10px 0';
 
         for (let i = 0; i < sizes.rows; i++) {
           const tr = document.createElement('tr');
