@@ -32,8 +32,27 @@
   max-width: 800px;
   margin: 0 auto;
   background: var(--color-bg);
-  overflow: hidden;
+  position: relative;
+  /* Allow user resizing like Syncfusion - show browser resize handle */
+  resize: vertical;
+  overflow: auto;
+  min-height: 300px;
   box-shadow: var(--shadow-sm);
+}
+
+/* Small visual grip in the bottom-right to hint resizability */
+.rte::after {
+  content: '';
+  position: absolute;
+  right: 6px;
+  bottom: 6px;
+  width: 14px;
+  height: 14px;
+  border-right: 2px solid rgba(0,0,0,0.12);
+  border-bottom: 2px solid rgba(0,0,0,0.12);
+  border-radius: 2px;
+  pointer-events: none;
+  opacity: 0.6;
 }
 
 .rte__toolbar {
@@ -79,6 +98,7 @@
   display: flex;
   overflow: hidden;
   position: relative;
+  min-height: 250px;
 }
 
 .rte__content {
@@ -157,6 +177,10 @@
 
 .rte__content li {
   margin: 0.25rem 0;
+}
+
+.rte__content li[data-list-marker]::marker {
+  content: attr(data-list-marker);
 }
 
 .rte__content ul.rte-checklist {

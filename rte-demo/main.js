@@ -10,7 +10,16 @@ const editor = new RTE('editor-container', {
                 { type: 'button', label: 'Redo', command: 'redo', icon: '<i class="fas fa-redo"></i>' },
                 { type: 'button', label: 'Cut', command: 'cut', icon: '<i class="fas fa-cut"></i>' },
                 { type: 'button', label: 'Copy', command: 'copy', icon: '<i class="fas fa-copy"></i>' },
-                { type: 'button', label: 'Paste', command: 'paste', icon: '<i class="fas fa-paste"></i>' }
+                {
+                    type: 'select',
+                    label: 'Paste',
+                    command: 'paste',
+                    options: [
+                        { label: 'Paste', value: 'default' },
+                        { label: 'Paste from Word', value: 'word' },
+                        { label: 'Paste as Plain Text', value: 'plain' }
+                    ]
+                }
             ]
         },
 
@@ -47,8 +56,29 @@ const editor = new RTE('editor-container', {
                         { label: 'Preformatted', value: 'pre' }
                     ]
                 },
-                { type: 'button', label: 'Bulleted List', command: 'insertUnorderedList', icon: '<i class="fas fa-list-ul"></i>' },
-                { type: 'button', label: 'Numbered List', command: 'insertOrderedList', icon: '<i class="fas fa-list-ol"></i>' },
+                {
+                    type: 'select',
+                    label: 'Bullets',
+                    command: 'bulletStyle',
+                    options: [
+                        { label: '•', value: 'disc' },
+                        { label: '◦', value: 'circle' },
+                        { label: '▪', value: 'square' },
+                        { label: 'None', value: 'none' }
+                    ]
+                },
+                {
+                    type: 'select',
+                    label: 'Numbers',
+                    command: 'numberStyle',
+                    options: [
+                        { label: '1.', value: 'decimal' },
+                        { label: 'a.', value: 'lower-alpha' },
+                        { label: 'A.', value: 'upper-alpha' },
+                        { label: 'i.', value: 'lower-roman' },
+                        { label: 'I.', value: 'upper-roman' }
+                    ]
+                },
                 { type: 'button', label: 'Block Quote', command: 'insertBlockquote', icon: '<i class="fas fa-quote-left"></i>' }
             ]
         },
@@ -67,10 +97,17 @@ const editor = new RTE('editor-container', {
         {
             group: 'alignment',
             items: [
-                { type: 'button', label: 'Align Left', command: 'alignLeft', icon: '<i class="fas fa-align-left"></i>' },
-                { type: 'button', label: 'Align Center', command: 'alignCenter', icon: '<i class="fas fa-align-center"></i>' },
-                { type: 'button', label: 'Align Right', command: 'alignRight', icon: '<i class="fas fa-align-right"></i>' },
-                { type: 'button', label: 'Justify', command: 'alignJustify', icon: '<i class="fas fa-align-justify"></i>' },
+                {
+                    type: 'select',
+                    label: 'Align',
+                    command: 'align',
+                    options: [
+                        { label: '← Left', value: 'left' },
+                        { label: '↔ Center', value: 'center' },
+                        { label: '→ Right', value: 'right' },
+                        { label: '⇌ Justify', value: 'justify' }
+                    ]
+                },
                 { type: 'button', label: 'Increase Indent', command: 'indent', icon: '<i class="fas fa-indent"></i>' },
                 { type: 'button', label: 'Decrease Indent', command: 'outdent', icon: '<i class="fas fa-outdent"></i>' }
             ]
@@ -191,8 +228,14 @@ const editor = new RTE('editor-container', {
                 { type: 'button', label: 'Find & Replace', command: 'findReplace', icon: '<i class="fas fa-search"></i>' }
             ]
         }
-    ]
-});
+    ],
+    pasteCleanup: {
+        formatOption: 'cleanFormat', // 'prompt', 'plainText', 'keepFormat', 'cleanFormat' (Word content automatically keeps format)
+        deniedTags: ['script', 'style'], // Basic cleanup for non-Word content
+        deniedAttributes: ['id', 'title', 'onclick'], // Remove problematic attributes
+        allowedStyleProperties: ['color', 'margin', 'padding', 'font-size', 'text-align', 'font-weight', 'font-style'] // Allow common formatting
+    }
+}, ['PasteCleanup']);
 
 // Load sample content
 const sampleContent = `
@@ -351,3 +394,38 @@ async function loadFromDatabase() {
 
 // Load sample on startup
 editor.setContent(sampleContent);
+
+// Keep editor content area sized to fit the toolbar when the container is resized
+function attachEditorResizeObserver() {
+    const rteContainer = document.getElementById('editor-container');
+    if (!rteContainer) return;
+
+    const toolbar = rteContainer.querySelector('.rte__toolbar');
+    const content = rteContainer.querySelector('.rte__content');
+    if (!toolbar || !content) return;
+
+    const updateHeight = () => {
+        // subtract toolbar height and some padding
+        const toolbarHeight = toolbar.offsetHeight || 48;
+        const newH = Math.max(100, rteContainer.clientHeight - toolbarHeight - 16);
+        content.style.height = newH + 'px';
+        content.style.minHeight = '100px';
+        content.style.overflowY = 'auto';
+    };
+
+    // Use ResizeObserver to detect user resizing of the `.rte` container
+    try {
+        const ro = new ResizeObserver(() => updateHeight());
+        ro.observe(rteContainer);
+        // also update on window resize
+        window.addEventListener('resize', updateHeight);
+        // initial update
+        setTimeout(updateHeight, 50);
+    } catch (e) {
+        // Fallback: window resize only
+        window.addEventListener('resize', updateHeight);
+        setTimeout(updateHeight, 50);
+    }
+}
+
+attachEditorResizeObserver();
