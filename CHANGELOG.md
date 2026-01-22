@@ -1,5 +1,14 @@
 # Changelog
 
+## v1.14.0 (2026-01-22)
+
+## What's Changed
+
+- updated fixed hoempage (aa62812)
+- branch (de9d874)
+
+**Full Changelog**: https://github.com/ksrivathsa2005-hub/buiild-rte/compare/v1.13.0...v1.14.0
+
 ## v1.13.0 (2026-01-22)
 
 ## What's Changed
