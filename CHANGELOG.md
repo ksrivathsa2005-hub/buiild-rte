@@ -1,5 +1,14 @@
 # Changelog
 
+## v1.7.0 (2026-01-22)
+
+## What's Changed
+
+- Merge pull request #15 from ksrivathsa2005-hub/simon-branch (be0f843)
+- Enter (2dd8f24)
+
+**Full Changelog**: https://github.com/ksrivathsa2005-hub/buiild-rte/compare/v1.6.0...v1.7.0
+
 ## v1.6.0 (2026-01-22)
 
 ## What's Changed
