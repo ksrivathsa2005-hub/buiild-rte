@@ -1,5 +1,15 @@
 # Changelog
 
+## v1.11.0 (2026-01-22)
+
+## What's Changed
+
+- Merge pull request #17 from ksrivathsa2005-hub/sri (783ef03)
+- docs (6c9c8e1)
+- new (f01bf59)
+
+**Full Changelog**: https://github.com/ksrivathsa2005-hub/buiild-rte/compare/v1.10.0...v1.11.0
+
 ## v1.10.0 (2026-01-22)
 
 ## What's Changed
