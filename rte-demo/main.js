@@ -35,7 +35,7 @@ const editor = new RTE('editor-container', {
             items: [
                 {
                     type: 'select',
-                    label: 'Paragraph',
+                    label: 'Heading',
                     command: 'formatBlock',
                     icon: '<i class="fas fa-heading"></i>',
                     options: [
@@ -44,8 +44,7 @@ const editor = new RTE('editor-container', {
                         { label: 'Heading 2', value: 'h2' },
                         { label: 'Heading 3', value: 'h3' },
                         { label: 'Heading 4', value: 'h4' },
-                        { label: 'Heading 5', value: 'h5' },
-                        { label: 'Heading 6', value: 'h6' }
+                        { label: 'Preformatted', value: 'pre' }
                     ]
                 },
                 { type: 'button', label: 'Bulleted List', command: 'insertUnorderedList', icon: '<i class="fas fa-list-ul"></i>' },
@@ -104,19 +103,37 @@ const editor = new RTE('editor-container', {
                 },
                 {
                     type: 'select',
-                    label: 'Size',
+                    label: 'Font Size',
                     command: 'fontSize',
                     icon: '<i class="fas fa-text-height"></i>',
                     options: [
-                        { label: 'Small', value: '12px' },
-                        { label: 'Normal', value: '16px' },
-                        { label: 'Large', value: '18px' },
-                        { label: 'XL', value: '24px' },
-                        { label: '2XL', value: '32px' }
+                        { label: 'Default', value: '3' },
+                        { label: '8 pt', value: '1' },
+                        { label: '10 pt', value: '2' },
+                        { label: '12 pt', value: '3' },
+                        { label: '14 pt', value: '4' },
+                        { label: '18 pt', value: '5' },
+                        { label: '24 pt', value: '6' },
+                        { label: '36 pt', value: '7' }
                     ]
                 },
                 { type: 'color', label: 'Text Color', command: 'foreColor', icon: '<i class="fas fa-palette"></i>' },
-                { type: 'color', label: 'Highlight', command: 'backColor', icon: '<i class="fas fa-highlighter"></i>' }
+                { type: 'color', label: 'Highlight', command: 'backColor', icon: '<i class="fas fa-highlighter"></i>' },
+                {
+                    type: 'select',
+                    label: 'Line Height',
+                    command: 'lineHeight',
+                    icon: '<i class="fas fa-text-height"></i>',
+                    options: [
+                        { label: '1.0', value: '1.0' },
+                        { label: '1.15', value: '1.15' },
+                        { label: '1.5', value: '1.5' },
+                        { label: '1.8', value: '1.8' },
+                        { label: '2.0', value: '2.0' },
+                        { label: '2.5', value: '2.5' },
+                        { label: '3.0', value: '3.0' }
+                    ]
+                }
             ]
         },
 
@@ -126,7 +143,27 @@ const editor = new RTE('editor-container', {
             items: [
                 { type: 'button', label: 'Uppercase', command: 'uppercase', icon: '<i class="fas fa-arrow-up"></i>' },
                 { type: 'button', label: 'Lowercase', command: 'lowercase', icon: '<i class="fas fa-arrow-down"></i>' },
-                { type: 'button', label: 'Code Block', command: 'insertCodeBlock', icon: '<i class="fas fa-code"></i>' }
+                {
+                    type: 'select',
+                    label: 'Code Block',
+                    command: 'insertCodeBlock',
+                    icon: '<i class="fas fa-code"></i>',
+                    options: [
+                        { label: 'HTML', value: 'html' },
+                        { label: 'Java', value: 'java' },
+                        { label: 'JavaScript', value: 'javascript' },
+                        { label: 'PHP', value: 'php' },
+                        { label: 'Python', value: 'python' },
+                        { label: 'Ruby', value: 'ruby' },
+                        { label: 'SQL', value: 'sql' },
+                        { label: 'TypeScript', value: 'typescript' },
+                        { label: 'XML', value: 'xml' },
+                        { label: 'CSS', value: 'css' },
+                        { label: 'C#', value: 'csharp' },
+                        { label: 'C++', value: 'cpp' },
+                        { label: 'JSON', value: 'json' }
+                    ]
+                }
             ]
         },
 
