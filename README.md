@@ -60,8 +60,9 @@ rte-demo/
 ### 1. ✅ Clipboard & History Actions
 - **Undo/Redo** - Full history with 50-entry stack
 - **Cut/Copy/Paste** - Native browser operations
-- **Paste from Word** - Smart paste with sanitization
-- **Paste as Plain Text** - Removes formatting
+- **Smart Word Paste** - Automatically detects MS Word content and preserves all formatting (gaps, alignment, styles)
+- **Paste Cleanup** - Configurable filtering for other content sources
+- **Paste as Plain Text** - Removes all formatting
 
 ### 2. ✅ Text Formatting & Styling
 - **Basic Styles** - Bold, Italic, Underline, Strikethrough
@@ -154,7 +155,60 @@ createRangeSlider({
 
 ---
 
-## 🔧 Architecture & Design Patterns
+## � Advanced Paste Cleanup
+
+### Intelligent Word Detection
+**Automatically preserves Word formatting** when content is copied from Microsoft Word:
+
+```javascript
+// Content from Word automatically keeps ALL formatting
+pasteCleanup: {
+  formatOption: 'cleanFormat' // Word content bypasses all filtering
+}
+```
+
+**Word Detection markers:**
+- `mso-` CSS classes and styles
+- `w:` and `o:` XML namespaces  
+- Conditional comments `[if...][endif]`
+- Microsoft Office schemas
+- Word-specific XML tags
+
+**Word content gets:**
+- ✅ Headings preserved as headings
+- ✅ Alignment maintained (left, center, right, justify)
+- ✅ Indentation and margins kept
+- ✅ Font sizes and families preserved
+- ✅ Line spacing and gaps maintained
+- ✅ Lists and bullets preserved
+- ✅ Tables and table formatting kept
+- ✅ Colors and styling preserved
+
+### Configurable Content Filtering
+For non-Word content, apply advanced filtering:
+
+```javascript
+pasteCleanup: {
+  formatOption: 'cleanFormat', // 'prompt', 'plainText', 'keepFormat', 'cleanFormat'
+  deniedTags: ['script', 'style'], // Remove unwanted tags
+  deniedAttributes: ['id', 'title'], // Remove problematic attributes
+  allowedStyleProperties: ['color', 'margin', 'font-size'] // Keep only safe styles
+}
+```
+
+### Advanced Tag Patterns
+Use attribute-based filtering:
+
+```javascript
+deniedTags: [
+  'a[!href]',        // Remove links without href
+  'a[href, target]'  // Remove links with both href and target
+]
+```
+
+---
+
+## �🔧 Architecture & Design Patterns
 
 ### Configuration-Driven
 Everything is controlled via config objects - **no hardcoded content**:

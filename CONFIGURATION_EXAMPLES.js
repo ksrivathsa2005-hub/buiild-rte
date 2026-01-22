@@ -131,18 +131,46 @@ export const professionalConfig = {
             { label: 'H6', value: 'h6' }
           ]
         },
-        { type: 'button', label: 'Bullet List', command: 'insertUnorderedList', icon: '•' },
-        { type: 'button', label: 'Numbered List', command: 'insertOrderedList', icon: '1.' },
+        {
+          type: 'select',
+          label: 'Bullets',
+          command: 'bulletStyle',
+          options: [
+            { label: '•', value: 'disc' },
+            { label: '◦', value: 'circle' },
+            { label: '▪', value: 'square' },
+            { label: 'None', value: 'none' }
+          ]
+        },
+        {
+          type: 'select',
+          label: 'Numbers',
+          command: 'numberStyle',
+          options: [
+            { label: '1.', value: 'decimal' },
+            { label: 'a.', value: 'lower-alpha' },
+            { label: 'A.', value: 'upper-alpha' },
+            { label: 'i.', value: 'lower-roman' },
+            { label: 'I.', value: 'upper-roman' }
+          ]
+        },
         { type: 'button', label: 'Blockquote', command: 'insertBlockquote', icon: '❝' }
       ]
     },
     {
       group: 'alignment',
       items: [
-        { type: 'button', label: 'Align Left', command: 'alignLeft', icon: '⊣' },
-        { type: 'button', label: 'Align Center', command: 'alignCenter', icon: '⊤' },
-        { type: 'button', label: 'Align Right', command: 'alignRight', icon: '⊢' },
-        { type: 'button', label: 'Justify', command: 'alignJustify', icon: '⊥' }
+        {
+          type: 'select',
+          label: 'Align',
+          command: 'align',
+          options: [
+            { label: '← Left', value: 'left' },
+            { label: '↔ Center', value: 'center' },
+            { label: '→ Right', value: 'right' },
+            { label: '⇌ Justify', value: 'justify' }
+          ]
+        }
       ]
     },
     {
@@ -203,8 +231,16 @@ export const fullFeatureConfig = {
         { type: 'button', label: 'Redo', command: 'redo', icon: '⟳' },
         { type: 'button', label: 'Cut', command: 'cut', icon: '✂' },
         { type: 'button', label: 'Copy', command: 'copy', icon: '📋' },
-        { type: 'button', label: 'Paste', command: 'paste', icon: '📌' },
-        { type: 'button', label: 'Paste as Text', command: 'pasteAsPlainText', icon: 'TXT' }
+        {
+          type: 'select',
+          label: 'Paste',
+          command: 'paste',
+          options: [
+            { label: 'Paste', value: 'default' },
+            { label: 'Paste from Word', value: 'word' },
+            { label: 'Paste as Plain Text', value: 'plain' }
+          ]
+        }
       ]
     },
     {
@@ -245,8 +281,29 @@ export const fullFeatureConfig = {
             { label: 'H6', value: 'h6' }
           ]
         },
-        { type: 'button', label: 'Bullet List', command: 'insertUnorderedList', icon: '•' },
-        { type: 'button', label: 'Numbered List', command: 'insertOrderedList', icon: '1.' },
+        {
+          type: 'select',
+          label: 'Bullets',
+          command: 'bulletStyle',
+          options: [
+            { label: '•', value: 'disc' },
+            { label: '◦', value: 'circle' },
+            { label: '▪', value: 'square' },
+            { label: 'None', value: 'none' }
+          ]
+        },
+        {
+          type: 'select',
+          label: 'Numbers',
+          command: 'numberStyle',
+          options: [
+            { label: '1.', value: 'decimal' },
+            { label: 'a.', value: 'lower-alpha' },
+            { label: 'A.', value: 'upper-alpha' },
+            { label: 'i.', value: 'lower-roman' },
+            { label: 'I.', value: 'upper-roman' }
+          ]
+        },
         { type: 'button', label: 'Blockquote', command: 'insertBlockquote', icon: '❝' },
         { type: 'button', label: 'HR', command: 'insertHorizontalRule', icon: '─' }
       ]
@@ -254,10 +311,17 @@ export const fullFeatureConfig = {
     {
       group: 'alignment',
       items: [
-        { type: 'button', label: 'Align Left', command: 'alignLeft', icon: '⊣' },
-        { type: 'button', label: 'Align Center', command: 'alignCenter', icon: '⊤' },
-        { type: 'button', label: 'Align Right', command: 'alignRight', icon: '⊢' },
-        { type: 'button', label: 'Justify', command: 'alignJustify', icon: '⊥' }
+        {
+          type: 'select',
+          label: 'Align',
+          command: 'align',
+          options: [
+            { label: '← Left', value: 'left' },
+            { label: '↔ Center', value: 'center' },
+            { label: '→ Right', value: 'right' },
+            { label: '⇌ Justify', value: 'justify' }
+          ]
+        }
       ]
     },
     {
@@ -386,3 +450,53 @@ export const technicalConfig = {
     }
   ]
 };
+
+// ============================================
+// PASTE CLEANUP - Advanced Content Processing
+// ============================================
+export const pasteCleanupConfig = {
+  toolbar: [
+    {
+      group: 'clipboard',
+      items: [
+        { type: 'button', label: 'Undo', command: 'undo', icon: '⟲' },
+        { type: 'button', label: 'Redo', command: 'redo', icon: '⟳' },
+        { type: 'button', label: 'Cut', command: 'cut', icon: '✂' },
+        { type: 'button', label: 'Copy', command: 'copy', icon: '📋' },
+        {
+          type: 'select',
+          label: 'Paste',
+          command: 'paste',
+          options: [
+            { label: 'Paste', value: 'default' },
+            { label: 'Paste from Word', value: 'word' },
+            { label: 'Paste as Plain Text', value: 'plain' }
+          ]
+        }
+      ]
+    },
+    {
+      group: 'formatting',
+      items: [
+        { type: 'button', label: 'Bold', command: 'bold', icon: '<b>B</b>' },
+        { type: 'button', label: 'Italic', command: 'italic', icon: '<i>I</i>' },
+        { type: 'button', label: 'Underline', command: 'underline', icon: '<u>U</u>' }
+      ]
+    },
+    {
+      group: 'view',
+      items: [
+        { type: 'button', label: 'Source', command: 'toggleSource', icon: 'Source' }
+      ]
+    }
+  ],
+  pasteCleanup: {
+    formatOption: 'cleanFormat', // 'prompt', 'plainText', 'keepFormat', 'cleanFormat' (Word content automatically keeps format)
+    deniedTags: ['script', 'style'], // Basic cleanup for non-Word content
+    deniedAttributes: ['id', 'title', 'onclick'], // Remove problematic attributes
+    allowedStyleProperties: ['color', 'margin', 'padding', 'font-size', 'text-align', 'font-weight', 'font-style'] // Allow common formatting
+  }
+};
+
+// Usage with modules:
+// const editor = new RTE('container', pasteCleanupConfig, ['PasteCleanup']);

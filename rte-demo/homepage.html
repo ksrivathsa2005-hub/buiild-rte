@@ -287,11 +287,20 @@
                 {
                     group: 'clipboard',
                     items: [
-                        { type: 'button', label: 'Undo', command: 'undo', icon: '<i class="fas fa-undo"></i>' },
-                        { type: 'button', label: 'Redo', command: 'redo', icon: '<i class="fas fa-redo"></i>' },
-                        { type: 'button', label: 'Cut', command: 'cut', icon: '<i class="fas fa-cut"></i>' },
-                        { type: 'button', label: 'Copy', command: 'copy', icon: '<i class="fas fa-copy"></i>' },
-                        { type: 'button', label: 'Paste', command: 'paste', icon: '<i class="fas fa-paste"></i>' }
+                            { type: 'button', label: 'Undo', command: 'undo', icon: '<i class="fas fa-undo"></i>' },
+                            { type: 'button', label: 'Redo', command: 'redo', icon: '<i class="fas fa-redo"></i>' },
+                            { type: 'button', label: 'Cut', command: 'cut', icon: '<i class="fas fa-cut"></i>' },
+                            { type: 'button', label: 'Copy', command: 'copy', icon: '<i class="fas fa-copy"></i>' },
+                            {
+                                type: 'select',
+                                label: 'Paste',
+                                command: 'paste',
+                                options: [
+                                    { label: 'Paste', value: 'default' },
+                                    { label: 'Paste from Word', value: 'word' },
+                                    { label: 'Paste as Plain Text', value: 'plain' }
+                                ]
+                            }
                     ]
                 },
                 // Text Formatting
@@ -326,8 +335,29 @@
                                 { label: 'Heading 6', value: 'h6' }
                             ]
                         },
-                        { type: 'button', label: 'Bulleted List', command: 'insertUnorderedList', icon: '<i class="fas fa-list-ul"></i>' },
-                        { type: 'button', label: 'Numbered List', command: 'insertOrderedList', icon: '<i class="fas fa-list-ol"></i>' },
+                        {
+                            type: 'select',
+                            label: 'Bullets',
+                            command: 'bulletStyle',
+                            options: [
+                                { label: '•', value: 'disc' },
+                                { label: '◦', value: 'circle' },
+                                { label: '▪', value: 'square' },
+                                { label: 'None', value: 'none' }
+                            ]
+                        },
+                        {
+                            type: 'select',
+                            label: 'Numbers',
+                            command: 'numberStyle',
+                            options: [
+                                { label: '1.', value: 'decimal' },
+                                { label: 'a.', value: 'lower-alpha' },
+                                { label: 'A.', value: 'upper-alpha' },
+                                { label: 'i.', value: 'lower-roman' },
+                                { label: 'I.', value: 'upper-roman' }
+                            ]
+                        },
                         { type: 'button', label: 'Quote', command: 'insertBlockquote', icon: '<i class="fas fa-quote-left"></i>' }
                     ]
                 },
@@ -344,10 +374,17 @@
                 {
                     group: 'alignment',
                     items: [
-                        { type: 'button', label: 'Align Left', command: 'alignLeft', icon: '<i class="fas fa-align-left"></i>' },
-                        { type: 'button', label: 'Align Center', command: 'alignCenter', icon: '<i class="fas fa-align-center"></i>' },
-                        { type: 'button', label: 'Align Right', command: 'alignRight', icon: '<i class="fas fa-align-right"></i>' },
-                        { type: 'button', label: 'Justify', command: 'alignJustify', icon: '<i class="fas fa-align-justify"></i>' },
+                        {
+                            type: 'select',
+                            label: 'Align',
+                            command: 'align',
+                            options: [
+                                { label: '← Left', value: 'left' },
+                                { label: '↔ Center', value: 'center' },
+                                { label: '→ Right', value: 'right' },
+                                { label: '⇌ Justify', value: 'justify' }
+                            ]
+                        },
                         { type: 'button', label: 'Indent', command: 'indent', icon: '<i class="fas fa-indent"></i>' },
                         { type: 'button', label: 'Outdent', command: 'outdent', icon: '<i class="fas fa-outdent"></i>' }
                     ]

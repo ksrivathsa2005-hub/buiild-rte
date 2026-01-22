@@ -31,7 +31,8 @@ export class CommandHandler {
         document.execCommand('copy');
         break;
       case 'paste':
-        this._handlePaste();
+        // value may be 'default'|'word'|'plain' when invoked from toolbar select
+        this._handlePaste(value || 'default');
         break;
       case 'pasteAsPlainText':
         await this._pasteAsPlainText();
@@ -78,6 +79,9 @@ export class CommandHandler {
       case 'formatBlock':
         document.execCommand('formatBlock', false, value);
         break;
+      case 'align':
+        this._setAlignment(value);
+        break;
       case 'alignLeft':
         this._setAlignment('left');
         break;
@@ -91,10 +95,19 @@ export class CommandHandler {
         this._setAlignment('justify');
         break;
       case 'insertUnorderedList':
-        document.execCommand('insertUnorderedList');
+        this._insertList('unordered', value);
         break;
       case 'insertOrderedList':
-        document.execCommand('insertOrderedList');
+        this._insertList('ordered', value);
+        break;
+      case 'listStyle':
+        this._setListStyle(value);
+        break;
+      case 'bulletStyle':
+        this._setListStyle('unordered', value);
+        break;
+      case 'numberStyle':
+        this._setListStyle('ordered', value);
         break;
       case 'indent':
         document.execCommand('indent');
@@ -247,17 +260,391 @@ export class CommandHandler {
     }
   }
 
-  _handlePaste() {
-    // Let default paste happen, but sanitize on blur/change
-    const clipboard = navigator.clipboard;
-    if (clipboard) {
-      clipboard.readText().then(text => {
-        const sanitized = this.editor.sanitizer(text);
-        document.execCommand('insertHTML', false, sanitized);
-      }).catch(() => {
-        // Fallback to regular paste
+  async _handlePaste(mode = 'default') {
+    // Check if PasteCleanup module is enabled
+    if (this.editor.modules && this.editor.modules.includes('PasteCleanup')) {
+      // Use the new pasteCleanup logic
+      const cfg = this.editor.config && this.editor.config.pasteCleanup ? this.editor.config.pasteCleanup : {};
+      let options = {
+        mode: this._getModeFromFormatOption(cfg.formatOption || 'cleanFormat'),
+        deniedTags: cfg.deniedTags || [],
+        deniedAttributes: cfg.deniedAttributes || [],
+        allowedStyleProperties: cfg.allowedStyleProperties || []
+      };
+
+      // For toolbar-initiated paste, override mode based on selection
+      if (mode === 'plain') options.mode = 'plain';
+      else if (mode === 'word') options.mode = 'clean'; // word mode uses clean format
+
+      // Get clipboard content
+      try {
+        const clipboard = navigator.clipboard;
+        if (!clipboard) {
+          document.execCommand('paste');
+          return;
+        }
+
+        let html = '';
+        let text = '';
+
+        // Try to read HTML content first
+        try {
+          const items = await clipboard.read();
+          for (const item of items) {
+            if (item.types.includes('text/html')) {
+              const blob = await item.getType('text/html');
+              html = await blob.text();
+              break;
+            }
+          }
+          if (!html) {
+            text = await clipboard.readText();
+          }
+        } catch (e) {
+          // Fallback to readText
+          text = await clipboard.readText();
+        }
+
+        const content = html || text;
+
+        // Check if content is from Word and automatically keep format
+        const isFromWord = this._isFromWord(content);
+        if (isFromWord) {
+          // For Word content, insert as-is without any filtering
+          document.execCommand('insertHTML', false, content);
+          return;
+        }
+
+        if (options.mode === 'plain') {
+          const escaped = content.replace(/[&<>\"']/g, char => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
+          document.execCommand('insertHTML', false, escaped);
+          return;
+        }
+
+        if (options.mode === 'clean') {
+          content = this._cleanWordHtml(content);
+        }
+
+        content = this._applyPasteFilters(content, options);
+        document.execCommand('insertHTML', false, content);
+      } catch (e) {
         document.execCommand('paste');
+      }
+    } else {
+      // Legacy paste handling
+      // mode: 'default' | 'word' | 'plain'
+      try {
+        const clipboard = navigator.clipboard;
+        if (!clipboard) {
+          // Fallback: trigger native paste
+          document.execCommand('paste');
+          return;
+        }
+
+        if (mode === 'plain') {
+          // open plain-text paste modal
+          await this._pasteAsPlainText();
+          return;
+        }
+
+        // Try to read HTML if available when 'word' requested
+        if (mode === 'word' && clipboard.read) {
+          try {
+            const items = await clipboard.read();
+            for (const item of items) {
+              if (item.types.includes('text/html')) {
+                const blob = await item.getType('text/html');
+                const html = await blob.text();
+                const cleaned = this._cleanWordHtml(html);
+                document.execCommand('insertHTML', false, cleaned);
+                return;
+              }
+            }
+          } catch (e) {
+            // fall through to readText
+          }
+        }
+
+        // Default: read text and sanitize
+        const text = await clipboard.readText();
+        let sanitized = this.editor.sanitizer(text);
+
+        // Check if content is from Word and keep format
+        if (this._isFromWord(text)) {
+          // For Word content, keep the format
+          document.execCommand('insertHTML', false, text);
+          return;
+        }
+
+        if (mode === 'word') sanitized = this._cleanWordHtml(sanitized);
+        document.execCommand('insertHTML', false, sanitized);
+      } catch (e) {
+        // Fallback to native paste
+        document.execCommand('paste');
+      }
+    }
+  }
+
+  // Handle paste events coming from paste DOM event
+  async handlePasteEvent(e) {
+    try {
+      if (!e || !e.clipboardData) return;
+      const clipboardData = e.clipboardData;
+
+      // Get paste cleanup configuration
+      const cfg = this.editor.config && this.editor.config.pasteCleanup ? this.editor.config.pasteCleanup : {};
+      let options = {
+        mode: this._getModeFromFormatOption(cfg.formatOption || 'cleanFormat'),
+        deniedTags: cfg.deniedTags || [],
+        deniedAttributes: cfg.deniedAttributes || [],
+        allowedStyleProperties: cfg.allowedStyleProperties || []
+      };
+
+      // If formatOption is 'prompt', show options to the user
+      if (cfg.formatOption === 'prompt') {
+        try {
+          const result = await this.editor.modal.prompt({
+            title: 'Paste Options',
+            message: 'Choose how to clean pasted content and optionally specify denied tags/attributes or allowed styles (comma-separated).',
+            fields: [
+              { id: 'mode', label: 'Format Option', type: 'select', value: options.mode, options: [
+                { label: 'Keep Format', value: 'keep' },
+                { label: 'Clean Format', value: 'clean' },
+                { label: 'Plain Text', value: 'plain' }
+              ] },
+              { id: 'deniedTags', label: 'Denied Tags (comma separated)', type: 'text', value: (options.deniedTags || []).join(',') },
+              { id: 'deniedAttributes', label: 'Denied Attributes (comma separated)', type: 'text', value: (options.deniedAttributes || []).join(',') },
+              { id: 'allowedStyleProperties', label: 'Allowed Style Properties (comma separated)', type: 'text', value: (options.allowedStyleProperties || []).join(',') }
+            ]
+          });
+
+          if (result) {
+            options.mode = result.mode || options.mode;
+            options.deniedTags = (result.deniedTags || '').split(',').map(s => s.trim()).filter(Boolean);
+            options.deniedAttributes = (result.deniedAttributes || '').split(',').map(s => s.trim()).filter(Boolean);
+            options.allowedStyleProperties = (result.allowedStyleProperties || '').split(',').map(s => s.trim()).filter(Boolean);
+          }
+        } catch (err) {
+          // user cancelled - abort paste
+          return;
+        }
+      }
+
+      // Obtain HTML if available, otherwise plain text
+      const html = clipboardData.getData('text/html');
+      const text = clipboardData.getData('text/plain');
+
+      // Check if content is from Microsoft Word and automatically keep format
+      const isFromWord = html && this._isFromWord(html);
+      if (isFromWord) {
+        // For Word content, insert HTML as-is without any filtering
+        console.log('Word content detected, preserving all formatting');
+        document.execCommand('insertHTML', false, html);
+        return;
+      }
+
+      if (options.mode === 'plain') {
+        const escaped = (text || html || '').replace(/[&<>\"']/g, char => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
+        document.execCommand('insertHTML', false, escaped);
+        return;
+      }
+
+      let content = html || text || '';
+      if (options.mode === 'clean') {
+        content = this._cleanWordHtml(content);
+      }
+
+      content = this._applyPasteFilters(content, options);
+
+      document.execCommand('insertHTML', false, content);
+    } catch (err) {
+      // fallback: try native paste
+      try { document.execCommand('paste'); } catch (e) {}
+    }
+  }
+
+  _applyPasteFilters(html, options = {}) {
+    if (!html) return '';
+    // Parse into DOM
+    const temp = document.createElement('div');
+    temp.innerHTML = html;
+
+    // Remove denied tags with attribute-based filtering
+    if (options.deniedTags && options.deniedTags.length) {
+      options.deniedTags.forEach(tagPattern => {
+        this._removeDeniedTags(temp, tagPattern);
       });
+    }
+
+    // Remove denied attributes
+    if (options.deniedAttributes && options.deniedAttributes.length) {
+      const all = temp.getElementsByTagName('*');
+      for (let i = 0; i < all.length; i++) {
+        const el = all[i];
+        options.deniedAttributes.forEach(attr => {
+          if (el.hasAttribute && el.hasAttribute(attr)) el.removeAttribute(attr);
+        });
+      }
+    }
+
+    // Filter style property list
+    if (options.allowedStyleProperties && options.allowedStyleProperties.length) {
+      const all = temp.getElementsByTagName('*');
+      for (let i = 0; i < all.length; i++) {
+        const el = all[i];
+        if (el.hasAttribute && el.hasAttribute('style')) {
+          const style = el.getAttribute('style');
+          const rules = style.split(';').map(r => r.trim()).filter(Boolean);
+          const allowed = options.allowedStyleProperties.map(s => s.toLowerCase());
+          const kept = rules.filter(rule => {
+            const prop = rule.split(':')[0] && rule.split(':')[0].trim().toLowerCase();
+            return allowed.includes(prop);
+          });
+          if (kept.length) el.setAttribute('style', kept.join('; ')); else el.removeAttribute('style');
+        }
+      }
+    }
+
+    // Fallback sanitize
+    try {
+      return this.editor.sanitizer(temp.innerHTML);
+    } catch (e) {
+      return temp.innerHTML;
+    }
+  }
+
+  _getModeFromFormatOption(formatOption) {
+    switch (formatOption) {
+      case 'plainText': return 'plain';
+      case 'keepFormat': return 'keep';
+      case 'cleanFormat': return 'clean';
+      case 'prompt': return 'clean'; // default when prompt is shown
+      default: return 'clean';
+    }
+  }
+
+  _isFromWord(html) {
+    if (!html) return false;
+
+    // Check for Microsoft Word specific indicators
+    const wordIndicators = [
+      /mso-[a-zA-Z-]+/i,  // mso- prefixed styles and attributes
+      /w:[a-zA-Z-]+/i,    // w: prefixed Word XML attributes
+      /\[if [^]]*\]/i,    // conditional comments
+      /\[endif\]/i,       // endif comments
+      /urn:schemas-microsoft-com:office/i,  // Office schemas
+      /WordDocument/i,    // Word document marker
+      /class="[^"]*Mso[^"]*"/i,  // Mso classes
+      /style="[^"]*mso-[^"]*"/i, // mso- styles
+      /xmlns:w=/i,        // Word XML namespace
+      /xmlns:o=/i,        // Office XML namespace
+      /<w:[a-zA-Z]+/i,    // Word XML tags
+      /<o:[a-zA-Z]+/i     // Office XML tags
+    ];
+
+    const isWord = wordIndicators.some(pattern => pattern.test(html));
+    if (isWord) {
+      console.log('Word content detected with pattern:', wordIndicators.find(pattern => pattern.test(html)));
+    }
+    return isWord;
+  }
+
+  _cleanWordHtml(html) {
+    if (!html) return '';
+    // Remove Word conditional comments and XML namespaces
+    html = html.replace(/<!--\[if[\s\S]*?endif\]-->/gi, '');
+    // Remove o:p tags
+    html = html.replace(/<\/?o:p[^>]*>/gi, '');
+    // Remove mso- styles and classes
+    html = html.replace(/class="[^"]*mso-[^"]*"/gi, '');
+    html = html.replace(/style="[^"]*mso-[^"]*"/gi, '');
+    // Remove XML namespace declarations
+    html = html.replace(/xmlns(:[a-z]+)?="[^"]*"/gi, '');
+    // Strip comments
+    html = html.replace(/<!--([\s\S]*?)-->/g, '');
+    // Remove empty spans
+    html = html.replace(/<span[^>]*>\s*<\/span>/gi, '');
+    // Use base sanitizer afterwards
+    try {
+      return this.editor.sanitizer(html);
+    } catch (e) {
+      return html;
+    }
+  }
+
+  _removeDeniedTags(container, tagPattern) {
+    // Parse tag pattern like 'a[!href]' or 'a[href, target]'
+    const match = tagPattern.match(/^([a-zA-Z][a-zA-Z0-9]*)(?:\[(.*?)\])?$/);
+    if (!match) return;
+
+    const tagName = match[1].toUpperCase();
+    const attrPattern = match[2];
+
+    if (!attrPattern) {
+      // Simple tag removal without attributes
+      const nodes = container.getElementsByTagName(tagName);
+      const arr = Array.from(nodes);
+      arr.forEach(n => {
+        const parent = n.parentNode;
+        while (n.firstChild) parent.insertBefore(n.firstChild, n);
+        parent.removeChild(n);
+      });
+      return;
+    }
+
+    // Parse attribute conditions
+    const conditions = attrPattern.split(',').map(s => s.trim());
+    const nodes = container.getElementsByTagName(tagName);
+    const arr = Array.from(nodes);
+
+    arr.forEach(n => {
+      let shouldRemove = false;
+
+      for (const condition of conditions) {
+        if (condition.startsWith('!')) {
+          // Negative condition: remove if attribute is NOT present
+          const attr = condition.substring(1);
+          if (!n.hasAttribute(attr)) {
+            shouldRemove = true;
+            break;
+          }
+        } else {
+          // Positive condition: remove if attribute IS present
+          if (n.hasAttribute(condition)) {
+            shouldRemove = true;
+            break;
+          }
+        }
+      }
+
+      if (shouldRemove) {
+        const parent = n.parentNode;
+        while (n.firstChild) parent.insertBefore(n.firstChild, n);
+        parent.removeChild(n);
+      }
+    });
+  }
+
+  _cleanWordHtml(html) {
+    if (!html) return '';
+    // Remove Word conditional comments and XML namespaces
+    html = html.replace(/<!--\[if[\s\S]*?endif\]-->/gi, '');
+    // Remove o:p tags
+    html = html.replace(/<\/?o:p[^>]*>/gi, '');
+    // Remove mso- styles and classes
+    html = html.replace(/class=\"?Mso[A-Za-z0-9_\-]*\"?/gi, '');
+    html = html.replace(/style=\"[^\"]*mso-[^\"]*\"/gi, '');
+    // Remove XML namespace declarations
+    html = html.replace(/xmlns(:[a-z]+)?=\"[^\"]*\"/gi, '');
+    // Strip comments
+    html = html.replace(/<!--([\s\S]*?)-->/g, '');
+    // Remove empty spans
+    html = html.replace(/<span[^>]*>\s*<\/span>/gi, '');
+    // Use base sanitizer afterwards
+    try {
+      return this.editor.sanitizer(html);
+    } catch (e) {
+      return html;
     }
   }
 
@@ -265,6 +652,7 @@ export class CommandHandler {
     try {
       const text = await this.editor.modal.prompt({
         title: 'Paste Plain Text',
+        message: 'This example demonstrates the paste cleanup feature of the Rich Text Editor control. Copy your content from MS Word or other website, and paste it within the editor to cleanup.',
         fields: [{ id: 'text', label: 'Content', type: 'textarea', placeholder: 'Paste your text here...', required: true }]
       });
       if (text) {
@@ -334,6 +722,77 @@ export class CommandHandler {
 
     if (block && block.nodeType === Node.ELEMENT_NODE) {
       block.style.textAlign = alignment;
+    }
+  }
+
+  _setListStyle(type, style) {
+    const selection = window.getSelection();
+    if (selection.rangeCount === 0) return;
+
+    const range = selection.getRangeAt(0);
+    let list = range.commonAncestorContainer;
+
+    // Get the closest list element
+    while (list && list.nodeType !== Node.ELEMENT_NODE) {
+      list = list.parentNode;
+    }
+
+    const tagName = type === 'unordered' ? 'UL' : 'OL';
+    while (list && list.nodeType === Node.ELEMENT_NODE &&
+      list.tagName !== tagName) {
+      list = list.parentNode;
+    }
+
+    if (list && list.nodeType === Node.ELEMENT_NODE && list.tagName === tagName) {
+      const standardStyles = ['disc', 'circle', 'square', 'none', 'decimal', 'lower-alpha', 'upper-alpha', 'lower-roman', 'upper-roman'];
+      if (standardStyles.includes(style)) {
+        list.style.listStyleType = style;
+        list.removeAttribute('data-list-marker');
+      } else {
+        list.style.listStyleType = 'none';
+        list.setAttribute('data-list-marker', style);
+      }
+    } else {
+      // No list found, insert a new one
+      this._insertList(type, style);
+    }
+  }
+
+  _insertList(type, style = 'default') {
+    const command = type === 'unordered' ? 'insertUnorderedList' : 'insertOrderedList';
+    document.execCommand(command);
+
+    // If a specific style is requested, apply it to the newly created list
+    if (style && style !== 'default') {
+      // Small delay to ensure the list is inserted
+      setTimeout(() => {
+        const selection = window.getSelection();
+        if (selection.rangeCount > 0) {
+          const range = selection.getRangeAt(0);
+          let list = range.commonAncestorContainer;
+
+          // Find the list element
+          while (list && list.nodeType !== Node.ELEMENT_NODE) {
+            list = list.parentNode;
+          }
+
+          while (list && list.nodeType === Node.ELEMENT_NODE &&
+            !((type === 'unordered' && list.tagName === 'UL') || (type === 'ordered' && list.tagName === 'OL'))) {
+            list = list.parentNode;
+          }
+
+          if (list) {
+            const standardStyles = ['disc', 'circle', 'square', 'none', 'decimal', 'lower-alpha', 'upper-alpha', 'lower-roman', 'upper-roman'];
+            if (standardStyles.includes(style)) {
+              list.style.listStyleType = style;
+              list.removeAttribute('data-list-marker');
+            } else {
+              list.style.listStyleType = 'none';
+              list.setAttribute('data-list-marker', style);
+            }
+          }
+        }
+      }, 10);
     }
   }
 
@@ -1013,10 +1472,78 @@ export class CommandHandler {
 
   async _insertEmoji() {
     try {
-      const emoji = await this.editor.modal.prompt({
+      const emojis = [
+        '😀', '😃', '😄', '😁', '😆', '😅', '😂', '🤣', '😊', '😇',
+        '🙂', '🙃', '😉', '😌', '😍', '🥰', '😘', '😗', '😙', '😚',
+        '😋', '😛', '😝', '😜', '🤪', '🤨', '🧐', '🤓', '😎', '🤩',
+        '🥳', '😏', '😒', '😞', '😔', '😟', '😕', '🙁', '☹️', '😣',
+        '😖', '😫', '😩', '🥺', '😢', '😭', '😤', '😠', '😡', '🤬',
+        '🤯', '😳', '🥵', '🥶', '😱', '😨', '😰', '😥', '😓', '🤗',
+        '🤔', '🤭', '🤫', '🤥', '😶', '😐', '😑', '😬', '🙄', '😯',
+        '😦', '😧', '😮', '😲', '🥱', '😴', '🤤', '😪', '😵', '🤐',
+        '🥴', '🤢', '🤮', '🤧', '😷', '🤒', '🤕', '🤑', '🤠', '😈',
+        '👿', '👹', '👺', '🤡', '💩', '👻', '💀', '☠️', '👽', '👾',
+        '🤖', '🎃', '😺', '😸', '😹', '😻', '😼', '😽', '🙀', '😿',
+        '😾', '👍', '👎', '👌', '✌️', '🤞', '🤟', '🤘', '🤙', '👈',
+        '👉', '👆', '🖕', '👇', '☝️', '👋', '🤚', '🖐️', '✋', '🖖',
+        '👏', '🙌', '🤲', '🤝', '🙏', '✍️', '💅', '🤳', '💪', '🦾',
+        '🦿', '🦵', '🦶', '👂', '🦻', '👃', '🧠', '🫀', '🫁', '🦷',
+        '🦴', '👀', '👁️', '👅', '👄', '💋', '🩸', '❤️', '🧡', '💛',
+        '💚', '💙', '💜', '🖤', '🤍', '🤎', '💔', '❤️‍🔥', '❤️‍🩹', '💕',
+        '💞', '💓', '💗', '💖', '💘', '💝', '💟', '☮️', '✝️', '☪️',
+        '🕉️', '☸️', '✡️', '🔯', '🕎', '☯️', '☦️', '🛐', '⛎', '♈️',
+        '♉️', '♊️', '♋️', '♌️', '♍️', '♎️', '♏️', '♐️', '♑️', '♒️',
+        '♓️', '🆔', '⚛️', '🉑', '☢️', '☣️', '📴', '📳', '🈶', '🈚️',
+        '🈸', '🈺', '🈷️', '✴️', '🆚', '💮', '🉐', '㊙️', '㊗️', '🈴',
+        '🈵', '🈹', '🈲', '🅰️', '🅱️', '🆎', '🆑', '🅾️', '🆘', '❌',
+        '⭕', '🛑', '⛔', '📛', '🚫', '💯', '💢', '♨️', '🚨', '🚥',
+        '🚦', '🛹', '🛷', '⛸️', '🥌', '🎯', '🎳', '🎮', '🎲', '🧿',
+        '🪀', '🪁', '🔮', '🪄', '🧿', '🎴', '🎭', '🩰', '🪕', '🥁',
+        '🪘', '🎷', '🎺', '🪗', '🎸', '🪕', '🎹', '🎤', '🎧', '🎼',
+        '🎵', '🎶', '🎙️', '🎚️', '🎛️', '🎞️', '📽️', '🎬', '📺', '📷',
+        '📸', '📹', '📼', '🔍', '🔎', '🕯️', '💡', '🔦', '🏮', '🪔',
+        '📔', '📕', '📖', '📗', '📘', '📙', '📚', '📓', '📒', '📃',
+        '📜', '📄', '📰', '🗞️', '📑', '🔖', '🏷️', '💰', '🪙', '💴',
+        '💵', '💶', '💷', '💸', '💳', '🧾', '💹', '✉️', '📧', '📨',
+        '📩', '📤', '📥', '📦', '📫', '📪', '📬', '📭', '📮', '🗳️',
+        '✏️', '✒️', '🖋️', '🖊️', '🖌️', '🖍️', '📝', '💼', '📁', '📂',
+        '🗂️', '📅', '📆', '🗒️', '🗓️', '📇', '📈', '📉', '📊', '📋',
+        '📌', '📍', '📎', '🖇️', '📏', '📐', '✂️', '🗃️', '🗄️', '🗑️',
+        '🔒', '🔓', '🔏', '🔐', '🔑', '🗝️', '🔨', '🪓', '⛏️', '⚒️',
+        '🛠️', '🗡️', '⚔️', '🔫', '🪃', '🏹', '🛡️', '🔧', '🔩', '⚙️',
+        '🗜️', '⚖️', '🦯', '🔗', '⛓️', '🪝', '🧰', '🧲', '🪜', '⚗️',
+        '🧪', '🧫', '🧬', '🔬', '🔭', '📡', '💉', '🩸', '💊', '🩹',
+        '🩼', '🩺', '🩻', '🚪', '🛗', '🪞', '🪟', '🛏️', '🛋️', '🪑',
+        '🚽', '🪠', '🚿', '🛁', '🪤', '🪒', '🧴', '🧷', '🧹', '🧺',
+        '🧻', '🪣', '🧼', '🪥', '🧽', '🧯', '🛒', '🚬', '⚰️', '🪦',
+        '⚱️', '🗿', '🪧', '🚮', '🚰', '🚹', '🚺', '🚻', '🚼', '🚾',
+        '🛂', '🛃', '🛄', '🛅', '⚠️', '🚸', '⛔', '🚫', '🚳', '🚭',
+        '🚯', '🚱', '🚷', '📵', '🔞', '☢️', '☣️', '⬆️', '↗️', '➡️',
+        '↘️', '⬇️', '↙️', '⬅️', '↖️', '↕️', '↔️', '↩️', '↪️', '⤴️',
+        '⤵️', '🔃', '🔄', '🔙', '🔚', '🔛', '🔜', '🔝', '🛐', '⚛️',
+        '🕉️', '✡️', '☸️', '☯️', '✝️', '☦️', '☪️', '☮️', '🕎', '🔯',
+        '♈', '♉', '♊', '♋', '♌', '♍', '♎', '♏', '♐', '♑', '♒', '♓',
+        '⛎', '🔀', '🔁', '🔂', '▶️', '⏩', '⏭️', '⏯️', '◀️', '⏪',
+        '⏮️', '🔼', '⏫', '🔽', '⏬', '⏸️', '⏹️', '⏺️', '⏏️', '🎦',
+        '🔅', '🔆', '📶', '📳', '📴', '♀️', '♂️', '⚧️', '✖️', '➕',
+        '➖', '➗', '🟰', '♾️', '‼️', '⁉️', '❓', '❔', '❕', '❗', '〰️',
+        '💱', '💲', '⚕️', '♻️', '⚜️', '🔱', '📛', '🔰', '⭕', '✅',
+        '☑️', '✔️', '❌', '❎', '➰', '➿', '〽️', '✳️', '✴️', '❇️',
+        '©️', '®️', '™️', '🔟', '🔠', '🔡', '🔢', '🔣', '🔤', '🅰️',
+        '🆎', '🅱️', '🆑', '🆒', '🆓', 'ℹ️', '🆔', 'Ⓜ️', '🆕', '🆖',
+        '🅾️', '🆗', '🅿️', '🆘', '🆙', '🆚', '🈁', '🈂️', '🈷️', '🈶',
+        '🈯', '🉐', '🈹', '🈚', '🈲', '🉑', '🈸', '🈴', '🈳', '㊗️',
+        '㊙️', '🈺', '🈵', '🔴', '🟠', '🟡', '🟢', '🔵', '🟣', '🟤',
+        '⚫', '⚪', '🟥', '🟧', '🟨', '🟩', '🟦', '🟪', '🟫', '⬛',
+        '⬜', '🟪', '🔶', '🔷', '🔸', '🔹', '🔺', '🔻', '💠', '🔘',
+        '🔳', '🔲', '🏁', '🚩', '🎌', '🏴', '🏳️', '🏳️‍🌈', '🏳️‍⚧️', '🏴‍☠️',
+        '🏴󠁧󠁢󠁥󠁮󠁧󠁿', '🏴󠁧󠁢󠁳󠁣󠁴󠁿', '🏴󠁧󠁢󠁷󠁬󠁳󠁿'
+      ];
+      const emoji = await this.editor.modal.grid({
         title: 'Insert Emoji',
-        fields: [{ id: 'emoji', label: 'Emoji', type: 'text', value: '😊', required: true }]
+        items: emojis
       });
+
       if (emoji) {
         document.execCommand('insertText', false, emoji);
       }
