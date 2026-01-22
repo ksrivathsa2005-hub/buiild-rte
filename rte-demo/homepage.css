@@ -189,9 +189,10 @@ body {
 
 /* Laptop Mockup */
 .device-wrapper {
-    max-width: 1000px;
+    max-width: 1200px;
     margin: 0 auto;
     padding: 0 1rem;
+
 }
 
 .laptop-frame {
@@ -244,7 +245,7 @@ body {
     background: white;
     border-radius: 8px 8px 0 0;
     overflow: visible;
-    height: 500px;
+    height: 700px;
     display: flex;
     flex-direction: column;
 }
@@ -275,7 +276,7 @@ body {
 
 .editor-demo .rte__toolbar {
     background: #fafafa;
-    border-bottom: 1px solid #e5e5e5;
+    border-bottom: 2px solid #e5e5e5;
     padding: 8px 12px;
     flex-shrink: 0;
 }
@@ -465,7 +466,9 @@ body {
 
 .device-wrapper {
     animation-delay: 0.2s;
-}/* Team Section */
+}
+
+/* Team Section */
 .team {
     padding: 100px 2rem;
     background: var(--bg-light);

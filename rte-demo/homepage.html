@@ -17,7 +17,7 @@
         /* Carousel Styles */
         .carousel-container {
             position: relative;
-            max-width: 1000px;
+            max-width: 1200px;
             margin: 0 auto;
             padding: 0 60px;
         }
@@ -109,7 +109,7 @@
 
         /* Updated laptop screen height for carousel */
         .carousel-slide .laptop-screen {
-            height: 450px;
+            height: 650px;
         }
 
         .carousel-slide .laptop-frame {
@@ -169,19 +169,45 @@
 
         .rte__toolbar {
             background: #ffffff;
-            border-bottom: 1px solid #e0e6ed;
-            padding: 10px;
-            overflow-x: auto;
-            flex-wrap: wrap;
-            gap: 8px;
+            border-bottom: 2px solid #f0f0f0;
+            padding: 8px;
             display: flex;
+            flex-direction: column;
+            gap: 0;
+            min-height: auto;
+        }
+
+        /* Force expanded view for the demo */
+        .rte__toolbar-primary {
+            flex-wrap: wrap !important;
+            padding: 4px !important;
+            gap: 4px !important;
+            width: 100%;
+        }
+
+        .rte__toolbar-overflow {
+            display: flex !important;
+            flex-wrap: wrap !important;
+            border-top: none !important;
+            background: transparent !important;
+            padding: 4px !important;
+            gap: 4px !important;
+            margin-top: 0 !important;
+            width: 100%;
+        }
+
+        .rte__toolbar-toggle {
+            display: none !important;
         }
 
         /* Toolbar group separator */
         .rte__toolbar-group {
             display: flex;
-            gap: 6px;
+            gap: 2px;
             align-items: center;
+            margin-right: 4px;
+            padding-right: 4px;
+            border-right: 1px solid #eee;
         }
 
         .rte__toolbar-group:not(:last-child)::after {
@@ -515,28 +541,32 @@
                 <!-- Member 1 -->
                 <div class="team-card">
                     <div class="team-photo-wrapper">
-                        <img src="https://ui-avatars.com/api/?name=Srivathsa&background=1a1a1a&color=fff&size=200" alt="Srivathsa" class="team-photo">
+                        <img src="https://ui-avatars.com/api/?name=Srivathsa&background=1a1a1a&color=fff&size=200"
+                            alt="Srivathsa" class="team-photo">
                     </div>
                     <h3 class="team-name">Srivathsa K</h3>
                 </div>
                 <!-- Member 2 -->
                 <div class="team-card">
                     <div class="team-photo-wrapper">
-                        <img src="https://ui-avatars.com/api/?name=Alan+John+Chacko&background=1a1a1a&color=fff&size=200" alt="Alan John Chacko" class="team-photo">
+                        <img src="https://ui-avatars.com/api/?name=Alan+John+Chacko&background=1a1a1a&color=fff&size=200"
+                            alt="Alan John Chacko" class="team-photo">
                     </div>
                     <h3 class="team-name">Alan John Chacko</h3>
                 </div>
                 <!-- Member 3 -->
                 <div class="team-card">
                     <div class="team-photo-wrapper">
-                        <img src="https://ui-avatars.com/api/?name=Simon&background=1a1a1a&color=fff&size=200" alt="Simon" class="team-photo">
+                        <img src="https://ui-avatars.com/api/?name=Simon&background=1a1a1a&color=fff&size=200"
+                            alt="Simon" class="team-photo">
                     </div>
                     <h3 class="team-name">Simon</h3>
                 </div>
                 <!-- Member 4 -->
                 <div class="team-card">
                     <div class="team-photo-wrapper">
-                        <img src="https://ui-avatars.com/api/?name=Adwaith&background=1a1a1a&color=fff&size=200" alt="Adwaith" class="team-photo">
+                        <img src="https://ui-avatars.com/api/?name=Adwaith&background=1a1a1a&color=fff&size=200"
+                            alt="Adwaith" class="team-photo">
                     </div>
                     <h3 class="team-name">Adwaith</h3>
                 </div>
