@@ -38,38 +38,100 @@
 
 .rte__toolbar {
   display: flex;
-  flex-wrap: wrap;
-  gap: 4px;
-  padding: 6px 10px;
+  flex-direction: column;
   background: white;
   border-bottom: 1px solid var(--color-border);
-  overflow-x: auto;
-  overflow-y: visible;
-  align-items: center;
   position: relative;
   z-index: 10;
 }
 
-.rte__toolbar::-webkit-scrollbar {
+.rte__toolbar-primary {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 2px;
+  padding: 4px 6px;
+  overflow-x: hidden;
+  overflow-y: visible;
+  align-items: center;
+  position: relative;
+  max-width: 100%;
+}
+
+.rte__toolbar-overflow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2px;
+  padding: 4px 6px;
+  border-top: 1px solid var(--color-border);
+  background: #fafafa;
+  overflow-x: hidden;
+  overflow-y: visible;
+  align-items: center;
+  transition: all 0.3s ease-in-out;
+}
+
+.rte__toolbar-toggle {
+  background: transparent;
+  border: 1px solid transparent;
+  padding: 4px 8px;
+  cursor: pointer;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 28px;
+  min-height: 28px;
+  color: #495057;
+  margin-left: auto;
+  transition: all 0.2s ease-in-out;
+  position: relative;
+}
+
+.rte__toolbar-toggle:hover {
+  background-color: #f0f1f3;
+  border-color: #e0e3e7;
+  color: #2c3e50;
+}
+
+.rte__toolbar-toggle i {
+  font-size: 13px;
+  transition: transform 0.3s ease-in-out;
+}
+
+.rte__toolbar-toggle--expanded i {
+  transform: rotate(180deg);
+}
+
+.rte__toolbar::-webkit-scrollbar,
+.rte__toolbar-primary::-webkit-scrollbar,
+.rte__toolbar-overflow::-webkit-scrollbar {
   height: 6px;
 }
 
-.rte__toolbar::-webkit-scrollbar-track {
+.rte__toolbar::-webkit-scrollbar-track,
+.rte__toolbar-primary::-webkit-scrollbar-track,
+.rte__toolbar-overflow::-webkit-scrollbar-track {
   background: #f1f1f1;
 }
 
-.rte__toolbar::-webkit-scrollbar-thumb {
+.rte__toolbar::-webkit-scrollbar-thumb,
+.rte__toolbar-primary::-webkit-scrollbar-thumb,
+.rte__toolbar-overflow::-webkit-scrollbar-thumb {
   background: #ccc;
   border-radius: 3px;
 }
 
 .rte__toolbar-group {
   display: flex;
-  gap: 2px;
+  gap: 1px;
   align-items: center;
   border-right: 1px solid var(--color-border);
-  padding-right: 4px;
-  margin-right: 2px;
+  padding-right: 3px;
+  margin-right: 3px;
+}
+
+.rte__toolbar-group:last-child {
+  border-right: none;
 }
 
 .rte__toolbar-group:last-child {

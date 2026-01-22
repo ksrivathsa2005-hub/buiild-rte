@@ -358,14 +358,22 @@ export class CommandHandler {
         node = node.parentElement;
       }
       
-      // Find the closest block-level element
+      // Find the closest block-level element that's not the editor itself
       while (node && node !== this.editor.editor) {
-        if (node.nodeType === Node.ELEMENT_NODE) {
+        if (node.nodeType === Node.ELEMENT_NODE && node.parentElement === this.editor.editor) {
+          // We're at a top-level block in the editor
           const tagName = node.tagName;
-          const display = window.getComputedStyle(node).display;
-          
-          if (display === 'block' || tagName === 'P' || tagName === 'DIV' || 
-              tagName === 'LI' || tagName.match(/^H[1-6]$/) || tagName === 'BLOCKQUOTE') {
+          if (tagName === 'P' || tagName === 'DIV' || 
+              tagName === 'LI' || tagName.match(/^H[1-6]$/) || 
+              tagName === 'BLOCKQUOTE' || tagName === 'PRE') {
+            blockElements.add(node);
+            break;
+          }
+        } else if (node.nodeType === Node.ELEMENT_NODE) {
+          const tagName = node.tagName;
+          if (tagName === 'P' || tagName === 'DIV' || 
+              tagName === 'LI' || tagName.match(/^H[1-6]$/) || 
+              tagName === 'BLOCKQUOTE' || tagName === 'PRE') {
             blockElements.add(node);
             break;
           }
@@ -373,49 +381,66 @@ export class CommandHandler {
         node = node.parentElement;
       }
     } else {
-      // Text is selected - find all block elements in selection
-      const commonAncestor = range.commonAncestorContainer;
-      const walker = document.createTreeWalker(
-        commonAncestor.nodeType === Node.ELEMENT_NODE ? commonAncestor : commonAncestor.parentElement,
-        NodeFilter.SHOW_ELEMENT,
-        {
-          acceptNode: (node) => {
-            // Check if node is within selection
-            if (range.intersectsNode(node)) {
-              const tagName = node.tagName;
-              const display = window.getComputedStyle(node).display;
-              
-              if (display === 'block' || tagName === 'P' || tagName === 'DIV' || 
-                  tagName === 'LI' || tagName.match(/^H[1-6]$/) || tagName === 'BLOCKQUOTE') {
-                return NodeFilter.FILTER_ACCEPT;
+      // Text is selected - find all block elements that contain selected content
+      const startContainer = range.startContainer;
+      const endContainer = range.endContainer;
+      
+      // Helper function to get the block parent of a node
+      const getBlockParent = (node) => {
+        let current = node.nodeType === Node.TEXT_NODE ? node.parentElement : node;
+        while (current && current !== this.editor.editor) {
+          const tagName = current.tagName;
+          if (current.nodeType === Node.ELEMENT_NODE && 
+              (tagName === 'P' || tagName === 'DIV' || tagName === 'LI' || 
+               tagName.match(/^H[1-6]$/) || tagName === 'BLOCKQUOTE' || tagName === 'PRE')) {
+            return current;
+          }
+          current = current.parentElement;
+        }
+        return null;
+      };
+      
+      // Get start and end blocks
+      const startBlock = getBlockParent(startContainer);
+      const endBlock = getBlockParent(endContainer);
+      
+      if (startBlock && endBlock) {
+        if (startBlock === endBlock) {
+          // Selection within a single block
+          blockElements.add(startBlock);
+        } else {
+          // Selection spans multiple blocks
+          blockElements.add(startBlock);
+          
+          // Find all blocks between start and end
+          let currentNode = startBlock.nextSibling;
+          while (currentNode && currentNode !== endBlock) {
+            if (currentNode.nodeType === Node.ELEMENT_NODE) {
+              const tagName = currentNode.tagName;
+              if (tagName === 'P' || tagName === 'DIV' || tagName === 'LI' || 
+                  tagName.match(/^H[1-6]$/) || tagName === 'BLOCKQUOTE' || tagName === 'PRE') {
+                blockElements.add(currentNode);
               }
             }
-            return NodeFilter.FILTER_SKIP;
+            currentNode = currentNode.nextSibling;
           }
+          
+          blockElements.add(endBlock);
         }
-      );
-      
-      let node;
-      while ((node = walker.nextNode())) {
-        blockElements.add(node);
-      }
-      
-      // Also check the common ancestor itself
-      if (commonAncestor.nodeType === Node.ELEMENT_NODE) {
-        const tagName = commonAncestor.tagName;
-        const display = window.getComputedStyle(commonAncestor).display;
-        
-        if (display === 'block' || tagName === 'P' || tagName === 'DIV' || 
-            tagName === 'LI' || tagName.match(/^H[1-6]$/) || tagName === 'BLOCKQUOTE') {
-          blockElements.add(commonAncestor);
-        }
+      } else if (startBlock) {
+        blockElements.add(startBlock);
+      } else if (endBlock) {
+        blockElements.add(endBlock);
       }
     }
     
     // Apply line height to all found block elements
     if (blockElements.size > 0) {
       blockElements.forEach(element => {
-        element.style.lineHeight = value;
+        // Don't apply to pre/code blocks as they have special formatting
+        if (element.tagName !== 'PRE') {
+          element.style.lineHeight = value;
+        }
       });
     } else {
       // If no block elements found, create a new paragraph with line height
