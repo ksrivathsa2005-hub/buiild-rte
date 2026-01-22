@@ -1,5 +1,13 @@
 # Changelog
 
+## v1.17.0 (2026-01-22)
+
+## What's Changed
+
+- local storage session (38d32e4)
+
+**Full Changelog**: https://github.com/ksrivathsa2005-hub/buiild-rte/compare/v1.16.0...v1.17.0
+
 ## v1.16.0 (2026-01-22)
 
 ## What's Changed
