@@ -3,6 +3,8 @@ import { sanitizeHTML } from './utils/sanitizer.js';
 import { CommandHandler } from './commands/handler.js';
 import { StateManager } from './state/manager.js';
 import { ModalManager } from './components/modal-manager.js';
+import { DraggableImage } from './components/draggable-image.js';
+import { QuickToolbar } from './components/quick-toolbar.js';
 
 export class RTE {
   constructor(containerId, config = {}) {
@@ -231,11 +233,22 @@ export class RTE {
 
     this.container.appendChild(wrapper);
 
+    // Initialize DraggableImage
+    this.draggableImage = new DraggableImage(this);
+
+    // Initialize QuickToolbar after DOM is ready
+    this.quickToolbar = new QuickToolbar(this);
+
     this._bindEvents();
   }
 
   _bindEvents() {
     this.editor.addEventListener('keydown', (e) => {
+      // Hide quick toolbar when typing (except for modifier keys)
+      if (!e.ctrlKey && !e.metaKey && !e.altKey && e.key.length === 1) {
+        this.quickToolbar.hide();
+      }
+
       if (e.ctrlKey || e.metaKey) {
         const key = e.key.toLowerCase();
         if (['b', 'i', 'u', 'z', 'y'].includes(key)) {
@@ -246,8 +259,9 @@ export class RTE {
       }
     });
 
-    this.editor.addEventListener('mouseup', () => {
+    this.editor.addEventListener('mouseup', (e) => {
       this.stateManager.updateButtonStates();
+      this._handleQuickToolbar(e);
     });
 
     this.editor.addEventListener('keyup', () => {
@@ -260,6 +274,61 @@ export class RTE {
       const sanitized = sanitizeHTML(text);
       document.execCommand('insertHTML', false, sanitized);
     });
+  }
+
+  _handleQuickToolbar(event) {
+    if (this.isSourceMode) return;
+
+    setTimeout(() => {
+      const target = event.target;
+
+      // Check if clicked element is an image or contains an image
+      let imageElement = null;
+
+      if (target.tagName === 'IMG') {
+        imageElement = target;
+      } else if (target.querySelector && target.querySelector('img')) {
+        imageElement = target.querySelector('img');
+      }
+
+      // If we found an image, show the quick toolbar
+      if (imageElement && this.editor.contains(imageElement)) {
+        const rect = imageElement.getBoundingClientRect();
+        this.quickToolbar.show(imageElement, 'image', rect);
+        return;
+      }
+
+      // Check if clicked element is a video or iframe (YouTube)
+      let videoElement = null;
+      if (target.tagName === 'VIDEO' || target.tagName === 'IFRAME') {
+        videoElement = target;
+      } else if (target.querySelector) {
+        videoElement = target.querySelector('video') || target.querySelector('iframe');
+      }
+
+      if (videoElement && this.editor.contains(videoElement)) {
+        const rect = videoElement.getBoundingClientRect();
+        this.quickToolbar.show(videoElement, 'video', rect);
+        return;
+      }
+
+      // Check if clicked element is audio
+      let audioElement = null;
+      if (target.tagName === 'AUDIO') {
+        audioElement = target;
+      } else if (target.querySelector && target.querySelector('audio')) {
+        audioElement = target.querySelector('audio');
+      }
+
+      if (audioElement && this.editor.contains(audioElement)) {
+        const rect = audioElement.getBoundingClientRect();
+        this.quickToolbar.show(audioElement, 'audio', rect);
+        return;
+      }
+
+      // Hide toolbar if clicking elsewhere
+      this.quickToolbar.hide();
+    }, 50);
   }
 
   async executeCommand(command, value = null) {

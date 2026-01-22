@@ -34,6 +34,7 @@
   background: var(--color-bg);
   overflow: hidden;
   box-shadow: var(--shadow-sm);
+  position: relative;
 }
 
 .rte__toolbar {
@@ -281,6 +282,7 @@
   from {
     opacity: 0;
   }
+
   to {
     opacity: 1;
   }
@@ -291,6 +293,7 @@
     transform: translateY(20px);
     opacity: 0;
   }
+
   to {
     transform: translateY(0);
     opacity: 1;
