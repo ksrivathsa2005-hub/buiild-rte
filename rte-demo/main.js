@@ -35,21 +35,42 @@ const editor = new RTE('editor-container', {
             items: [
                 {
                     type: 'select',
-                    label: 'Heading',
+                    label: 'Paragraph',
                     command: 'formatBlock',
-                    icon: '<i class="fas fa-heading"></i>',
                     options: [
                         { label: 'Paragraph', value: 'p' },
                         { label: 'Heading 1', value: 'h1' },
                         { label: 'Heading 2', value: 'h2' },
                         { label: 'Heading 3', value: 'h3' },
                         { label: 'Heading 4', value: 'h4' },
-                        { label: 'Preformatted', value: 'pre' }
+                        { label: 'Heading 5', value: 'h5' },
+                        { label: 'Heading 6', value: 'h6' }
                     ]
                 },
-                { type: 'button', label: 'Bulleted List', command: 'insertUnorderedList', icon: '<i class="fas fa-list-ul"></i>' },
-                { type: 'button', label: 'Numbered List', command: 'insertOrderedList', icon: '<i class="fas fa-list-ol"></i>' },
-                { type: 'button', label: 'Block Quote', command: 'insertBlockquote', icon: '<i class="fas fa-quote-left"></i>' }
+                {
+                    type: 'select',
+                    label: 'Bullets',
+                    command: 'bulletStyle',
+                    options: [
+                        { label: '•', value: 'disc' },
+                        { label: '◦', value: 'circle' },
+                        { label: '▪', value: 'square' },
+                        { label: 'None', value: 'none' }
+                    ]
+                },
+                {
+                    type: 'select',
+                    label: 'Numbers',
+                    command: 'numberStyle',
+                    options: [
+                        { label: '1.', value: 'decimal' },
+                        { label: 'a.', value: 'lower-alpha' },
+                        { label: 'A.', value: 'upper-alpha' },
+                        { label: 'i.', value: 'lower-roman' },
+                        { label: 'I.', value: 'upper-roman' }
+                    ]
+                },
+                { type: 'button', label: 'Quote', command: 'insertBlockquote', icon: '<i class="fas fa-quote-left"></i>' }
             ]
         },
 
@@ -64,17 +85,26 @@ const editor = new RTE('editor-container', {
         },
 
         // Alignment & Indentation Group
-        {
-            group: 'alignment',
-            items: [
-                { type: 'button', label: 'Align Left', command: 'alignLeft', icon: '<i class="fas fa-align-left"></i>' },
-                { type: 'button', label: 'Align Center', command: 'alignCenter', icon: '<i class="fas fa-align-center"></i>' },
-                { type: 'button', label: 'Align Right', command: 'alignRight', icon: '<i class="fas fa-align-right"></i>' },
-                { type: 'button', label: 'Justify', command: 'alignJustify', icon: '<i class="fas fa-align-justify"></i>' },
-                { type: 'button', label: 'Increase Indent', command: 'indent', icon: '<i class="fas fa-indent"></i>' },
-                { type: 'button', label: 'Decrease Indent', command: 'outdent', icon: '<i class="fas fa-outdent"></i>' }
-            ]
-        },
+         // Alignment
+                {
+                    group: 'alignment',
+                    items: [
+                        {
+                            type: 'select',
+                            label: 'Align',
+                            command: 'align',
+                            options: [
+                                { label: '← Left', value: 'left' },
+                                { label: '↔ Center', value: 'center' },
+                                { label: '→ Right', value: 'right' },
+                                { label: '⇌ Justify', value: 'justify' }
+                            ]
+                        },
+                        { type: 'button', label: 'Indent', command: 'indent', icon: '<i class="fas fa-indent"></i>' },
+                        { type: 'button', label: 'Outdent', command: 'outdent', icon: '<i class="fas fa-outdent"></i>' }
+                    ]
+                },
+               
 
         // Insert Elements Group
         {
