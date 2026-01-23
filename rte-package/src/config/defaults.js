@@ -7,10 +7,10 @@ export const DEFAULT_TOOLBAR = [
   {
     group: 'clipboard',
     items: [
-      { type: 'button', label: 'Undo', command: 'undo', icon: '⟲' },
-      { type: 'button', label: 'Redo', command: 'redo', icon: '⟳' },
-      { type: 'button', label: 'Cut', command: 'cut', icon: '✂' },
-      { type: 'button', label: 'Copy', command: 'copy', icon: '📋' },
+      { type: 'button', label: 'Undo', command: 'undo', icon: '<i class="fas fa-undo"></i>' },
+      { type: 'button', label: 'Redo', command: 'redo', icon: '<i class="fas fa-redo"></i>' },
+      { type: 'button', label: 'Cut', command: 'cut', icon: '<i class="fas fa-cut"></i>' },
+      { type: 'button', label: 'Copy', command: 'copy', icon: '<i class="fas fa-copy"></i>' },
       {
         type: 'select',
         label: 'Paste',
@@ -22,188 +22,8 @@ export const DEFAULT_TOOLBAR = [
         ]
       }
     ]
-  },
-  {
-    group: 'formatting',
-    items: [
-      { type: 'button', label: 'Bold', command: 'bold', icon: '<b>B</b>' },
-      { type: 'button', label: 'Italic', command: 'italic', icon: '<i>I</i>' },
-      { type: 'button', label: 'Underline', command: 'underline', icon: '<u>U</u>' },
-      { type: 'button', label: 'Strikethrough', command: 'strikeThrough', icon: '<s>S</s>' },
-      { type: 'button', label: 'Superscript', command: 'superscript', icon: 'ˢᵘᵖ' },
-      { type: 'button', label: 'Subscript', command: 'subscript', icon: 'ₛᵤᵦ' },
-      { type: 'button', label: 'Code', command: 'code', icon: '</>' },
-      { type: 'button', label: 'Clear Formatting', command: 'clearFormatting', icon: '⊘' }
-    ]
-  },
-  {
-    group: 'textCase',
-    items: [
-      { type: 'button', label: 'UPPERCASE', command: 'uppercase', icon: 'A' },
-      { type: 'button', label: 'lowercase', command: 'lowercase', icon: 'a' },
-      { type: 'button', label: 'Sentence case', command: 'sentenceCase', icon: 'Aa' }
-    ]
-  },
-  {
-    group: 'paragraph',
-    items: [
-      {
-        type: 'select',
-        label: 'Heading',
-        command: 'formatBlock',
-        options: [
-          { label: 'Paragraph', value: 'p' },
-          { label: 'H1', value: 'h1' },
-          { label: 'H2', value: 'h2' },
-          { label: 'H3', value: 'h3' },
-          { label: 'H4', value: 'h4' },
-          { label: 'H5', value: 'h5' },
-          { label: 'H6', value: 'h6' }
-        ]
-      },
-      {
-        type: 'select',
-        label: 'Bullets',
-        command: 'bulletStyle',
-        options: [
-          { label: '•', value: 'disc' },
-          { label: '◦', value: 'circle' },
-          { label: '▪', value: 'square' },
-          { label: 'None', value: 'none' }
-        ]
-      },
-      {
-        type: 'select',
-        label: 'Numbers',
-        command: 'numberStyle',
-        options: [
-          { label: '1.', value: 'decimal' },
-          { label: 'a.', value: 'lower-alpha' },
-          { label: 'A.', value: 'upper-alpha' },
-          { label: 'i.', value: 'lower-roman' },
-          { label: 'I.', value: 'upper-roman' }
-        ]
-      },
-      { type: 'button', label: 'Blockquote', command: 'insertBlockquote', icon: '❝' },
-      { type: 'button', label: 'HR', command: 'insertHorizontalRule', icon: '─' }
-    ]
-  },
-  {
-    group: 'alignment',
-    items: [
-      {
-        type: 'select',
-        label: 'Align',
-        command: 'align',
-        options: [
-          { label: '← Left', value: 'left' },
-          { label: '↔ Center', value: 'center' },
-          { label: '→ Right', value: 'right' },
-          { label: '⇌ Justify', value: 'justify' }
-        ]
-      }
-    ]
-  },
-  {
-    group: 'indent',
-    items: [
-      { type: 'button', label: 'Decrease Indent', command: 'outdent', icon: '«' },
-      { type: 'button', label: 'Increase Indent', command: 'indent', icon: '»' }
-    ]
-  },
-  {
-    group: 'insert',
-    items: [
-      { type: 'button', label: 'Link', command: 'createLink', icon: '🔗' },
-      { type: 'button', label: 'Unlink', command: 'unlink', icon: '⛔' },
-      { type: 'button', label: 'Image', command: 'insertImage', icon: '🖼' },
-      { type: 'button', label: 'Audio', command: 'insertAudio', icon: '🔊' },
-      { type: 'button', label: 'Video', command: 'insertVideo', icon: '🎬' },
-      { type: 'button', label: 'Table', command: 'insertTable', icon: '▦' },
-      { type: 'button', label: 'Code Block', command: 'insertCodeBlock', icon: '{}' },
-      { type: 'button', label: 'Emoji', command: 'insertEmoji', icon: '😊' },
-      { type: 'button', label: 'Special Char', command: 'insertSpecialChar', icon: '§' }
-    ]
-  },
-  {
-    group: 'typography',
-    items: [
-      {
-        type: 'select',
-        label: 'Font',
-        command: 'fontName',
-        options: [
-          { label: 'Segoe UI', value: 'Segoe UI' },
-          { label: 'Arial', value: 'Arial' },
-          { label: 'Verdana', value: 'Verdana' },
-          { label: 'Georgia', value: 'Georgia' },
-          { label: 'Times New Roman', value: 'Times New Roman' },
-          { label: 'Courier New', value: 'Courier New' },
-          { label: 'Trebuchet MS', value: 'Trebuchet MS' },
-          { label: 'Comic Sans MS', value: 'Comic Sans MS' },
-          { label: 'Impact', value: 'Impact' }
-        ]
-      },
-      {
-        type: 'select',
-        label: 'Size',
-        command: 'fontSize',
-        options: [
-          { label: '8 pt', value: '1' },
-          { label: '10 pt', value: '2' },
-          { label: '12 pt', value: '3' },
-          { label: '14 pt', value: '4' },
-          { label: '18 pt', value: '5' },
-          { label: '24 pt', value: '6' },
-          { label: '36 pt', value: '7' }
-        ]
-      },
-      { type: 'color', label: 'Text Color', command: 'foreColor' },
-      { type: 'color', label: 'Highlight', command: 'backColor' },
-      {
-        type: 'select',
-        label: 'Line Height',
-        command: 'lineHeight',
-        options: [
-          { label: '1.0', value: '1.0' },
-          { label: '1.15', value: '1.15' },
-          { label: '1.5', value: '1.5' },
-          { label: '1.8', value: '1.8' },
-          { label: '2.0', value: '2.0' },
-          { label: '2.5', value: '2.5' },
-          { label: '3.0', value: '3.0' }
-        ]
-      },
-      {
-        type: 'select',
-        label: 'Code Language',
-        command: 'codeLanguage',
-        options: [
-          { label: 'HTML', value: 'html' },
-          { label: 'CSS', value: 'css' },
-          { label: 'JavaScript', value: 'javascript' },
-          { label: 'Python', value: 'python' },
-          { label: 'Java', value: 'java' },
-          { label: 'C#', value: 'csharp' },
-          { label: 'C++', value: 'cpp' },
-          { label: 'PHP', value: 'php' },
-          { label: 'Ruby', value: 'ruby' },
-          { label: 'SQL', value: 'sql' },
-          { label: 'JSON', value: 'json' },
-          { label: 'XML', value: 'xml' },
-          { label: 'TypeScript', value: 'typescript' }
-        ]
-      }
-    ]
-  },
-  {
-    group: 'view',
-    items: [
-      { type: 'button', label: 'Source', command: 'toggleSource', icon: 'Source' },
-      { type: 'button', label: 'Fullscreen', command: 'toggleFullscreen', icon: '⛶' },
-      { type: 'button', label: 'Print', command: 'print', icon: '🖨️' }
-    ]
   }
+
 ];
 
 export const DEFAULT_BUBBLE_TOOLBAR = [
@@ -314,7 +134,7 @@ export const DEFAULT_I18N = {
     lineHeight: 'Line Height',
     source: 'Source Code',
     fullscreen: 'Fullscreen',
-    
+
     // Modal dialogs
     insertLink: 'Insert Link',
     linkUrl: 'URL',
@@ -324,36 +144,36 @@ export const DEFAULT_I18N = {
     insert: 'Insert',
     cancel: 'Cancel',
     update: 'Update',
-    
+
     insertImage: 'Insert Image',
     imageUrl: 'Image URL',
     imageAlt: 'Alt Text',
     imageWidth: 'Width',
     imageHeight: 'Height',
-    
+
     insertVideo: 'Insert Video',
     videoUrl: 'Video URL or Embed Code',
-    
+
     insertAudio: 'Insert Audio',
     audioUrl: 'Audio URL',
-    
+
     insertTable: 'Insert Table',
     tableRows: 'Rows',
     tableColumns: 'Columns',
     tableHeader: 'Include Header Row',
-    
+
     insertEmoji: 'Insert Emoji',
     selectEmoji: 'Select an emoji',
-    
+
     insertSpecialChar: 'Insert Special Character',
     selectChar: 'Select a character',
-    
+
     // Messages
     pleaseEnterUrl: 'Please enter a valid URL',
     pleaseSelectText: 'Please select text first',
     noTextSelected: 'No text selected',
     confirmDelete: 'Are you sure you want to delete this?',
-    
+
     // Quick toolbar
     alignLeft: 'Align Left',
     alignCenter: 'Align Center',
@@ -426,7 +246,7 @@ export const DEFAULT_CSS_CLASSES = {
  */
 export function mergeConfig(userConfig = {}, defaults = {}) {
   const merged = { ...defaults };
-  
+
   for (const key in userConfig) {
     if (userConfig[key] && typeof userConfig[key] === 'object' && !Array.isArray(userConfig[key])) {
       merged[key] = mergeConfig(userConfig[key], defaults[key] || {});
@@ -434,6 +254,6 @@ export function mergeConfig(userConfig = {}, defaults = {}) {
       merged[key] = userConfig[key];
     }
   }
-  
+
   return merged;
 }

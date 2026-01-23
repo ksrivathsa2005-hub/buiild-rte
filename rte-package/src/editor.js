@@ -5,6 +5,13 @@ import { StateManager } from './state/manager.js';
 import { ModalManager } from './components/modal-manager.js';
 import { DraggableImage } from './components/draggable-image.js';
 import { QuickToolbar } from './components/quick-toolbar.js';
+import {
+  DEFAULT_TOOLBAR,
+  DEFAULT_BUBBLE_TOOLBAR,
+  DEFAULT_EDITOR_OPTIONS,
+  DEFAULT_PASTE_CLEANUP,
+  mergeConfig
+} from './config/defaults.js';
 
 export class RTE {
   constructor(containerId, config = {}, modules = []) {
@@ -25,6 +32,7 @@ export class RTE {
 
   _mergeConfig(userConfig) {
     const defaultConfig = {
+      ...DEFAULT_EDITOR_OPTIONS,
       autosave: {
         enabled: true,
         delay: 5000,
@@ -35,217 +43,62 @@ export class RTE {
         maxVersions: 20,
         key: `rte_history_${this.container.id || 'default'}`
       },
-      toolbar: [
-        {
-          group: 'clipboard',
-          items: [
-            { type: 'button', label: 'Undo', command: 'undo', icon: '⟲' },
-            { type: 'button', label: 'Redo', command: 'redo', icon: '⟳' },
-            { type: 'button', label: 'Cut', command: 'cut', icon: '✂' },
-            { type: 'button', label: 'Copy', command: 'copy', icon: '📋' },
-            {
-              type: 'select',
-              label: 'Paste',
-              command: 'paste',
-              options: [
-                { label: 'Paste', value: 'default' },
-                { label: 'Paste from Word', value: 'word' },
-                { label: 'Paste as Plain Text', value: 'plain' }
-              ]
-            }
-          ]
-        },
-        {
-          group: 'formatting',
-          items: [
-            { type: 'button', label: 'Bold', command: 'bold', icon: '<b>B</b>' },
-            { type: 'button', label: 'Italic', command: 'italic', icon: '<i>I</i>' },
-            { type: 'button', label: 'Underline', command: 'underline', icon: '<u>U</u>' },
-            { type: 'button', label: 'Strikethrough', command: 'strikeThrough', icon: '<s>S</s>' },
-            { type: 'button', label: 'Superscript', command: 'superscript', icon: 'ˢᵘᵖ' },
-            { type: 'button', label: 'Subscript', command: 'subscript', icon: 'ₛᵤᵦ' },
-            { type: 'button', label: 'Code', command: 'code', icon: '</>' },
-            { type: 'button', label: 'Clear Formatting', command: 'clearFormatting', icon: '⊘' }
-          ]
-        },
-        {
-          group: 'textCase',
-          items: [
-            { type: 'button', label: 'UPPERCASE', command: 'uppercase', icon: 'A' },
-            { type: 'button', label: 'lowercase', command: 'lowercase', icon: 'a' },
-            { type: 'button', label: 'Sentence case', command: 'sentenceCase', icon: 'Aa' }
-          ]
-        },
-        {
-          group: 'paragraph',
-          items: [
-            {
-              type: 'select',
-              label: 'Heading',
-              command: 'formatBlock',
-              options: [
-                { label: 'Paragraph', value: 'p' },
-                { label: 'H1', value: 'h1' },
-                { label: 'H2', value: 'h2' },
-                { label: 'H3', value: 'h3' },
-                { label: 'H4', value: 'h4' },
-                { label: 'H5', value: 'h5' },
-                { label: 'H6', value: 'h6' }
-              ]
-            },
-            {
-              type: 'select',
-              label: 'Bullets',
-              command: 'bulletStyle',
-              options: [
-                { label: '•', value: 'disc' },
-                { label: '◦', value: 'circle' },
-                { label: '▪', value: 'square' },
-                { label: 'None', value: 'none' }
-              ]
-            },
-            {
-              type: 'select',
-              label: 'Numbers',
-              command: 'numberStyle',
-              options: [
-                { label: '1.', value: 'decimal' },
-                { label: 'a.', value: 'lower-alpha' },
-                { label: 'A.', value: 'upper-alpha' },
-                { label: 'i.', value: 'lower-roman' },
-                { label: 'I.', value: 'upper-roman' }
-              ]
-            },
-            { type: 'button', label: 'Blockquote', command: 'insertBlockquote', icon: '❝' },
-            { type: 'button', label: 'HR', command: 'insertHorizontalRule', icon: '─' }
-          ]
-        },
-        {
-          group: 'alignment',
-          items: [
-            {
-              type: 'select',
-              label: 'Align',
-              command: 'align',
-              options: [
-                { label: '← Left', value: 'left' },
-                { label: '↔ Center', value: 'center' },
-                { label: '→ Right', value: 'right' },
-                { label: '⇌ Justify', value: 'justify' }
-              ]
-            }
-          ]
-        },
-        {
-          group: 'indent',
-          items: [
-            { type: 'button', label: 'Decrease Indent', command: 'outdent', icon: '«' },
-            { type: 'button', label: 'Increase Indent', command: 'indent', icon: '»' }
-          ]
-        },
-        {
-          group: 'insert',
-          items: [
-            { type: 'button', label: 'Link', command: 'createLink', icon: '🔗' },
-            { type: 'button', label: 'Unlink', command: 'unlink', icon: '⛔' },
-            { type: 'button', label: 'Image', command: 'insertImage', icon: '🖼' },
-            { type: 'button', label: 'Audio', command: 'insertAudio', icon: '🔊' },
-            { type: 'button', label: 'Video', command: 'insertVideo', icon: '🎬' },
-            { type: 'button', label: 'Table', command: 'insertTable', icon: '▦' },
-            { type: 'button', label: 'Code Block', command: 'insertCodeBlock', icon: '{}' },
-            { type: 'button', label: 'Special Char', command: 'insertSpecialChar', icon: '§' }
-          ]
-        },
-        {
-          group: 'typography',
-          items: [
-            {
-              type: 'select',
-              label: 'Font',
-              command: 'fontName',
-              options: [
-                { label: 'Segoe UI', value: 'Segoe UI' },
-                { label: 'Arial', value: 'Arial' },
-                { label: 'Verdana', value: 'Verdana' },
-                { label: 'Georgia', value: 'Georgia' },
-                { label: 'Times New Roman', value: 'Times New Roman' },
-                { label: 'Courier New', value: 'Courier New' },
-                { label: 'Trebuchet MS', value: 'Trebuchet MS' },
-                { label: 'Comic Sans MS', value: 'Comic Sans MS' },
-                { label: 'Impact', value: 'Impact' }
-              ]
-            },
-            {
-              type: 'select',
-              label: 'Size',
-              command: 'fontSize',
-              options: [
-                { label: '8 pt', value: '1' },
-                { label: '10 pt', value: '2' },
-                { label: '12 pt', value: '3' },
-                { label: '14 pt', value: '4' },
-                { label: '18 pt', value: '5' },
-                { label: '24 pt', value: '6' },
-                { label: '36 pt', value: '7' }
-              ]
-            },
-            { type: 'color', label: 'Text Color', command: 'foreColor' },
-            { type: 'color', label: 'Highlight', command: 'backColor' },
-            {
-              type: 'select',
-              label: 'Line Height',
-              command: 'lineHeight',
-              options: [
-                { label: '1.0', value: '1.0' },
-                { label: '1.15', value: '1.15' },
-                { label: '1.5', value: '1.5' },
-                { label: '1.8', value: '1.8' },
-                { label: '2.0', value: '2.0' },
-                { label: '2.5', value: '2.5' },
-                { label: '3.0', value: '3.0' }
-              ]
-            },
-            {
-              type: 'select',
-              label: 'Code Language',
-              command: 'codeLanguage',
-              options: [
-                { label: 'HTML', value: 'html' },
-                { label: 'CSS', value: 'css' },
-                { label: 'JavaScript', value: 'javascript' },
-                { label: 'Python', value: 'python' },
-                { label: 'Java', value: 'java' },
-                { label: 'C#', value: 'csharp' },
-                { label: 'C++', value: 'cpp' },
-                { label: 'PHP', value: 'php' },
-                { label: 'Ruby', value: 'ruby' },
-                { label: 'SQL', value: 'sql' },
-                { label: 'JSON', value: 'json' },
-                { label: 'XML', value: 'xml' },
-                { label: 'TypeScript', value: 'typescript' }
-              ]
-            }
-          ]
-        },
-        {
-          group: 'view',
-          items: [
-            { type: 'button', label: 'Source', command: 'toggleSource', icon: 'Source' },
-            { type: 'button', label: 'Fullscreen', command: 'toggleFullscreen', icon: '⛶' },
-            { type: 'button', label: 'Theme', command: 'uploadTheme', icon: '🎨' }
-          ]
-        }
-      ]
+      toolbar: DEFAULT_TOOLBAR
     };
-    const merged = { ...defaultConfig, ...userConfig };
+
+    // special handling for toolbar merging
+    if (userConfig.toolbar && Array.isArray(userConfig.toolbar)) {
+      const defaultToolbar = defaultConfig.toolbar || [];
+      const userToolbar = userConfig.toolbar;
+
+      // Create a map of default groups for easy lookup
+      const groupMap = new Map(defaultToolbar.map(g => [g.group, g]));
+
+      userToolbar.forEach(userGroup => {
+        if (groupMap.has(userGroup.group)) {
+          // If group exists, decide how to merge. 
+          // For simplicity in this specific request context (user expects merging), 
+          // let's override the default group with the user's group completely,
+          // effectively allowing them to customize specific groups while keeping others?
+          // OR, do they want to KEEP other default groups and just REPLACE this one?
+          // The standard mergeConfig overwrites the WHOLE array. 
+          // Smart merging: Update existing group, keep others.
+          groupMap.set(userGroup.group, userGroup);
+        } else {
+          // New group, append it (or should we respect order?)
+          // For now, let's just add it to the map.
+          groupMap.set(userGroup.group, userGroup);
+        }
+      });
+
+      // Convert back to array. Note: This loses original order of user's new groups relative to defaults if we just use values(), 
+      // but typically customized groups replace default ones in place.
+      // However, if user provided a toolbar, they might want ONLY what they provided?
+      // The user asked "why it not merging with the default". This implies they expected their custom 'clipboard' formatting to be APPLIED, but presumably other defaults to disappear? 
+      // No, "merging with default" usually means "keep defaults, but update this part".
+      // So if they provided ONE group, they probably want the OTHER default groups to stay.
+
+      // Reconstruct toolbar: Start with defaults, replace matches, append new.
+      const mergedToolbar = defaultToolbar.map(g => {
+        const userGroup = userToolbar.find(ug => ug.group === g.group);
+        return userGroup ? userGroup : g;
+      });
+
+      // Add completely new groups from user
+      userToolbar.forEach(ug => {
+        if (!defaultToolbar.find(dg => dg.group === ug.group)) {
+          mergedToolbar.push(ug);
+        }
+      });
+
+      userConfig.toolbar = mergedToolbar;
+    }
+
+    const merged = mergeConfig(userConfig, defaultConfig);
+
     // Ensure pasteCleanup defaults exist only if PasteCleanup module is enabled
     if (this.modules && this.modules.includes('PasteCleanup')) {
-      merged.pasteCleanup = Object.assign({
-        formatOption: 'cleanFormat', // 'prompt', 'plainText', 'keepFormat', 'cleanFormat'
-        deniedTags: [],
-        deniedAttributes: [],
-        allowedStyleProperties: []
-      }, userConfig.pasteCleanup || {});
+      merged.pasteCleanup = mergeConfig(userConfig.pasteCleanup || {}, DEFAULT_PASTE_CLEANUP);
     }
 
     return merged;
@@ -439,15 +292,7 @@ export class RTE {
     `;
 
     // Bubble toolbar items - minimal formatting tools
-    const bubbleItems = [
-      { label: 'Bold', command: 'bold', icon: '<b>B</b>' },
-      { label: 'Italic', command: 'italic', icon: '<i>I</i>' },
-      { label: 'Underline', command: 'underline', icon: '<u>U</u>' },
-      { label: 'Strikethrough', command: 'strikeThrough', icon: '<s>S</s>' },
-      { type: 'separator' },
-      { label: 'Link', command: 'createLink', icon: '🔗' },
-      { label: 'Code', command: 'code', icon: '{ }' }
-    ];
+    const bubbleItems = DEFAULT_BUBBLE_TOOLBAR;
 
     bubbleItems.forEach(item => {
       if (item.type === 'separator') {

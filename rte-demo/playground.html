@@ -306,199 +306,26 @@
         import RTE from '../rte-package/src/index.js';
 
         const editor = new RTE('editor-container', {
-            toolbar: [
-                // Clipboard Actions Group
-                {
-                    group: 'clipboard',
-                    items: [
-                        { type: 'button', label: 'Undo', command: 'undo', icon: '<i class="fas fa-undo"></i>' },
-                        { type: 'button', label: 'Redo', command: 'redo', icon: '<i class="fas fa-redo"></i>' },
-                        { type: 'button', label: 'Cut', command: 'cut', icon: '<i class="fas fa-cut"></i>' },
-                        { type: 'button', label: 'Copy', command: 'copy', icon: '<i class="fas fa-copy"></i>' },
-                                {
-                                    type: 'select',
-                                    label: 'Paste',
-                                    command: 'paste',
-                                    options: [
-                                        { label: 'Paste', value: 'default' },
-                                        { label: 'Paste from Word', value: 'word' },
-                                        { label: 'Paste as Plain Text', value: 'plain' }
-                                    ]
-                                }
-                    ]
-                },
-
-                // Text Formatting Group
-                {
-                    group: 'formatting',
-                    items: [
-                        { type: 'button', label: 'Bold', command: 'bold', icon: '<i class="fas fa-bold"></i>' },
-                        { type: 'button', label: 'Italic', command: 'italic', icon: '<i class="fas fa-italic"></i>' },
-                        { type: 'button', label: 'Underline', command: 'underline', icon: '<i class="fas fa-underline"></i>' },
-                        { type: 'button', label: 'Strikethrough', command: 'strikeThrough', icon: '<i class="fas fa-strikethrough"></i>' },
-                        { type: 'button', label: 'Superscript', command: 'superscript', icon: '<i class="fas fa-superscript"></i>' },
-                        { type: 'button', label: 'Subscript', command: 'subscript', icon: '<i class="fas fa-subscript"></i>' },
-                        { type: 'button', label: 'Code', command: 'code', icon: '<i class="fas fa-code"></i>' },
-                        { type: 'button', label: 'Clear Format', command: 'clearFormatting', icon: '<i class="fas fa-eraser"></i>' }
-                    ]
-                },
-
-                // Paragraph & List Formatting Group
-                {
-                    group: 'paragraph',
-                    items: [
-                        {
-                            type: 'select',
-                            label: 'Paragraph',
-                            command: 'formatBlock',
-                            icon: '<i class="fas fa-heading"></i>',
-                            options: [
-                                { label: 'Paragraph', value: 'p' },
-                                { label: 'Heading 1', value: 'h1' },
-                                { label: 'Heading 2', value: 'h2' },
-                                { label: 'Heading 3', value: 'h3' },
-                                { label: 'Heading 4', value: 'h4' },
-                                { label: 'Heading 5', value: 'h5' },
-                                { label: 'Heading 6', value: 'h6' }
-                            ]
-                        },
-                        {
-                            type: 'select',
-                            label: 'Bullets',
-                            command: 'bulletStyle',
-                            options: [
-                                { label: '•', value: 'disc' },
-                                { label: '◦', value: 'circle' },
-                                { label: '▪', value: 'square' },
-                                { label: 'None', value: 'none' }
-                            ]
-                        },
-                        {
-                            type: 'select',
-                            label: 'Numbers',
-                            command: 'numberStyle',
-                            options: [
-                                { label: '1.', value: 'decimal' },
-                                { label: 'a.', value: 'lower-alpha' },
-                                { label: 'A.', value: 'upper-alpha' },
-                                { label: 'i.', value: 'lower-roman' },
-                                { label: 'I.', value: 'upper-roman' }
-                            ]
-                        },
-                        { type: 'button', label: 'Block Quote', command: 'insertBlockquote', icon: '<i class="fas fa-quote-left"></i>' }
-                    ]
-                },
-
-                // Checklist Group
-                {
-                    group: 'checklist',
-                    items: [
-                        { type: 'button', label: 'Checkbox', command: 'insertChecklist', value: 'checkbox', icon: '<i class="fas fa-check-square"></i>' },
-                        { type: 'button', label: 'Circle', command: 'insertChecklist', value: 'circle', icon: '<i class="far fa-circle"></i>' },
-                        { type: 'button', label: 'Square', command: 'insertChecklist', value: 'square', icon: '<i class="far fa-square"></i>' }
-                    ]
-                },
-
-                // Alignment & Indentation Group
-                {
-                    group: 'alignment',
-                    items: [
-                        {
-                            type: 'select',
-                            label: 'Align',
-                            command: 'align',
-                            options: [
-                                { label: '← Left', value: 'left' },
-                                { label: '↔ Center', value: 'center' },
-                                { label: '→ Right', value: 'right' },
-                                { label: '⇌ Justify', value: 'justify' }
-                            ]
-                        },
-                        { type: 'button', label: 'Increase Indent', command: 'indent', icon: '<i class="fas fa-indent"></i>' },
-                        { type: 'button', label: 'Decrease Indent', command: 'outdent', icon: '<i class="fas fa-outdent"></i>' }
-                    ]
-                },
-
-                // Insert Elements Group
-                {
-                    group: 'insert',
-                    items: [
-                        { type: 'button', label: 'Link', command: 'createLink', icon: '<i class="fas fa-link"></i>' },
-                        { type: 'button', label: 'Image', command: 'insertImage', icon: '<i class="fas fa-image"></i>' },
-                        { type: 'button', label: 'Audio', command: 'insertAudio', icon: '<i class="fas fa-volume-up"></i>' },
-                        { type: 'button', label: 'Video', command: 'insertVideo', icon: '<i class="fas fa-video"></i>' },
-                        { type: 'button', label: 'Table', command: 'insertTable', icon: '<i class="fas fa-table"></i>' },
-                        { type: 'button', label: 'Emoji', command: 'insertEmoji', icon: '<i class="fas fa-grin"></i>' },
-                        { type: 'button', label: 'Special Character', command: 'insertSpecialChar', icon: '<i class="fas fa-keyboard"></i>' },
-                        { type: 'button', label: 'Horizontal Line', command: 'insertHorizontalRule', icon: '<i class="fas fa-minus"></i>' }
-                    ]
-                },
-
-                // Font & Style Group
-                {
-                    group: 'typography',
-                    items: [
-                        {
-                            type: 'select',
-                            label: 'Font',
-                            command: 'fontName',
-                            icon: '<i class="fas fa-font"></i>',
-                            options: [
-                                { label: 'Arial', value: 'Arial' },
-                                { label: 'Verdana', value: 'Verdana' },
-                                { label: 'Georgia', value: 'Georgia' },
-                                { label: 'Times New Roman', value: 'Times New Roman' },
-                                { label: 'Courier New', value: 'Courier New' },
-                                { label: 'Trebuchet MS', value: 'Trebuchet MS' },
-                                { label: 'System UI', value: 'system-ui' }
-                            ]
-                        },
-                        {
-                            type: 'select',
-                            label: 'Size',
-                            command: 'fontSize',
-                            icon: '<i class="fas fa-text-height"></i>',
-                            options: [
-                                { label: '8', value: '1' },
-                                { label: '10', value: '2' },
-                                { label: '12', value: '3' },
-                                { label: '14', value: '4' },
-                                { label: '18', value: '5' },
-                                { label: '24', value: '6' },
-                                { label: '36', value: '7' }
-                            ]
-                        },
-                        { type: 'color', label: 'Text Color', command: 'foreColor', icon: '<i class="fas fa-palette"></i>' },
-                        { type: 'color', label: 'Highlight', command: 'backColor', icon: '<i class="fas fa-highlighter"></i>' }
-                    ]
-                },
-
-                // Text Case & Code Group
-                {
-                    group: 'transform',
-                    items: [
-                        { type: 'button', label: 'Uppercase', command: 'uppercase', icon: '<i class="fas fa-arrow-up"></i>' },
-                        { type: 'button', label: 'Lowercase', command: 'lowercase', icon: '<i class="fas fa-arrow-down"></i>' },
-                        { type: 'button', label: 'Code Block', command: 'insertCodeBlock', icon: '<i class="fas fa-code"></i>' }
-                    ]
-                },
-
-                // View Options Group
-                {
-                    group: 'view',
-                    items: [
-                        { type: 'button', label: 'Source Code', command: 'toggleSource', icon: '<i class="fas fa-file-code"></i>' },
-                        { type: 'button', label: 'Fullscreen', command: 'toggleFullscreen', icon: '<i class="fas fa-expand"></i>' }
-                    ]
-                },
-
-                // Tools Group
-                {
-                    group: 'tools',
-                    items: [
-                        { type: 'button', label: 'Find & Replace', command: 'findReplace', icon: '<i class="fas fa-search"></i>' }
-                    ]
-                }
+            // defaults will be used
+            toolbar: [{
+                group: 'clipboard',
+                items: [
+                    { type: 'button', label: 'Undo', command: 'undo', icon: '<i class="fas fa-undo"></i>' },
+                    { type: 'button', label: 'Redo', command: 'redo', icon: '<i class="fas fa-redo"></i>' },
+                    { type: 'button', label: 'Cut', command: 'cut', icon: '<i class="fas fa-cut"></i>' },
+                    { type: 'button', label: 'Copy', command: 'copy', icon: '<i class="fas fa-copy"></i>' },
+                    {
+                        type: 'select',
+                        label: 'Paste',
+                        command: 'paste',
+                        options: [
+                            { label: 'Paste', value: 'default' },
+                            { label: 'Paste from Word', value: 'word' },
+                            { label: 'Paste as Plain Text', value: 'plain' }
+                        ]
+                    }
+                ]
+            }
             ]
         });
 
