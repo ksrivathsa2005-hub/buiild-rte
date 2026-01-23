@@ -1,5 +1,13 @@
 # Changelog
 
+## v1.25.0 (2026-01-23)
+
+## What's Changed
+
+- default (9fdbc86)
+
+**Full Changelog**: https://github.com/ksrivathsa2005-hub/buiild-rte/compare/v1.24.0...v1.25.0
+
 ## v1.24.0 (2026-01-22)
 
 ## What's Changed
