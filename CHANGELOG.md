@@ -1,5 +1,13 @@
 # Changelog
 
+## v1.26.0 (2026-01-28)
+
+## What's Changed
+
+- Remove 'Try it out' button from homepage (53c6d5c)
+
+**Full Changelog**: https://github.com/ksrivathsa2005-hub/buiild-rte/compare/v1.25.0...v1.26.0
+
 ## v1.25.0 (2026-01-23)
 
 ## What's Changed
